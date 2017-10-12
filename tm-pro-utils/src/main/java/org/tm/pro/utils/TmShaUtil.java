@@ -3,7 +3,7 @@ package org.tm.pro.utils;
 import com.xiaoleilu.hutool.crypto.digest.DigestAlgorithm;
 import com.xiaoleilu.hutool.crypto.digest.Digester;
 
-public class ShaUtil {
+public class TmShaUtil {
 	public static String sha1(String str) {
 		Digester sha = new Digester(DigestAlgorithm.SHA1);
 		return sha.digestHex(str);

@@ -8,7 +8,7 @@ import com.xiaoleilu.hutool.crypto.digest.Digester;
 import com.xiaoleilu.hutool.crypto.digest.HMac;
 import com.xiaoleilu.hutool.crypto.digest.HmacAlgorithm;
 
-public class Md5Util {
+public class TmMd5Util {
 	final static Digester md5 = new Digester(DigestAlgorithm.MD5);
 
 	public static String md5(File file) {

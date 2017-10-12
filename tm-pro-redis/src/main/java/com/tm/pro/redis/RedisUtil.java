@@ -6,8 +6,8 @@ import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.tm.pro.utils.NumberUtil;
-import org.tm.pro.utils.StringUtil;
+import org.tm.pro.utils.TmNumberUtil;
+import org.tm.pro.utils.TmStringUtil;
 
 import redis.clients.jedis.JedisPoolConfig;
 import redis.clients.jedis.JedisShardInfo;
@@ -39,15 +39,15 @@ public class RedisUtil {
 
 	private void initialShardedPool() {
 		// 操作超时时间,默认2秒
-		int timeout = NumberUtil.toInt(RedisConfig.getConfigProperty("redis.timeout"), 2000);
+		int timeout = TmNumberUtil.toInt(RedisConfig.getConfigProperty("redis.timeout"), 2000);
 		// jedis池最大连接数总数，默认8
-		int maxTotal = NumberUtil.toInt(RedisConfig.getConfigProperty("redis.jedisPoolConfig.maxTotal"), 8);
+		int maxTotal = TmNumberUtil.toInt(RedisConfig.getConfigProperty("redis.jedisPoolConfig.maxTotal"), 8);
 		// jedis池最大空闲连接数，默认8
-		int maxIdle = NumberUtil.toInt(RedisConfig.getConfigProperty("redis.jedisPoolConfig.maxIdle"), 8);
+		int maxIdle = TmNumberUtil.toInt(RedisConfig.getConfigProperty("redis.jedisPoolConfig.maxIdle"), 8);
 		// jedis池最少空闲连接数
-		int minIdle = NumberUtil.toInt(RedisConfig.getConfigProperty("redis.jedisPoolConfig.minIdle"), 0);
+		int minIdle = TmNumberUtil.toInt(RedisConfig.getConfigProperty("redis.jedisPoolConfig.minIdle"), 0);
 		// jedis池没有对象返回时，最大等待时间单位为毫秒
-		long maxWaitMillis = NumberUtil.toLong(RedisConfig.getConfigProperty("redis.jedisPoolConfig.maxWaitTime"), -1);
+		long maxWaitMillis = TmNumberUtil.toLong(RedisConfig.getConfigProperty("redis.jedisPoolConfig.maxWaitTime"), -1);
 		// 在borrow一个jedis实例时，是否提前进行validate操作
 		boolean testOnBorrow = Boolean
 				.parseBoolean(RedisConfig.getConfigProperty("redis.jedisPoolConfig.testOnBorrow"));
@@ -74,7 +74,7 @@ public class RedisUtil {
 		for (String redisUrl : redisUrls.split(DEFAULT_REDIS_SEPARATOR)) {
 			String[] redisUrlInfo = redisUrl.split(HOST_PORT_SEPARATOR);
 			JedisShardInfo Jedisinfo = new JedisShardInfo(redisUrlInfo[0], Integer.parseInt(redisUrlInfo[1]), timeout);
-			if (StringUtil.isNotBlank(auth)) {
+			if (TmStringUtil.isNotBlank(auth)) {
 				Jedisinfo.setPassword(auth);
 			}
 			shardedPoolList.add(Jedisinfo);

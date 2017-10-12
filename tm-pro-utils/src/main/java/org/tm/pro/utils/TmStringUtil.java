@@ -2,7 +2,7 @@ package org.tm.pro.utils;
 
 import com.xiaoleilu.hutool.lang.Validator;
 
-public class StringUtil {
+public class TmStringUtil {
 	/**
 	 * 验证是否为空<br>
 	 * 对于String类型判定是否为empty(null 或 "")<br>
