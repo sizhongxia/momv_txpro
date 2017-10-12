@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?> 
+<!DOCTYPE generatorConfiguration PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN" 
+"http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd" >
+<generatorConfiguration>
+    <context id="prod">
+    
+        <plugin type="org.mybatis.generator.plugins.CaseInsensitiveLikePlugin" />
+        <plugin type="org.mybatis.generator.plugins.SerializablePlugin" />
+
+        <commentGenerator>
+            <property name="suppressDate" value="true" />
+            <property name="suppressAllComments" value="true" />
+        </commentGenerator>
+
+        <!-- jdbc连接 -->
+        <jdbcConnection driverClass="com.mysql.jdbc.Driver"
+            connectionURL="jdbc:mysql://127.0.0.1:3306/generator" userId="root"
+            password="123456" />
+
+        <javaModelGenerator targetPackage="org.tm.pro.entity" targetProject="src/main/java">
+            <!-- 是否针对string类型的字段在set的时候进行trim调用 -->
+            <property name="trimStrings" value="true" />
+        </javaModelGenerator>
+        
+        <sqlMapGenerator targetPackage="xml" targetProject="src/main/java" />
+        
+        <javaClientGenerator targetPackage="org.tm.pro.mapper" targetProject="src/main/java" type="XMLMAPPER" />
+
+        <table tableName="tb_user" domainObjectName="User"></table>
+
+    </context>
+</generatorConfiguration>
