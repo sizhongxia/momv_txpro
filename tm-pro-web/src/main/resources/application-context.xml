@@ -11,7 +11,8 @@
        http://www.springframework.org/schema/aop
        http://www.springframework.org/schema/aop/spring-aop.xsd ">
 
-	<context:property-placeholder location="classpath:db.properties" />
+	<!-- 只能配置一个property-placeholder，使用通配符加载多个配置文件 -->
+	<context:property-placeholder location="classpath*:conf/*.properties" />
 
 	<context:annotation-config />
 	<!--扫描包进行注入 -->
@@ -46,12 +47,11 @@
 		<property name="breakAfterAcquireFailure" value="${db.breakAfterAcquireFailure}"></property>
 	</bean>
 
-
 	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
 		<property name="dataSource" ref="c3p0DataSource" />
 		<property name="configLocation" value="classpath:mybatis-config.xml" />
 		<property name="typeAliasesPackage" value="org.tm.pro.entity" />
-		<property name="mapperLocations" value="classpath*:**/xml/*Mapper.xml"/>
+		<property name="mapperLocations" value="classpath*:**/xml/*Mapper.xml" />
 		<property name="plugins">
 			<array>
 				<bean class="com.github.pagehelper.PageInterceptor">
@@ -88,9 +88,12 @@
 
 	<tx:advice id="userTxAdvice" transaction-manager="transactionManager">
 		<tx:attributes>
+			<!-- PROPAGATION_REQUIRED: 如果当前没有事务，就新建一个事务，如果已经存在一个事务中，加入到这个事务中。 -->
 			<tx:method name="del*" propagation="REQUIRED" read-only="false"
 				rollback-for="java.lang.Exception" no-rollback-for="java.lang.RuntimeException" />
 			<tx:method name="insert*" propagation="REQUIRED" read-only="false"
+				rollback-for="java.lang.RuntimeException" />
+			<tx:method name="save*" propagation="REQUIRED" read-only="false"
 				rollback-for="java.lang.RuntimeException" />
 			<tx:method name="update*" propagation="REQUIRED" read-only="false"
 				rollback-for="java.lang.Exception" />

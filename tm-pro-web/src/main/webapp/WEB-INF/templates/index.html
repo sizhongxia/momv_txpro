@@ -1,10 +1,19 @@
-<!DOCTYPE html>  
+<!DOCTYPE html>
 <html>
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <title>Insert title here</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>${title}</title>
 </head>
 <body>
-Hello ${name}
+	Hello ${time}
+
+	<form action="${rc.contextPath}/upload-image.do" method="post"
+		enctype="multipart/form-data">
+		<input type="file" name="file" value="" /> <input type="submit"
+			value="Upload" />
+	</form>
+
+	<script type="text/javascript"
+		src="http://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
 </body>
 </html>

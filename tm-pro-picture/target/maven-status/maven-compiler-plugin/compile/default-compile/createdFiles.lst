@@ -1,0 +1,7 @@
+org\tm\pro\picture\zimg\service\ZimgPictureUploadService.class
+org\tm\pro\picture\zimg\config\ZimgConfig.class
+org\tm\pro\picture\zimg\model\ZimgSucInfo.class
+org\tm\pro\picture\PictureUploadService.class
+org\tm\pro\picture\util\HttpClientUtil.class
+org\tm\pro\picture\zimg\model\ZimgUploadRet.class
+org\tm\pro\picture\zimg\model\ZimgFailInfo.class

@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:util="http://www.springframework.org/schema/util"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="
+        http://www.springframework.org/schema/beans
+        classpath:/org/springframework/beans/factory/xml/spring-beans-3.0.xsd
+        http://www.springframework.org/schema/util
+        http://www.springframework.org/schema/util/spring-util-3.0.xsd
+        http://www.springframework.org/schema/context
+        classpath:/org/springframework/context/config/spring-context-3.0.xsd">
+
+	<bean id="realm" class="org.tm.pro.web.realm.TmJDBCRealm" />
+
+	<bean id="lifecycleBeanPostProcessor" class="org.apache.shiro.spring.LifecycleBeanPostProcessor" />
+
+	<bean id="redisManager" class="org.crazycake.shiro.RedisManager">
+		<property name="host" value="${redis.host}" />
+		<property name="port" value="${redis.port}" />
+		<property name="expire" value="${redis.expire}" />
+		<property name="timeout" value="${redis.timeout}" />
+		<property name="password" value="${redis.password}" />
+	</bean>
+
+	<bean id="redisSessionDAO" class="org.crazycake.shiro.RedisSessionDAO">
+		<property name="redisManager" ref="redisManager" />
+	</bean>
+
+	<bean id="sessionManager"
+		class="org.apache.shiro.web.session.mgt.DefaultWebSessionManager">
+		<property name="sessionDAO" ref="redisSessionDAO" />
+		<property name="sessionIdCookie.name" value="tm_sid" />
+		<property name="sessionIdCookie.path" value="/" />
+	</bean>
+
+	<bean id="cacheManager" class="org.crazycake.shiro.RedisCacheManager">
+		<property name="redisManager" ref="redisManager" />
+	</bean>
+
+	<bean id="securityManager" class="org.apache.shiro.web.mgt.DefaultWebSecurityManager">
+		<property name="realm" ref="realm" />
+		<property name="sessionManager" ref="sessionManager" />
+		<property name="cacheManager" ref="cacheManager" />
+	</bean>
+
+	<bean id="systemLogoutFilter" class="org.tm.pro.web.filter.TmSystemLogoutFilter">
+		<property name="redirectUrl" value="/login.do" />
+	</bean>
+
+	<bean id="shiroFilter" class="org.tm.pro.web.shiro.TmShiroFilterFactoryBean">
+		<property name="securityManager" ref="securityManager" />
+		<property name="loginUrl" value="/login.do" />
+		<property name="unauthorizedUrl" value="/ep/401.do" />
+		<property name="filters">
+			<map>
+				<entry key="logout" value-ref="systemLogoutFilter" />
+			</map>
+		</property>
+		<property name="filterChainDefinitions" value="/logout.do=logout" />
+	</bean>
+
+</beans>

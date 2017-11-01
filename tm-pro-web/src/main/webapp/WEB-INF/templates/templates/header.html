@@ -1,0 +1,20 @@
+<header id="header">
+	<div class="header-wrap fn-clear">
+		<h1 id="logo" class="fn-left">
+		  <a href="${rc.contextPath}/manage/index.do" title="系统">系统</a>
+		</h1>
+		<div class="account-box actual fn-right">
+			<div class="name-box">
+				<div class="name">
+					<span>欢迎，<@shiro.principal property="username"/></span>
+				</div>
+			</div>
+			<span class="split"></span>
+			<span class="settings-box">
+				<div class="text">
+						<span class="settings"><a style="color:#666" href="${rc.contextPath}/logout.do">退出</a></span> 
+				</div>
+			</span>
+		</div>
+	</div>
+</header>

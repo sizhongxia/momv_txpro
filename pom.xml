@@ -25,6 +25,9 @@
 		<aspectj.version>1.8.10</aspectj.version>
 		
 		<jackson.version>2.9.0</jackson.version>
+		
+		<shiro.version>1.4.0</shiro.version>
+		
 	</properties>
 
 	<build>

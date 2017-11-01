@@ -5,9 +5,25 @@ import java.io.Serializable;
 public class User implements Serializable {
     private Integer id;
 
-    private String name;
+    private String loginName;
 
-    private String pass;
+    private String loginPass;
+
+    private String username;
+
+    private String gender;
+
+    private String lockedState;
+
+    private String disabledState;
+
+    private Long expiredTime;
+
+    private Long createdTime;
+
+    private Long updatedTime;
+
+    private Long lastLoginTime;
 
     private static final long serialVersionUID = 1L;
 
@@ -19,19 +35,83 @@ public class User implements Serializable {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
+    public String getLoginName() {
+        return loginName;
     }
 
-    public void setName(String name) {
-        this.name = name == null ? null : name.trim();
+    public void setLoginName(String loginName) {
+        this.loginName = loginName == null ? null : loginName.trim();
     }
 
-    public String getPass() {
-        return pass;
+    public String getLoginPass() {
+        return loginPass;
     }
 
-    public void setPass(String pass) {
-        this.pass = pass == null ? null : pass.trim();
+    public void setLoginPass(String loginPass) {
+        this.loginPass = loginPass == null ? null : loginPass.trim();
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username == null ? null : username.trim();
+    }
+
+    public String getGender() {
+        return gender;
+    }
+
+    public void setGender(String gender) {
+        this.gender = gender == null ? null : gender.trim();
+    }
+
+    public String getLockedState() {
+        return lockedState;
+    }
+
+    public void setLockedState(String lockedState) {
+        this.lockedState = lockedState == null ? null : lockedState.trim();
+    }
+
+    public String getDisabledState() {
+        return disabledState;
+    }
+
+    public void setDisabledState(String disabledState) {
+        this.disabledState = disabledState == null ? null : disabledState.trim();
+    }
+
+    public Long getExpiredTime() {
+        return expiredTime;
+    }
+
+    public void setExpiredTime(Long expiredTime) {
+        this.expiredTime = expiredTime;
+    }
+
+    public Long getCreatedTime() {
+        return createdTime;
+    }
+
+    public void setCreatedTime(Long createdTime) {
+        this.createdTime = createdTime;
+    }
+
+    public Long getUpdatedTime() {
+        return updatedTime;
+    }
+
+    public void setUpdatedTime(Long updatedTime) {
+        this.updatedTime = updatedTime;
+    }
+
+    public Long getLastLoginTime() {
+        return lastLoginTime;
+    }
+
+    public void setLastLoginTime(Long lastLoginTime) {
+        this.lastLoginTime = lastLoginTime;
     }
 }

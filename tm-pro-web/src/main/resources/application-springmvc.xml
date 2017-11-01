@@ -9,16 +9,41 @@
        http://www.springframework.org/schema/mvc
        http://www.springframework.org/schema/mvc/spring-mvc.xsd  ">
 
+	<!-- 系统缓存类 -->
+	<bean class="org.tm.pro.web.cache.SystemBaseInfoCacheUtil"></bean>
+	<bean class="org.tm.pro.web.cache.SystemAppEventCacheUtil"></bean>
+	<bean class="org.tm.pro.web.cache.SystemDictCacheUtil"></bean>
+	<bean class="org.tm.pro.web.cache.SystemPermissionWordCacheUtil"></bean>
+	<!-- 图片上传服务 -->
+	<bean id="pictureUploadService" class="org.tm.pro.picture.zimg.service.ZimgPictureUploadService"></bean>
+	
+	<!-- 扫描Controller -->
 	<context:component-scan base-package="org.tm.pro.web.controller" />
-
+	<context:component-scan base-package="org.tm.pro.web.handler" />
 	<!-- 启用Spring mvc 注解 -->
 	<mvc:annotation-driven />
+	<mvc:default-servlet-handler />
 
 	<!-- 配置FreeMarker的模板路径 -->
-	<bean
-		class="org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer">
+	<bean class="org.tm.pro.web.shiro.tag.TmShiroTagConfigurer">
 		<property name="templateLoaderPath" value="WEB-INF/templates/" />
 		<property name="defaultEncoding" value="UTF-8" />
+		<property name="freemarkerSettings">
+			<props>
+				<prop key="template_update_delay">0</prop>
+				<prop key="defaultEncoding">UTF-8</prop>
+				<prop key="url_escaping_charset">UTF-8</prop>
+				<prop key="locale">zh_CN</prop>
+				<prop key="boolean_format">true,false</prop>
+				<prop key="datetime_format">yyyy-MM-dd HH:mm:ss</prop>
+				<prop key="date_format">yyyy-MM-dd</prop>
+				<prop key="time_format">HH:mm:ss</prop>
+				<prop key="number_format">#</prop>
+				<prop key="whitespace_stripping">true</prop>
+				<prop key="auto_import">
+				</prop>
+			</props>
+		</property>
 	</bean>
 
 	<!-- Freemarker视图解析器 -->
@@ -105,6 +130,53 @@
 	<bean id="multipartResolver"
 		class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
 		<property name="maxUploadSize" value="209715200" />
+	</bean>
+
+	<mvc:interceptors>
+		<!-- 记录访问标识拦截器 -->
+		<mvc:interceptor>
+			<mvc:mapping path="/**" />
+			<bean class="org.tm.pro.web.interceptor.UserAgentHandlerInterceptor" />
+		</mvc:interceptor>
+
+		<!-- 用户Token验证拦截器 -->
+		<mvc:interceptor>
+			<mvc:mapping path="/manage/**" />
+			<bean class="org.tm.pro.web.interceptor.AuthHandlerInterceptor" />
+		</mvc:interceptor>
+	</mvc:interceptors>
+
+	<bean
+		class="org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator"
+		depends-on="lifecycleBeanPostProcessor" />
+
+	<bean
+		class="org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor">
+		<property name="securityManager" ref="securityManager" />
+	</bean>
+
+	<!--图片验证码配置 -->
+	<bean id="captchaProducer" class="com.google.code.kaptcha.impl.DefaultKaptcha">
+		<property name="config">
+			<bean class="com.google.code.kaptcha.util.Config">
+				<constructor-arg>
+					<props>
+						<prop key="kaptcha.border">no</prop>
+						<prop key="kaptcha.session.key">kaptcha_code</prop>
+						<prop key="kaptcha.textproducer.font.color">73,73,73</prop>
+						<prop key="kaptcha.noise.color">73,73,73</prop>
+						<prop key="kaptcha.background.clear.from">225,230,246</prop>
+						<prop key="kaptcha.background.clear.to">235,235,235</prop>
+						<prop key="kaptcha.textproducer.font.size">28</prop>
+						<prop key="kaptcha.textproducer.char.space">3</prop>
+						<prop key="kaptcha.image.width">120</prop>
+						<prop key="kaptcha.image.height">42</prop>
+						<prop key="kaptcha.obscurificator.impl">org.tm.pro.web.kaptcha.TmGimpyEngine</prop>
+						<prop key="kaptcha.textproducer.impl">org.tm.pro.web.kaptcha.TmChineseTextProducer</prop>
+					</props>
+				</constructor-arg>
+			</bean>
+		</property>
 	</bean>
 
 </beans>

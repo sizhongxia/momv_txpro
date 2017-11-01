@@ -2,6 +2,8 @@ package com.tm.pro.redis;
 
 import org.junit.Test;
 
+import com.tm.pro.redis.util.RedisUtil;
+
 public class RedisTest {
 
 	@Test

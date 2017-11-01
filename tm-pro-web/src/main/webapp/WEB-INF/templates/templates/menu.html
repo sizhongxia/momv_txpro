@@ -1,0 +1,16 @@
+<div id="nav">
+	<div class="wrap fn-clear">
+		<@shiro.hasPermission name="system_menu_manage_index">
+			<a class="<#if currentMenu == 'manage_index'>active</#if>" href="${rc.contextPath}/manage/index.do"> &nbsp; <span class="lnr lnr-home"></span> 概览 &nbsp; </a>
+		</@shiro.hasPermission>
+		<@shiro.hasPermission name="system_menu_manage_users">
+			<a class="<#if currentMenu == 'manage_users'>active</#if>" href="${rc.contextPath}/manage/users.do"> &nbsp; <span class="lnr lnr-users"></span> 用户 &nbsp; </a>
+		</@shiro.hasPermission>
+		<@shiro.hasPermission name="system_menu_manage_notices">
+			<a class="<#if currentMenu == 'manage_notices'>active</#if>" href="${rc.contextPath}/manage/notices.do"> &nbsp; <span class="lnr lnr-bubble"></span> 消息 &nbsp; </a>
+		</@shiro.hasPermission>
+		<@shiro.hasPermission name="system_menu_manage_system">
+			<a class="<#if currentMenu == 'manage_system'>active</#if>" href="${rc.contextPath}/manage/system.do"> &nbsp; <span class="lnr lnr-screen"></span> 系统 &nbsp; </a> 
+		</@shiro.hasPermission>
+	</div>
+</div>

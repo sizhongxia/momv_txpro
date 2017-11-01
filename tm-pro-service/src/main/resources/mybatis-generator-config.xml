@@ -26,7 +26,39 @@
         
         <javaClientGenerator targetPackage="org.tm.pro.mapper" targetProject="src/main/java" type="XMLMAPPER" />
 
-        <table tableName="tb_user" domainObjectName="User"></table>
+        <table tableName="tb_login_log" domainObjectName="LoginLog">
+        	<generatedKey column="id" sqlStatement="MySql" identity="true"/>
+        </table>
+        <table tableName="tb_news" domainObjectName="News">
+        	<generatedKey column="id" sqlStatement="MySql" identity="true"/>
+        </table>
+        <table tableName="tb_news_keyword" domainObjectName="NewsKeyword">
+        	<generatedKey column="id" sqlStatement="MySql" identity="true"/>
+        </table>
+        <table tableName="tb_role" domainObjectName="Role">
+        	<generatedKey column="id" sqlStatement="MySql" identity="true"/>
+        </table>
+        <table tableName="tb_role_authorization" domainObjectName="RoleAuthorization">
+        	<generatedKey column="id" sqlStatement="MySql" identity="true"/>
+        </table>
+        <table tableName="tb_system_dict" domainObjectName="SystemDict">
+        	<generatedKey column="id" sqlStatement="MySql" identity="true"/>
+        </table>
+        <table tableName="tb_system_dict_item" domainObjectName="SystemDictItem">
+        	<generatedKey column="id" sqlStatement="MySql" identity="true"/>
+        </table>
+        <table tableName="tb_user" domainObjectName="User">
+        	<generatedKey column="id" sqlStatement="MySql" identity="true"/>
+        </table>
+        <table tableName="tb_user_authorization" domainObjectName="UserAuthorization">
+        	<generatedKey column="id" sqlStatement="MySql" identity="true"/>
+        </table>
+        <table tableName="tb_user_contact_info" domainObjectName="UserContactInfo">
+        	<generatedKey column="id" sqlStatement="MySql" identity="true"/>
+        </table>
+        <table tableName="tb_user_role" domainObjectName="UserRole">
+        	<generatedKey column="id" sqlStatement="MySql" identity="true"/>
+        </table>
 
     </context>
 </generatorConfiguration>

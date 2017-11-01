@@ -3,8 +3,16 @@
 <mapper namespace="org.tm.pro.mapper.UserMapper">
   <resultMap id="BaseResultMap" type="org.tm.pro.entity.User">
     <id column="id" jdbcType="INTEGER" property="id" />
-    <result column="name" jdbcType="VARCHAR" property="name" />
-    <result column="pass" jdbcType="VARCHAR" property="pass" />
+    <result column="login_name" jdbcType="VARCHAR" property="loginName" />
+    <result column="login_pass" jdbcType="VARCHAR" property="loginPass" />
+    <result column="username" jdbcType="VARCHAR" property="username" />
+    <result column="gender" jdbcType="VARCHAR" property="gender" />
+    <result column="locked_state" jdbcType="VARCHAR" property="lockedState" />
+    <result column="disabled_state" jdbcType="VARCHAR" property="disabledState" />
+    <result column="expired_time" jdbcType="BIGINT" property="expiredTime" />
+    <result column="created_time" jdbcType="BIGINT" property="createdTime" />
+    <result column="updated_time" jdbcType="BIGINT" property="updatedTime" />
+    <result column="last_login_time" jdbcType="BIGINT" property="lastLoginTime" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <where>
@@ -65,7 +73,8 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    id, name, pass
+    id, login_name, login_pass, username, gender, locked_state, disabled_state, expired_time, 
+    created_time, updated_time, last_login_time
   </sql>
   <select id="selectByExample" parameterType="org.tm.pro.entity.UserExample" resultMap="BaseResultMap">
     select
@@ -98,33 +107,85 @@
     </if>
   </delete>
   <insert id="insert" parameterType="org.tm.pro.entity.User">
-    insert into tb_user (id, name, pass
-      )
-    values (#{id,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, #{pass,jdbcType=VARCHAR}
-      )
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into tb_user (login_name, login_pass, username, 
+      gender, locked_state, disabled_state, 
+      expired_time, created_time, updated_time, 
+      last_login_time)
+    values (#{loginName,jdbcType=VARCHAR}, #{loginPass,jdbcType=VARCHAR}, #{username,jdbcType=VARCHAR}, 
+      #{gender,jdbcType=VARCHAR}, #{lockedState,jdbcType=VARCHAR}, #{disabledState,jdbcType=VARCHAR}, 
+      #{expiredTime,jdbcType=BIGINT}, #{createdTime,jdbcType=BIGINT}, #{updatedTime,jdbcType=BIGINT}, 
+      #{lastLoginTime,jdbcType=BIGINT})
   </insert>
   <insert id="insertSelective" parameterType="org.tm.pro.entity.User">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
     insert into tb_user
     <trim prefix="(" suffix=")" suffixOverrides=",">
-      <if test="id != null">
-        id,
+      <if test="loginName != null">
+        login_name,
       </if>
-      <if test="name != null">
-        name,
+      <if test="loginPass != null">
+        login_pass,
       </if>
-      <if test="pass != null">
-        pass,
+      <if test="username != null">
+        username,
+      </if>
+      <if test="gender != null">
+        gender,
+      </if>
+      <if test="lockedState != null">
+        locked_state,
+      </if>
+      <if test="disabledState != null">
+        disabled_state,
+      </if>
+      <if test="expiredTime != null">
+        expired_time,
+      </if>
+      <if test="createdTime != null">
+        created_time,
+      </if>
+      <if test="updatedTime != null">
+        updated_time,
+      </if>
+      <if test="lastLoginTime != null">
+        last_login_time,
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
-      <if test="id != null">
-        #{id,jdbcType=INTEGER},
+      <if test="loginName != null">
+        #{loginName,jdbcType=VARCHAR},
       </if>
-      <if test="name != null">
-        #{name,jdbcType=VARCHAR},
+      <if test="loginPass != null">
+        #{loginPass,jdbcType=VARCHAR},
       </if>
-      <if test="pass != null">
-        #{pass,jdbcType=VARCHAR},
+      <if test="username != null">
+        #{username,jdbcType=VARCHAR},
+      </if>
+      <if test="gender != null">
+        #{gender,jdbcType=VARCHAR},
+      </if>
+      <if test="lockedState != null">
+        #{lockedState,jdbcType=VARCHAR},
+      </if>
+      <if test="disabledState != null">
+        #{disabledState,jdbcType=VARCHAR},
+      </if>
+      <if test="expiredTime != null">
+        #{expiredTime,jdbcType=BIGINT},
+      </if>
+      <if test="createdTime != null">
+        #{createdTime,jdbcType=BIGINT},
+      </if>
+      <if test="updatedTime != null">
+        #{updatedTime,jdbcType=BIGINT},
+      </if>
+      <if test="lastLoginTime != null">
+        #{lastLoginTime,jdbcType=BIGINT},
       </if>
     </trim>
   </insert>
@@ -140,11 +201,35 @@
       <if test="record.id != null">
         id = #{record.id,jdbcType=INTEGER},
       </if>
-      <if test="record.name != null">
-        name = #{record.name,jdbcType=VARCHAR},
+      <if test="record.loginName != null">
+        login_name = #{record.loginName,jdbcType=VARCHAR},
       </if>
-      <if test="record.pass != null">
-        pass = #{record.pass,jdbcType=VARCHAR},
+      <if test="record.loginPass != null">
+        login_pass = #{record.loginPass,jdbcType=VARCHAR},
+      </if>
+      <if test="record.username != null">
+        username = #{record.username,jdbcType=VARCHAR},
+      </if>
+      <if test="record.gender != null">
+        gender = #{record.gender,jdbcType=VARCHAR},
+      </if>
+      <if test="record.lockedState != null">
+        locked_state = #{record.lockedState,jdbcType=VARCHAR},
+      </if>
+      <if test="record.disabledState != null">
+        disabled_state = #{record.disabledState,jdbcType=VARCHAR},
+      </if>
+      <if test="record.expiredTime != null">
+        expired_time = #{record.expiredTime,jdbcType=BIGINT},
+      </if>
+      <if test="record.createdTime != null">
+        created_time = #{record.createdTime,jdbcType=BIGINT},
+      </if>
+      <if test="record.updatedTime != null">
+        updated_time = #{record.updatedTime,jdbcType=BIGINT},
+      </if>
+      <if test="record.lastLoginTime != null">
+        last_login_time = #{record.lastLoginTime,jdbcType=BIGINT},
       </if>
     </set>
     <if test="_parameter != null">
@@ -154,8 +239,16 @@
   <update id="updateByExample" parameterType="map">
     update tb_user
     set id = #{record.id,jdbcType=INTEGER},
-      name = #{record.name,jdbcType=VARCHAR},
-      pass = #{record.pass,jdbcType=VARCHAR}
+      login_name = #{record.loginName,jdbcType=VARCHAR},
+      login_pass = #{record.loginPass,jdbcType=VARCHAR},
+      username = #{record.username,jdbcType=VARCHAR},
+      gender = #{record.gender,jdbcType=VARCHAR},
+      locked_state = #{record.lockedState,jdbcType=VARCHAR},
+      disabled_state = #{record.disabledState,jdbcType=VARCHAR},
+      expired_time = #{record.expiredTime,jdbcType=BIGINT},
+      created_time = #{record.createdTime,jdbcType=BIGINT},
+      updated_time = #{record.updatedTime,jdbcType=BIGINT},
+      last_login_time = #{record.lastLoginTime,jdbcType=BIGINT}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -163,19 +256,51 @@
   <update id="updateByPrimaryKeySelective" parameterType="org.tm.pro.entity.User">
     update tb_user
     <set>
-      <if test="name != null">
-        name = #{name,jdbcType=VARCHAR},
+      <if test="loginName != null">
+        login_name = #{loginName,jdbcType=VARCHAR},
       </if>
-      <if test="pass != null">
-        pass = #{pass,jdbcType=VARCHAR},
+      <if test="loginPass != null">
+        login_pass = #{loginPass,jdbcType=VARCHAR},
+      </if>
+      <if test="username != null">
+        username = #{username,jdbcType=VARCHAR},
+      </if>
+      <if test="gender != null">
+        gender = #{gender,jdbcType=VARCHAR},
+      </if>
+      <if test="lockedState != null">
+        locked_state = #{lockedState,jdbcType=VARCHAR},
+      </if>
+      <if test="disabledState != null">
+        disabled_state = #{disabledState,jdbcType=VARCHAR},
+      </if>
+      <if test="expiredTime != null">
+        expired_time = #{expiredTime,jdbcType=BIGINT},
+      </if>
+      <if test="createdTime != null">
+        created_time = #{createdTime,jdbcType=BIGINT},
+      </if>
+      <if test="updatedTime != null">
+        updated_time = #{updatedTime,jdbcType=BIGINT},
+      </if>
+      <if test="lastLoginTime != null">
+        last_login_time = #{lastLoginTime,jdbcType=BIGINT},
       </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
   <update id="updateByPrimaryKey" parameterType="org.tm.pro.entity.User">
     update tb_user
-    set name = #{name,jdbcType=VARCHAR},
-      pass = #{pass,jdbcType=VARCHAR}
+    set login_name = #{loginName,jdbcType=VARCHAR},
+      login_pass = #{loginPass,jdbcType=VARCHAR},
+      username = #{username,jdbcType=VARCHAR},
+      gender = #{gender,jdbcType=VARCHAR},
+      locked_state = #{lockedState,jdbcType=VARCHAR},
+      disabled_state = #{disabledState,jdbcType=VARCHAR},
+      expired_time = #{expiredTime,jdbcType=BIGINT},
+      created_time = #{createdTime,jdbcType=BIGINT},
+      updated_time = #{updatedTime,jdbcType=BIGINT},
+      last_login_time = #{lastLoginTime,jdbcType=BIGINT}
     where id = #{id,jdbcType=INTEGER}
   </update>
 </mapper>
