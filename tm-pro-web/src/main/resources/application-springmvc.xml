@@ -10,23 +10,20 @@
        http://www.springframework.org/schema/mvc/spring-mvc.xsd  ">
 
 	<!-- 系统缓存类 -->
-	<bean class="org.tm.pro.web.cache.SystemBaseInfoCacheUtil"></bean>
+	<bean class="org.tm.pro.web.cache.SystemInfoCacheUtil"></bean>
 	<bean class="org.tm.pro.web.cache.SystemAppEventCacheUtil"></bean>
-	<bean class="org.tm.pro.web.cache.SystemDictCacheUtil"></bean>
-	<bean class="org.tm.pro.web.cache.SystemPermissionWordCacheUtil"></bean>
-	<!-- 图片上传服务 -->
-	<bean id="pictureUploadService" class="org.tm.pro.picture.zimg.service.ZimgPictureUploadService"></bean>
 	
 	<!-- 扫描Controller -->
 	<context:component-scan base-package="org.tm.pro.web.controller" />
 	<context:component-scan base-package="org.tm.pro.web.handler" />
+	
 	<!-- 启用Spring mvc 注解 -->
 	<mvc:annotation-driven />
 	<mvc:default-servlet-handler />
 
 	<!-- 配置FreeMarker的模板路径 -->
 	<bean class="org.tm.pro.web.shiro.tag.TmShiroTagConfigurer">
-		<property name="templateLoaderPath" value="WEB-INF/templates/" />
+		<property name="templateLoaderPath" value="WEB-INF/ftl/" />
 		<property name="defaultEncoding" value="UTF-8" />
 		<property name="freemarkerSettings">
 			<props>
@@ -40,8 +37,7 @@
 				<prop key="time_format">HH:mm:ss</prop>
 				<prop key="number_format">#</prop>
 				<prop key="whitespace_stripping">true</prop>
-				<prop key="auto_import">
-				</prop>
+				<prop key="auto_import"></prop>
 			</props>
 		</property>
 	</bean>
@@ -141,7 +137,7 @@
 
 		<!-- 用户Token验证拦截器 -->
 		<mvc:interceptor>
-			<mvc:mapping path="/manage/**" />
+			<mvc:mapping path="/**" />
 			<bean class="org.tm.pro.web.interceptor.AuthHandlerInterceptor" />
 		</mvc:interceptor>
 	</mvc:interceptors>

@@ -224,78 +224,78 @@ public class RoleAuthorizationExample {
             return (Criteria) this;
         }
 
-        public Criteria andPremissionWordIsNull() {
-            addCriterion("premission_word is null");
+        public Criteria andAuthorizationCodeIsNull() {
+            addCriterion("authorization_code is null");
             return (Criteria) this;
         }
 
-        public Criteria andPremissionWordIsNotNull() {
-            addCriterion("premission_word is not null");
+        public Criteria andAuthorizationCodeIsNotNull() {
+            addCriterion("authorization_code is not null");
             return (Criteria) this;
         }
 
-        public Criteria andPremissionWordEqualTo(String value) {
-            addCriterion("premission_word =", value, "premissionWord");
+        public Criteria andAuthorizationCodeEqualTo(String value) {
+            addCriterion("authorization_code =", value, "authorizationCode");
             return (Criteria) this;
         }
 
-        public Criteria andPremissionWordNotEqualTo(String value) {
-            addCriterion("premission_word <>", value, "premissionWord");
+        public Criteria andAuthorizationCodeNotEqualTo(String value) {
+            addCriterion("authorization_code <>", value, "authorizationCode");
             return (Criteria) this;
         }
 
-        public Criteria andPremissionWordGreaterThan(String value) {
-            addCriterion("premission_word >", value, "premissionWord");
+        public Criteria andAuthorizationCodeGreaterThan(String value) {
+            addCriterion("authorization_code >", value, "authorizationCode");
             return (Criteria) this;
         }
 
-        public Criteria andPremissionWordGreaterThanOrEqualTo(String value) {
-            addCriterion("premission_word >=", value, "premissionWord");
+        public Criteria andAuthorizationCodeGreaterThanOrEqualTo(String value) {
+            addCriterion("authorization_code >=", value, "authorizationCode");
             return (Criteria) this;
         }
 
-        public Criteria andPremissionWordLessThan(String value) {
-            addCriterion("premission_word <", value, "premissionWord");
+        public Criteria andAuthorizationCodeLessThan(String value) {
+            addCriterion("authorization_code <", value, "authorizationCode");
             return (Criteria) this;
         }
 
-        public Criteria andPremissionWordLessThanOrEqualTo(String value) {
-            addCriterion("premission_word <=", value, "premissionWord");
+        public Criteria andAuthorizationCodeLessThanOrEqualTo(String value) {
+            addCriterion("authorization_code <=", value, "authorizationCode");
             return (Criteria) this;
         }
 
-        public Criteria andPremissionWordLike(String value) {
-            addCriterion("premission_word like", value, "premissionWord");
+        public Criteria andAuthorizationCodeLike(String value) {
+            addCriterion("authorization_code like", value, "authorizationCode");
             return (Criteria) this;
         }
 
-        public Criteria andPremissionWordNotLike(String value) {
-            addCriterion("premission_word not like", value, "premissionWord");
+        public Criteria andAuthorizationCodeNotLike(String value) {
+            addCriterion("authorization_code not like", value, "authorizationCode");
             return (Criteria) this;
         }
 
-        public Criteria andPremissionWordIn(List<String> values) {
-            addCriterion("premission_word in", values, "premissionWord");
+        public Criteria andAuthorizationCodeIn(List<String> values) {
+            addCriterion("authorization_code in", values, "authorizationCode");
             return (Criteria) this;
         }
 
-        public Criteria andPremissionWordNotIn(List<String> values) {
-            addCriterion("premission_word not in", values, "premissionWord");
+        public Criteria andAuthorizationCodeNotIn(List<String> values) {
+            addCriterion("authorization_code not in", values, "authorizationCode");
             return (Criteria) this;
         }
 
-        public Criteria andPremissionWordBetween(String value1, String value2) {
-            addCriterion("premission_word between", value1, value2, "premissionWord");
+        public Criteria andAuthorizationCodeBetween(String value1, String value2) {
+            addCriterion("authorization_code between", value1, value2, "authorizationCode");
             return (Criteria) this;
         }
 
-        public Criteria andPremissionWordNotBetween(String value1, String value2) {
-            addCriterion("premission_word not between", value1, value2, "premissionWord");
+        public Criteria andAuthorizationCodeNotBetween(String value1, String value2) {
+            addCriterion("authorization_code not between", value1, value2, "authorizationCode");
             return (Criteria) this;
         }
 
-        public Criteria andPremissionWordLikeInsensitive(String value) {
-            addCriterion("upper(premission_word) like", value.toUpperCase(), "premissionWord");
+        public Criteria andAuthorizationCodeLikeInsensitive(String value) {
+            addCriterion("upper(authorization_code) like", value.toUpperCase(), "authorizationCode");
             return (Criteria) this;
         }
     }

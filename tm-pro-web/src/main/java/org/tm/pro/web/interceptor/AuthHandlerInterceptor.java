@@ -5,10 +5,13 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authz.UnauthenticatedException;
+import org.apache.shiro.authz.annotation.RequiresAuthentication;
 import org.apache.shiro.subject.Subject;
+import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 import org.tm.pro.entity.User;
+import org.tm.pro.utils.TmStringUtil;
 
 public class AuthHandlerInterceptor extends HandlerInterceptorAdapter {
 
@@ -20,13 +23,25 @@ public class AuthHandlerInterceptor extends HandlerInterceptorAdapter {
 		// 记录请求开始时间
 		request.setAttribute(StarTimeKey, System.currentTimeMillis());
 
-		Subject subject = SecurityUtils.getSubject();
-		Object user = subject.getPrincipal();
-		if (user == null) {
-			throw new UnauthenticatedException();
+		if (handler.getClass().isAssignableFrom(HandlerMethod.class)) {
+			RequiresAuthentication requiresAuthentication = (RequiresAuthentication) ((HandlerMethod) handler)
+					.getMethodAnnotation(RequiresAuthentication.class);
+			if (requiresAuthentication != null) {
+				Subject subject = SecurityUtils.getSubject();
+				Object user = subject.getPrincipal();
+				if (user == null) {
+					String param = request.getQueryString();
+					String uri = request.getRequestURI();
+					if(TmStringUtil.isNotBlank(param)) {
+						uri = uri + "?" + param;
+					}
+					subject.getSession(true).setAttribute("referer", uri);
+					throw new UnauthenticatedException();
+				}
+				request.setAttribute("userId", ((User) user).getId());
+			}
 		}
-		
-		request.setAttribute("userId", ((User) user).getId());
+
 		return super.preHandle(request, response, handler);
 	}
 

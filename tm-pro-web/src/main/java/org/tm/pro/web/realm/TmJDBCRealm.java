@@ -18,16 +18,16 @@ import org.apache.shiro.authc.UnknownAccountException;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.authz.SimpleAuthorizationInfo;
-import org.apache.shiro.authz.UnauthorizedException;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
 import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.tm.pro.entity.Role;
+import org.tm.pro.entity.SystemInfo;
 import org.tm.pro.entity.User;
 import org.tm.pro.service.UserService;
-import org.tm.pro.utils.TmCollectionUtil;
 import org.tm.pro.utils.TmNumberUtil;
-import org.tm.pro.web.cache.SystemBaseInfoCacheUtil;
+import org.tm.pro.web.cache.SystemInfoCacheUtil;
 import org.tm.pro.web.redis.TmRedisKeys;
 
 import com.tm.pro.redis.util.RedisUtil;
@@ -36,6 +36,8 @@ public class TmJDBCRealm extends AuthorizingRealm {
 
 	@Autowired
 	UserService userService;
+	@Autowired
+	RedisUtil redisUtil;
 
 	/***
 	 * 权限验证判断
@@ -47,13 +49,15 @@ public class TmJDBCRealm extends AuthorizingRealm {
 		Subject subject = SecurityUtils.getSubject();
 		User user = (User) subject.getPrincipal();
 		Integer userId = user.getId();
-		// Console.log("正在设置用户ID:{} 的权限信息.", userId);
-		Set<String> roles = userService.getUserRoles(userId);
-		if (roles == null) {
-			roles = new HashSet<String>();
+
+		Set<Role> roles = userService.getUserRoles(userId);
+		Set<String> roleCodes = new HashSet<String>();
+		if (roles != null) {
+			for (Role role : roles) {
+				roleCodes.add(role.getRoleCode());
+			}
 		}
-		// Console.log("用户角色信息：{}", roles);
-		authorizationInfo.setRoles(roles);
+		authorizationInfo.setRoles(roleCodes);
 
 		Set<String> permissions = userService.getUserAuthorizations(userId);
 		if (permissions == null) {
@@ -98,36 +102,50 @@ public class TmJDBCRealm extends AuthorizingRealm {
 			}
 		}
 
-		RedisUtil redis = RedisUtil.getInstance();
-
-		String loginFailCountKey = TmRedisKeys.LoginFailCountKey + loginName;
-		String failCountStr = redis.get(loginFailCountKey);
-
-		String loginFailCountStr = SystemBaseInfoCacheUtil.systemInfo.get("login_fail_count");
-
-		int failCount = TmNumberUtil.toInt(failCountStr, 0);
-		int loginFailCount = TmNumberUtil.toInt(loginFailCountStr, 0);
-		if (failCount >= loginFailCount) {
-			// 账号登陆失败次数超出范围
-			throw new ExcessiveAttemptsException();
-		}
 		String password = String.valueOf(upToken.getPassword());
-		if (!user.getLoginPass().equals(password)) {
-			String loginFailExpiredStr = SystemBaseInfoCacheUtil.systemInfo.get("login_fail_expired");
-			int loginFailExpired = TmNumberUtil.toInt(loginFailExpiredStr, 0);
-			failCount++;
-			String fc = failCount + "";
-			redis.setex(loginFailCountKey, loginFailExpired, fc);
-			// 登陆密码错误
-			throw new IncorrectCredentialsException();
-		}
-		// 删除Redis登陆失败次数Key
-		redis.del(loginFailCountKey);
+		// 系统配置信息
+		SystemInfo systemInfo = SystemInfoCacheUtil.systemInfo;
+		String loginFailLimit = systemInfo.getLoginFailLimit();
+		// 登录限制
+		if ("Y".equals(loginFailLimit)) {
 
-		Set<String> authorizations = userService.getUserAuthorizations(user.getId());
-		if (TmCollectionUtil.isEmpty(authorizations)) {
-			// 未授权
-			throw new UnauthorizedException();
+			String loginFailCountKey = TmRedisKeys.LoginFailCountKey + loginName;
+			String failCountStr = redisUtil.get(loginFailCountKey);
+
+			int failCount = TmNumberUtil.toInt(failCountStr, 0);
+			int loginFailCount = systemInfo.getLoginFailCount();
+			if (failCount >= loginFailCount) {
+				// 账号登陆失败次数超出范围
+				long ttl = redisUtil.ttl(loginFailCountKey);
+				String time = "";
+				int h = (int) (ttl / 3600);
+				if (h == 0) {
+					int m = (int) (ttl  / 60);
+					if (m == 0) {
+						time = ttl + "秒后";
+					} else {
+						time = m + "分钟后";
+					}
+				} else {
+					time = h + "小时后";
+				}
+				throw new ExcessiveAttemptsException(time);
+			}
+			if (!user.getLoginPass().equals(password)) {
+				int loginFailExpired = systemInfo.getLoginFailExpired();
+				failCount++;
+				String fc = failCount + "";
+				redisUtil.setex(loginFailCountKey, loginFailExpired, fc);
+				// 登陆密码错误
+				throw new IncorrectCredentialsException();
+			}
+			// 删除Redis登陆失败次数Key
+			redisUtil.del(loginFailCountKey);
+		} else {
+			if (!user.getLoginPass().equals(password)) {
+				// 登陆密码错误
+				throw new IncorrectCredentialsException();
+			}
 		}
 
 		user.setLastLoginTime(System.currentTimeMillis());

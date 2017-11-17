@@ -9,6 +9,8 @@ public class UserRole implements Serializable {
 
     private Integer roleId;
 
+    private Integer organizationId;
+
     private static final long serialVersionUID = 1L;
 
     public Integer getId() {
@@ -33,5 +35,13 @@ public class UserRole implements Serializable {
 
     public void setRoleId(Integer roleId) {
         this.roleId = roleId;
+    }
+
+    public Integer getOrganizationId() {
+        return organizationId;
+    }
+
+    public void setOrganizationId(Integer organizationId) {
+        this.organizationId = organizationId;
     }
 }

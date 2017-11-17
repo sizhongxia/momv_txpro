@@ -9,7 +9,8 @@ public class ApiResultMap implements Serializable {
 	private int code;
 	private String msg;
 	private Object data;
-	private List<Object> list;
+	private List<?> list;
+	private int totalPage;
 
 	public boolean isStatus() {
 		return status;
@@ -43,11 +44,11 @@ public class ApiResultMap implements Serializable {
 		this.data = data;
 	}
 
-	public List<Object> getList() {
+	public List<?> getList() {
 		return list;
 	}
 
-	public void setList(List<Object> list) {
+	public void setList(List<?> list) {
 		this.list = list;
 	}
 
@@ -79,6 +80,14 @@ public class ApiResultMap implements Serializable {
 	public ApiResultMap(List<Object> list) {
 		super();
 		this.list = list;
+	}
+
+	public int getTotalPage() {
+		return totalPage;
+	}
+
+	public void setTotalPage(int totalPage) {
+		this.totalPage = totalPage;
 	}
 
 }

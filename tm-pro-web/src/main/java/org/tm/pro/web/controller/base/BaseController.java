@@ -15,6 +15,7 @@ import org.apache.shiro.authz.UnauthorizedException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.tm.pro.enums.TmErrCode;
 import org.tm.pro.utils.TmJsonUtil;
+import org.tm.pro.utils.TmStringUtil;
 import org.tm.pro.web.utils.RequestUtil;
 
 public class BaseController {
@@ -34,7 +35,7 @@ public class BaseController {
 			writeJson(map, response);
 			return null;
 		} else {
-			return "redirect:/login";
+			return "redirect:/login.do";
 		}
 	}
 
@@ -54,7 +55,7 @@ public class BaseController {
 			writeJson(map, response);
 			return null;
 		} else {
-			return "redirect:/ep/401";
+			return "redirect:/un_authorized.do";
 		}
 	}
 
@@ -72,5 +73,20 @@ public class BaseController {
 				out.close();
 			}
 		}
+	}
+
+	@SuppressWarnings("unchecked")
+	public <T> T getParameter(HttpServletRequest request, String fieldName, T defaultValue) {
+		String fieldValue = request.getParameter(fieldName);
+		if (TmStringUtil.isNotBlank(fieldValue)) {
+			if (defaultValue instanceof Integer) {
+				return (T) new Integer(fieldValue);
+			} else if (defaultValue instanceof Long) {
+				return (T) new Long(fieldValue);
+			} else {
+				return (T) defaultValue.getClass().cast(fieldValue);
+			}
+		}
+		return defaultValue;
 	}
 }

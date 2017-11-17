@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<script src="${rc.contextPath}/statics/ui-frame/js/frame-util.js"></script>
+<!-- BootStrap Css -->
+<link href="${rc.contextPath}/statics/ui-frame/css/bootstrap.min14ed.css?v=3.3.6" rel="stylesheet">
+<!-- 字体图标 Css -->
+<link href="${rc.contextPath}/statics/ui-frame/css/font-awesome.min93e3.css?v=4.4.0" rel="stylesheet">
+<!-- 下拉选择插件 -->
+<link href="${rc.contextPath}/statics/ui-frame/css/plugins/chosen/chosen.css" rel="stylesheet">
+<!-- 开关按钮插件 -->
+<link href="${rc.contextPath}/statics/ui-frame/css/plugins/switchery/switchery.css" rel="stylesheet">
+<!-- BootStrap 扩展插件 -->
+<link href="${rc.contextPath}/statics/ui-frame/css/plugins/jasny/jasny-bootstrap.min.css" rel="stylesheet">
+<!-- BootStrap 日期插件 -->
+<link href="${rc.contextPath}/statics/ui-frame/css/plugins/datapicker/datepicker3.css" rel="stylesheet">
+<!-- Checkbox的美化插件 -->
+<link href="${rc.contextPath}/statics/ui-frame/css/plugins/iCheck/custom.css" rel="stylesheet">
+<!-- Css 动画 -->
+<link href="${rc.contextPath}/statics/ui-frame/css/animate.min.css" rel="stylesheet">
+<!-- 基本样式 -->
+<link href="${rc.contextPath}/statics/ui-frame/css/style.min862f.css?v=4.1.0" rel="stylesheet">
+<style type="text/css">
+thead>tr>th, tbody>tr>td{text-align:center}
+.wrapper-content{padding:0}
+.float-e-margins .btn{margin-bottom:0}
+.form-group{margin-bottom:4px!important}
+.input-group{width:100%}
+.ibox{margin-bottom:0px}
+.ilabel{color: #000}
+.required {background-color: red;color: red}
+.required:before {content: "|"}
+.col-xs-6 {margin-top: 10px;}
+</style>
+</head>
+<body class="gray-bg" style="display: none">
+	<div id="app" class="wrapper wrapper-content">
+		<div class="row">
+			<div class="col-sm-12">
+				<div class="ibox float-e-margins">
+					<div class="ibox-content">
+						<div class="row" style="padding: 12px 8px;">
+								<div class="col-xs-12">
+									<p>当前角色：${role.roleName}</p>
+								</div>
+						</div>
+						<#list parentAuthorizations as pa>
+							<div class="row" style="padding: 12px 8px;">
+								<div class="col-xs-2">
+									${pa.moduleName!}
+								</div>
+								<div class="col-xs-10">
+									<p>${pa.moduleIntroduce!}</p>
+									<#list childAuthorizations as ca>
+											<#if ca.pid == pa.id>
+													<label class="checkbox-inline  i-checks">
+					                                    <input name="${ca.authorizationCode!}" <#if ca.checked>checked="checked"</#if> type="checkbox" id="inlineCheckbox${ca.id!}"> ${ca.moduleName!}
+					                                </label>
+											</#if>
+									</#list>
+								</div>
+							</div>
+						</#list>
+						
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- Jquery Dom -->
+	<script src="${rc.contextPath}/statics/ui-frame/js/jquery.min.js?v=2.1.4"></script>
+	<!-- BootStrap Js -->
+	<script src="${rc.contextPath}/statics/ui-frame/js/bootstrap.min.js?v=3.3.6"></script>
+	<!-- Jquery 下拉选择插件 -->
+	<script src="${rc.contextPath}/statics/ui-frame/js/plugins/chosen/chosen.jquery.min.js?v=1.8.2"></script>
+	<!-- BootStrap 扩展插件 -->
+	<script src="${rc.contextPath}/statics/ui-frame/js/plugins/jasny/jasny-bootstrap.min.js"></script>
+    <script src="${rc.contextPath}/statics/ui-frame/js/plugins/datapicker/bootstrap-datepicker.js"></script>
+	<!-- 开关按钮插件 -->
+	<script src="${rc.contextPath}/statics/ui-frame/js/plugins/switchery/switchery.js"></script>
+	<!-- Checkbox的美化插件 -->
+	<script src="${rc.contextPath}/statics/ui-frame/js/plugins/iCheck/icheck.min.js"></script>
+	<!-- 下拉选择 -->
+    <script src="${rc.contextPath}/statics/ui-frame/js/plugins/suggest/bootstrap-suggest.min.js"></script>
+    
+	<!-- Vue MV-VM框架 -->
+	<script src="${rc.contextPath}/statics/ui-frame/js/vue.min.js"></script>
+	<script type="text/javascript">
+	    "use strict";
+	    !function(_d, _w, _j, _v) {
+	   		var data = {
+   				roleId: "${role.id!}"
+	   	    };
+	   		
+	   		var methods = {
+	   		};
+	   		
+	   	    new _v({
+	   	    	el: '#app',
+	   	     	data: data,
+	      		methods: methods,
+	      		mounted: function () { 
+			   	 	var that = this;
+			   	 	$(".i-checks").iCheck({
+			   	 		checkboxClass:"icheckbox_square-green",
+			   	 		radioClass:"iradio_square-green"
+			   	 	}).on('ifChanged', function(event){
+				   	 	var loadingLayer = parent.layer.load(1, {
+				   	 	  shade: [0.1,'#fff']
+				   	 	});
+				   	 	
+	   					_j.post("${rc.contextPath}/role/toAuth.do", {
+				   	 		roleId: that.roleId,
+				   	 		authorizationCode: event.currentTarget.name,
+				   	 		checked: event.currentTarget.checked
+				   	 	}, function(result){
+			    			parent.layer.close(loadingLayer);
+				    		var color = "#8c1717";
+				    		if(result.status) {
+				    			color = "#2f4050";
+				    		}
+				    		parent.layer.msg("<span style='color:" + color + "'><i class='fa fa-info'></i> " + result.msg  +"</span>");
+				    	}, "json");
+				   	 	
+				   	 }); 
+					setTimeout(function(){_j("body").fadeIn(40);});
+			   	}
+	   	    });
+	   	    
+	    }(document, window, jQuery, Vue)
+	</script>
+</body>
+</html>

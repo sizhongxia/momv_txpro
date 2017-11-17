@@ -4,9 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.tm.pro.utils.TmNumberUtil;
+import org.springframework.beans.factory.DisposableBean;
+import org.springframework.beans.factory.InitializingBean;
 import org.tm.pro.utils.TmStringUtil;
 
 import com.tm.pro.redis.RedisExecutor;
@@ -23,69 +22,17 @@ import redis.clients.util.Hashing;
  * 
  * @author sizhongxia
  */
-public class RedisUtil {
-
-	private static final Logger LOGGER = LoggerFactory.getLogger(RedisUtil.class);
-
-	private static final String HOST_PORT_SEPARATOR = ":";
+public class RedisUtil implements InitializingBean, DisposableBean {
 
 	private ShardedJedisPool shardedJedisPool = null;
 
-	private static final RedisUtil INSTANCE = new RedisUtil();
+	private RedisConfig redisConfig;
 
 	private RedisUtil() {
-		LOGGER.debug("init sharded redis pool.");
-		initialShardedPool();
 	}
 
-	private void initialShardedPool() {
-		// 操作超时时间,默认2秒
-		int timeout = TmNumberUtil.toInt(RedisConfig.getConfigProperty("redis.timeout"), 2000);
-		// jedis池最大连接数总数，默认8
-		int maxTotal = TmNumberUtil.toInt(RedisConfig.getConfigProperty("redis.jedisPoolConfig.maxTotal"), 8);
-		// jedis池最大空闲连接数，默认8
-		int maxIdle = TmNumberUtil.toInt(RedisConfig.getConfigProperty("redis.jedisPoolConfig.maxIdle"), 8);
-		// jedis池最少空闲连接数
-		int minIdle = TmNumberUtil.toInt(RedisConfig.getConfigProperty("redis.jedisPoolConfig.minIdle"), 0);
-		// jedis池没有对象返回时，最大等待时间单位为毫秒
-		long maxWaitMillis = TmNumberUtil.toLong(RedisConfig.getConfigProperty("redis.jedisPoolConfig.maxWaitTime"),
-				-1);
-		// 在borrow一个jedis实例时，是否提前进行validate操作
-		boolean testOnBorrow = Boolean
-				.parseBoolean(RedisConfig.getConfigProperty("redis.jedisPoolConfig.testOnBorrow"));
-
-		// 设置jedis连接池配置
-		JedisPoolConfig poolConfig = new JedisPoolConfig();
-		poolConfig.setMaxTotal(maxTotal);
-		poolConfig.setMaxIdle(maxIdle);
-		poolConfig.setMinIdle(minIdle);
-		poolConfig.setMaxWaitMillis(maxWaitMillis);
-		poolConfig.setTestOnBorrow(testOnBorrow);
-
-		// 取得redis的url
-		String redisUrl = RedisConfig.getConfigProperty("redis.jedisPoolConfig.urls");
-		if (redisUrl == null || redisUrl.trim().isEmpty()) {
-			throw new IllegalStateException("the urls of redis is not configured");
-		}
-		LOGGER.info("the urls of redis is {}", redisUrl);
-
-		String auth = RedisConfig.getConfigProperty("redis.jedisPoolConfig.auth");
-
-		// 生成连接池
-		List<JedisShardInfo> shardedPoolList = new ArrayList<JedisShardInfo>();
-		String[] redisUrlInfo = redisUrl.split(HOST_PORT_SEPARATOR);
-		JedisShardInfo Jedisinfo = new JedisShardInfo(redisUrlInfo[0], Integer.parseInt(redisUrlInfo[1]), timeout);
-		if (TmStringUtil.isNotBlank(auth)) {
-			Jedisinfo.setPassword(auth);
-		}
-		shardedPoolList.add(Jedisinfo);
-
-		// 构造池
-		this.shardedJedisPool = new ShardedJedisPool(poolConfig, shardedPoolList, Hashing.MURMUR_HASH);
-	}
-
-	public static RedisUtil getInstance() {
-		return INSTANCE;
+	public void setRedisConfig(RedisConfig redisConfig) {
+		this.redisConfig = redisConfig;
 	}
 
 	/**
@@ -420,7 +367,36 @@ public class RedisUtil {
 	/**
 	 * 销毁连接池
 	 */
+	@Override
 	public void destroy() {
 		this.shardedJedisPool.close();
+	}
+
+	@Override
+	public void afterPropertiesSet() throws Exception {
+		// 设置jedis连接池配置
+		JedisPoolConfig poolConfig = new JedisPoolConfig();
+		poolConfig.setMaxTotal(redisConfig.getMaxTotal());
+		poolConfig.setMaxIdle(redisConfig.getMaxIdle());
+		poolConfig.setMinIdle(redisConfig.getMinIdle());
+		poolConfig.setMaxWaitMillis(redisConfig.getMaxWaitMillis());
+		poolConfig.setTestOnBorrow(redisConfig.isTestOnBorrow());
+
+		// 生成连接池
+		List<JedisShardInfo> shardedPoolList = new ArrayList<JedisShardInfo>();
+
+		String auth = redisConfig.getAuth();
+		String[] urls = redisConfig.getUrls().split(",");
+		JedisShardInfo Jedisinfo = null;
+		for (String url : urls) {
+			String[] urlInfo = url.split(":");
+			Jedisinfo = new JedisShardInfo(urlInfo[0], Integer.parseInt(urlInfo[1]), redisConfig.getTimeout());
+			if (TmStringUtil.isNotBlank(auth)) {
+				Jedisinfo.setPassword(auth);
+			}
+			shardedPoolList.add(Jedisinfo);
+		}
+		// 构造池
+		this.shardedJedisPool = new ShardedJedisPool(poolConfig, shardedPoolList, Hashing.MURMUR_HASH);
 	}
 }

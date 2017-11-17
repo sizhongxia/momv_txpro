@@ -9,8 +9,7 @@ import java.util.ResourceBundle;
  *
  */
 public class SystemConfig {
-	private static final String DEFAULT_SYSTEM_PROPERTIES = "system";
-	private static ResourceBundle SYSTEM_CONFIG = ResourceBundle.getBundle(DEFAULT_SYSTEM_PROPERTIES);
+	private static ResourceBundle SYSTEM_CONFIG = ResourceBundle.getBundle("system");
 
 	public static String getConfigProperty(String key) {
 		return SYSTEM_CONFIG.getString(key);

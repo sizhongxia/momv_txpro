@@ -71,19 +71,19 @@
 
 	<error-page>
 		<error-code>401</error-code>
-		<location>/ep/401.do</location>
+		<location>/un_authorized.do</location>
 	</error-page>
 	<error-page>
 		<error-code>403</error-code>
-		<location>/ep/403.do</location>
+		<location>/page_not_found.do</location>
 	</error-page>
 	<error-page>
 		<error-code>404</error-code>
-		<location>/ep/404.do</location>
+		<location>/page_not_found.do</location>
 	</error-page>
 	<error-page>
 		<error-code>500</error-code>
-		<location>/ep/500.do</location>
+		<location>/server_busy.do</location>
 	</error-page>
 
 	<welcome-file-list>

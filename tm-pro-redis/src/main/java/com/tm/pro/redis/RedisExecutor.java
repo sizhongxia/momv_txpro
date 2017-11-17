@@ -6,3 +6,4 @@ public interface RedisExecutor<T> {
 	// redis执行接口
 	T execute(ShardedJedis jedis);
 }
+

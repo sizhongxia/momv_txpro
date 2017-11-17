@@ -2,23 +2,24 @@ package org.tm.pro.service.impl;
 
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.tm.pro.entity.Role;
 import org.tm.pro.entity.User;
-import org.tm.pro.entity.UserAuthorization;
-import org.tm.pro.entity.UserAuthorizationExample;
 import org.tm.pro.entity.UserExample;
+import org.tm.pro.entity.UserExample.Criteria;
 import org.tm.pro.entity.UserRole;
 import org.tm.pro.entity.UserRoleExample;
 import org.tm.pro.mapper.RoleMapper;
-import org.tm.pro.mapper.UserAuthorizationMapper;
 import org.tm.pro.mapper.UserMapper;
 import org.tm.pro.mapper.UserRoleMapper;
 import org.tm.pro.service.RoleService;
 import org.tm.pro.service.UserService;
+import org.tm.pro.utils.TmMapUtil;
+import org.tm.pro.utils.TmStringUtil;
 
 import com.github.pagehelper.PageHelper;
 
@@ -33,8 +34,6 @@ public class UserServiceImpl implements UserService {
 	UserRoleMapper userRoleMapper;
 	@Autowired
 	RoleMapper roleMapper;
-	@Autowired
-	UserAuthorizationMapper userAuthorizationMapper;
 
 	@Override
 	public User getById(Integer id) {
@@ -54,51 +53,84 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
+	public long getUserCount(Map<String, Object> params) {
+		UserExample example = initParams(params);
+		return userMapper.countByExample(example);
+	}
+
+	@Override
+	public List<User> getUserList(Map<String, Object> params, int page, int size) {
+		UserExample example = initParams(params);
+		example.setOrderByClause("id asc");
+		PageHelper.startPage(page, size);
+		return userMapper.selectByExample(example);
+	}
+
+	private UserExample initParams(Map<String, Object> params) {
+		UserExample example = new UserExample();
+
+		Criteria criteria = example.createCriteria();
+
+		String loginName = TmMapUtil.getMapVal(params, "loginName", "");
+		if (TmStringUtil.isNotBlank(loginName)) {
+			criteria.andLoginNameLike("%" + loginName + "%");
+		}
+		String userName = TmMapUtil.getMapVal(params, "userName", "");
+		if (TmStringUtil.isNotBlank(userName)) {
+			criteria.andUsernameLike("%" + userName + "%");
+		}
+		String phone = TmMapUtil.getMapVal(params, "phone", "");
+		if (TmStringUtil.isNotBlank(phone)) {
+			criteria.andPhoneLike("%" + phone + "%");
+		}
+		Integer organizationId = TmMapUtil.getMapVal(params, "organizationId", 0);
+		if (organizationId > 0) {
+			criteria.andOrganizationIdEqualTo(organizationId);
+		}
+		return example;
+	}
+
+	@Override
 	public int insert(User record) {
 		return userMapper.insertSelective(record);
 	}
 
 	@Override
 	public Set<String> getUserAuthorizations(Integer id) {
-		UserRoleExample example = new UserRoleExample();
-		example.createCriteria().andUserIdEqualTo(id);
-		List<UserRole> userRoles = userRoleMapper.selectByExample(example);
-
-		Set<String> primessionWords = new HashSet<>();
-
+		Set<String> authorizationCodes = new HashSet<>();
+		Set<Role> userRoles = getUserRoles(id);
 		if (userRoles != null && !userRoles.isEmpty()) {
 			Set<String> _items = null;
-			for (UserRole userRole : userRoles) {
-				_items = roleService.getRoleAuthorizations(userRole.getRoleId());
+			for (Role role : userRoles) {
+				_items = roleService.getRoleAuthorizations(role.getId());
 				if (_items != null && !_items.isEmpty()) {
-					primessionWords.addAll(_items);
+					authorizationCodes.addAll(_items);
 				}
 			}
 		}
-
-		UserAuthorizationExample example2 = new UserAuthorizationExample();
-		example2.createCriteria().andUserIdEqualTo(id);
-		List<UserAuthorization> authorizations = userAuthorizationMapper.selectByExample(example2);
-		if (authorizations != null && !authorizations.isEmpty()) {
-			for (UserAuthorization userAuthorization : authorizations) {
-				primessionWords.add(userAuthorization.getPremissionWord());
-			}
-		}
-
-		return primessionWords;
+		return authorizationCodes;
 	}
 
+	/**
+	 * 
+	 */
 	@Override
-	public Set<String> getUserRoles(Integer id) {
+	public Set<Role> getUserRoles(Integer id) {
 		UserRoleExample example = new UserRoleExample();
-		example.createCriteria().andUserIdEqualTo(id);
+		Set<Role> roles = new HashSet<>();
+
+		User user = getById(id);
+		if (user == null || user.getOrganizationId() == 0) {
+			return roles;
+		}
+		example.createCriteria().andUserIdEqualTo(id).andOrganizationIdEqualTo(user.getOrganizationId());
+
 		List<UserRole> userRoles = userRoleMapper.selectByExample(example);
-		Set<String> roles = new HashSet<>();
 		if (userRoles != null && !userRoles.isEmpty()) {
 			for (UserRole userRole : userRoles) {
 				Role role = roleService.getById(userRole.getRoleId());
-				if (role != null) {
-					roles.add(role.getRoleCode());
+				if (role != null && role.getUsingState().equals("Y")) {
+					roles.add(role);
 				}
 			}
 		}
@@ -106,7 +138,36 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public void update(User user) {
-		userMapper.updateByPrimaryKey(user);
+	public int update(User user) {
+		return userMapper.updateByPrimaryKey(user);
+	}
+
+	@Override
+	public int delete(User user) {
+		return userMapper.deleteByPrimaryKey(user.getId());
+	}
+
+	@Override
+	public int removeRole(Integer userId, Integer roleId) {
+		UserRoleExample example = new UserRoleExample();
+		example.createCriteria().andUserIdEqualTo(userId).andRoleIdEqualTo(roleId);
+		return userRoleMapper.deleteByExample(example);
+	}
+
+	@Override
+	public int authRole(Integer userId, Integer roleId, Integer organizationId) {
+		UserRole record = new UserRole();
+		record.setUserId(userId);
+		record.setRoleId(roleId);
+		record.setOrganizationId(organizationId);
+		return userRoleMapper.insert(record);
+	}
+
+	@Override
+	public boolean checkUserRole(Integer userId, Integer roleId, Integer organizationId) {
+		UserRoleExample example = new UserRoleExample();
+		example.createCriteria().andUserIdEqualTo(userId).andRoleIdEqualTo(roleId)
+				.andOrganizationIdEqualTo(organizationId);
+		return userRoleMapper.countByExample(example) > 0;
 	}
 }

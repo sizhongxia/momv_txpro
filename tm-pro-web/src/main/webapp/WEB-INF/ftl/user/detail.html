@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<script src="${rc.contextPath}/statics/ui-frame/js/frame-util.js"></script>
+<!-- BootStrap Css -->
+<link href="${rc.contextPath}/statics/ui-frame/css/bootstrap.min14ed.css?v=3.3.6" rel="stylesheet">
+<!-- 字体图标 Css -->
+<link href="${rc.contextPath}/statics/ui-frame/css/font-awesome.min93e3.css?v=4.4.0" rel="stylesheet">
+<!-- 下拉选择插件 -->
+<link href="${rc.contextPath}/statics/ui-frame/css/plugins/chosen/chosen.css" rel="stylesheet">
+<!-- 开关按钮插件 -->
+<link href="${rc.contextPath}/statics/ui-frame/css/plugins/switchery/switchery.css" rel="stylesheet">
+<!-- BootStrap 扩展插件 -->
+<link href="${rc.contextPath}/statics/ui-frame/css/plugins/jasny/jasny-bootstrap.min.css" rel="stylesheet">
+<!-- BootStrap 日期插件 -->
+<link href="${rc.contextPath}/statics/ui-frame/css/plugins/datapicker/datepicker3.css" rel="stylesheet">
+<!-- Checkbox的美化插件 -->
+<link href="${rc.contextPath}/statics/ui-frame/css/plugins/iCheck/custom.css" rel="stylesheet">
+<!-- Css 动画 -->
+<link href="${rc.contextPath}/statics/ui-frame/css/animate.min.css" rel="stylesheet">
+<!-- 基本样式 -->
+<link href="${rc.contextPath}/statics/ui-frame/css/style.min862f.css?v=4.1.0" rel="stylesheet">
+<style type="text/css">
+thead>tr>th, tbody>tr>td{text-align:center}
+.wrapper-content{padding:0}
+.float-e-margins .btn{margin-bottom:0}
+.form-group{margin-bottom:4px!important}
+.input-group{width:100%}
+.ibox{margin-bottom:0px}
+.ilabel{color: #000}
+.required {background-color: red;color: red}
+.required:before {content: "|"}
+.col-xs-6 {margin-top: 10px;}
+</style>
+</head>
+<body class="gray-bg" style="display: none">
+	<div id="app" class="wrapper wrapper-content">
+		<div class="row">
+			
+			<div class="col-sm-12">
+				<div class="ibox float-e-margins">
+					<div class="ibox-content">
+						<div class="row">
+							<div class="col-xs-6">
+								<div class="form-group">
+		                            <div class="col-xs-12">
+		                                <span class="help-block m-b-none">
+		                                	<span class="ilabel">&nbsp;名称</span>
+		                                </span>
+		                                <input v-model="formObj.username" readonly="readonly" type="text" placeholder="请输入用户名称" class="form-control">
+		                            </div>
+		                        </div>
+							</div>
+							
+							<div class="col-xs-6">
+								<div class="form-group">
+		                            <div class="col-xs-12">
+		                                <span class="help-block m-b-none">
+		                                	<span class="ilabel">&nbsp;登录名</span>
+		                                </span>
+		                                <input v-model="formObj.loginName" type="text" readonly="readonly" placeholder="请输入用户登录账号" class="form-control">
+		                            </div>
+		                        </div>
+							</div>
+							
+							<div class="col-xs-6">
+								<div class="form-group">
+		                            <div class="col-xs-12">
+		                                <span class="help-block m-b-none">
+		                                	<span class="ilabel">&nbsp;密码</span>
+		                                </span>
+		                                <input v-model="formObj.loginPass" readonly="readonly" type="text" placeholder="请输入用户登录密码" class="form-control">
+		                            </div>
+		                        </div>
+							</div>
+							
+							<div class="col-xs-6">
+								<div class="form-group">
+		                            <div class="col-xs-12">
+		                                <span class="help-block m-b-none">
+		                                	<span class="ilabel">&nbsp;组织</span>
+		                                </span>
+		                                <div class="input-group">
+			                                <select disabled="disabled" v-model="formObj.organizationId" data-placeholder="组织" class="form-control">
+													<option value="0">选择一个组织</option>
+													<#list organizations as organization>
+														<option value="${organization.id!}">${organization.organizationName!}</option>
+													</#list>
+											</select>
+										</div>
+		                            </div>
+		                        </div>
+							</div>
+							
+							<div class="col-xs-6">
+								<div class="form-group">
+		                            <div class="col-xs-12">
+		                                <span class="help-block m-b-none">
+		                                	<span class="ilabel">&nbsp;手机号</span>
+		                                </span>
+		                                <input v-model="formObj.phone"  readonly="readonly" type="text" placeholder="请输入用户手机号" class="form-control">
+		                            </div>
+		                        </div>
+							</div>
+							
+							<div class="col-xs-6">
+								<div class="form-group">
+		                            <div class="col-xs-12">
+		                                <span class="help-block m-b-none">
+		                                	<span class="ilabel">&nbsp;性别</span>
+		                                </span>
+		                                <div class="input-group">
+			                                <select v-model="formObj.gender" disabled="disabled" data-placeholder="请选择用户性别" class="form-control">
+													<option value="M">男</option>
+													<option value="F">女</option>
+											</select>
+										</div>
+		                            </div>
+		                        </div>
+							</div>
+							
+							<div class="col-xs-6">
+								<div class="form-group">
+		                            <div class="col-xs-12">
+		                                <span class="help-block m-b-none">
+		                                	<span class="ilabel">&nbsp;固定电话</span>
+		                                </span>
+		                                <input v-model="formObj.telephone" disabled="disabled" type="text" placeholder="请输入用户固定电话" class="form-control">
+		                            </div>
+		                        </div>
+							</div>
+							
+							<div class="col-xs-6">
+								<div class="form-group">
+		                            <div class="col-xs-12">
+		                                <span class="help-block m-b-none">
+		                                	<span class="ilabel">&nbsp;邮箱</span>
+		                                </span>
+		                                <input v-model="formObj.email" disabled="disabled" type="text" placeholder="请输入用户电子邮箱" class="form-control">
+		                            </div>
+		                        </div>
+							</div>
+							
+							<div class="col-xs-6">
+								<div class="form-group">
+		                            <div class="col-xs-12">
+		                                <span class="help-block m-b-none">
+		                                	<span class="ilabel">&nbsp;禁用状态</span>
+		                                </span>
+		                                <div class="input-group">
+			                                <select v-model="formObj.disabledState" disabled="disabled" class="form-control">
+													<option value="N">正常</option>
+													<option value="D">禁用</option>
+											</select>
+										</div>
+		                            </div>
+		                        </div>
+							</div>
+							
+							<div class="col-xs-6">
+								<div class="form-group">
+		                            <div class="col-xs-12">
+		                                <span class="help-block m-b-none">
+		                                	<span class="ilabel">&nbsp;锁定状态</span>
+		                                </span>
+		                                <div class="input-group">
+			                                <select v-model="formObj.lockedState" disabled="disabled" class="form-control">
+													<option value="N">正常</option>
+													<option value="L">锁定</option>
+											</select>
+										</div>
+		                            </div>
+		                        </div>
+							</div>
+							
+							<div class="col-xs-6">
+								<div class="form-group">
+		                            <div class="col-xs-12">
+		                                <span class="help-block m-b-none">
+		                                	<span class="ilabel">&nbsp;账号过期日期 </span>
+		                                </span>
+			                            <div class="form-group">
+				                            <div class="input-group date">
+				                                <input readonly="readonly" v-model="formObj.expiredTime" type="text" class="form-control">
+				                            </div>
+				                        </div>
+		                            </div>
+		                        </div>
+							</div>
+							
+							<div class="col-xs-6">
+								<div class="form-group">
+		                            <div class="col-xs-12">
+		                                <span class="help-block m-b-none">
+		                                	<span class="ilabel">&nbsp;创建时间</span>
+		                                </span>
+			                            <div class="form-group">
+				                            <div class="input-group date">
+				                                <input readonly="readonly" v-model="formObj.createdTime" type="text" class="form-control">
+				                            </div>
+				                        </div>
+		                            </div>
+		                        </div>
+							</div>
+							
+							<div class="col-xs-6">
+								<div class="form-group">
+		                            <div class="col-xs-12">
+		                                <span class="help-block m-b-none">
+		                                	<span class="ilabel">&nbsp;最后修改时间</span>
+		                                </span>
+			                            <div class="form-group">
+				                            <div class="input-group date">
+				                                <input readonly="readonly" v-model="formObj.updatedTime" type="text" class="form-control">
+				                            </div>
+				                        </div>
+		                            </div>
+		                        </div>
+							</div>
+							
+							<div class="col-xs-6">
+								<div class="form-group">
+		                            <div class="col-xs-12">
+		                                <span class="help-block m-b-none">
+		                                	<span class="ilabel">&nbsp;最后登录时间</span>
+		                                </span>
+			                            <div class="form-group">
+				                            <div class="input-group date">
+				                                <input readonly="readonly" v-model="formObj.lastLoginTime" type="text" class="form-control">
+				                            </div>
+				                        </div>
+		                            </div>
+		                        </div>
+							</div>
+							
+						</div>
+					</div>
+				</div>
+				
+				
+			</div>
+		</div>
+	</div>
+	<!-- Jquery Dom -->
+	<script src="${rc.contextPath}/statics/ui-frame/js/jquery.min.js?v=2.1.4"></script>
+	<!-- BootStrap Js -->
+	<script src="${rc.contextPath}/statics/ui-frame/js/bootstrap.min.js?v=3.3.6"></script>
+	<!-- Jquery 下拉选择插件 -->
+	<script src="${rc.contextPath}/statics/ui-frame/js/plugins/chosen/chosen.jquery.min.js?v=1.8.2"></script>
+	<!-- BootStrap 扩展插件 -->
+	<script src="${rc.contextPath}/statics/ui-frame/js/plugins/jasny/jasny-bootstrap.min.js"></script>
+    <script src="${rc.contextPath}/statics/ui-frame/js/plugins/datapicker/bootstrap-datepicker.js"></script>
+	<!-- 开关按钮插件 -->
+	<script src="${rc.contextPath}/statics/ui-frame/js/plugins/switchery/switchery.js"></script>
+	<!-- Checkbox的美化插件 -->
+	<script src="${rc.contextPath}/statics/ui-frame/js/plugins/iCheck/icheck.min.js"></script>
+	<!-- 下拉选择 -->
+    <script src="${rc.contextPath}/statics/ui-frame/js/plugins/suggest/bootstrap-suggest.min.js"></script>
+    
+	<!-- Vue MV-VM框架 -->
+	<script src="${rc.contextPath}/statics/ui-frame/js/vue.min.js"></script>
+	<script type="text/javascript">
+	    "use strict";
+	    !function(_d, _w, _j, _v) {
+	   		var data = {
+	   			formObj: {
+	    			id: "${user.id!}",
+	    			loginName: "${user.loginName!}",
+	   				loginPass: "${user.loginPass!}",
+	   				username: "${user.username!}",
+	   				organizationId: "${user.organizationId!}",
+	   				gender: "${user.gender!}",
+	   				email: "${user.email!}",
+	   				phone: "${user.phone!}",
+	   				telephone: "${user.telephone!}",
+	   				lockedState: "${user.lockedState!}",
+	   				disabledState: "${user.disabledState!}",
+	   				expiredTime: "${expiredTime!}",
+	   				createdTime: "${createdTime!}",
+	   				updatedTime: "${updatedTime!}",
+	   				lastLoginTime: "${lastLoginTime!}"
+	   			}
+	   	    };
+	   		
+	   		var methods = {
+	   		};
+	   		
+	   	    new _v({
+	   	    	el: '#app',
+	   	     	data: data,
+	      		methods: methods,
+	      		mounted: function () { 
+			   	 	var that = this;
+					setTimeout(function(){_j("body").fadeIn(40);});
+			   	}
+	   	    });
+	   	    
+	    }(document, window, jQuery, Vue)
+	</script>
+</body>
+</html>

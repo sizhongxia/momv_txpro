@@ -5,6 +5,8 @@ import java.io.Serializable;
 public class Role implements Serializable {
     private Integer id;
 
+    private Integer organizationId;
+
     private String roleName;
 
     private String roleCode;
@@ -21,6 +23,14 @@ public class Role implements Serializable {
 
     public void setId(Integer id) {
         this.id = id;
+    }
+
+    public Integer getOrganizationId() {
+        return organizationId;
+    }
+
+    public void setOrganizationId(Integer organizationId) {
+        this.organizationId = organizationId;
     }
 
     public String getRoleName() {

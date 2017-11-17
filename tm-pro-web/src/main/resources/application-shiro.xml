@@ -19,10 +19,14 @@
 		<property name="port" value="${redis.port}" />
 		<property name="expire" value="${redis.expire}" />
 		<property name="timeout" value="${redis.timeout}" />
-		<property name="password" value="${redis.password}" />
+		<property name="password" value="${redis.auth}" />
 	</bean>
 
+	<!-- 自定义ID生成 -->
+	<bean id="sessionIdGenerator" class="org.tm.pro.web.shiro.TmSessionIdGenerator"/>
+	
 	<bean id="redisSessionDAO" class="org.crazycake.shiro.RedisSessionDAO">
+		<property name="sessionIdGenerator" ref="sessionIdGenerator"></property>
 		<property name="redisManager" ref="redisManager" />
 	</bean>
 
@@ -50,7 +54,7 @@
 	<bean id="shiroFilter" class="org.tm.pro.web.shiro.TmShiroFilterFactoryBean">
 		<property name="securityManager" ref="securityManager" />
 		<property name="loginUrl" value="/login.do" />
-		<property name="unauthorizedUrl" value="/ep/401.do" />
+		<property name="unauthorizedUrl" value="/un_authorized.do" />
 		<property name="filters">
 			<map>
 				<entry key="logout" value-ref="systemLogoutFilter" />

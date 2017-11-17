@@ -4,7 +4,7 @@
   <resultMap id="BaseResultMap" type="org.tm.pro.entity.RoleAuthorization">
     <id column="id" jdbcType="INTEGER" property="id" />
     <result column="role_id" jdbcType="INTEGER" property="roleId" />
-    <result column="premission_word" jdbcType="VARCHAR" property="premissionWord" />
+    <result column="authorization_code" jdbcType="VARCHAR" property="authorizationCode" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <where>
@@ -65,7 +65,7 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    id, role_id, premission_word
+    id, role_id, authorization_code
   </sql>
   <select id="selectByExample" parameterType="org.tm.pro.entity.RoleAuthorizationExample" resultMap="BaseResultMap">
     select
@@ -101,8 +101,8 @@
     <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
       SELECT LAST_INSERT_ID()
     </selectKey>
-    insert into tb_role_authorization (role_id, premission_word)
-    values (#{roleId,jdbcType=INTEGER}, #{premissionWord,jdbcType=VARCHAR})
+    insert into tb_role_authorization (role_id, authorization_code)
+    values (#{roleId,jdbcType=INTEGER}, #{authorizationCode,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="org.tm.pro.entity.RoleAuthorization">
     <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
@@ -113,16 +113,16 @@
       <if test="roleId != null">
         role_id,
       </if>
-      <if test="premissionWord != null">
-        premission_word,
+      <if test="authorizationCode != null">
+        authorization_code,
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="roleId != null">
         #{roleId,jdbcType=INTEGER},
       </if>
-      <if test="premissionWord != null">
-        #{premissionWord,jdbcType=VARCHAR},
+      <if test="authorizationCode != null">
+        #{authorizationCode,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
@@ -141,8 +141,8 @@
       <if test="record.roleId != null">
         role_id = #{record.roleId,jdbcType=INTEGER},
       </if>
-      <if test="record.premissionWord != null">
-        premission_word = #{record.premissionWord,jdbcType=VARCHAR},
+      <if test="record.authorizationCode != null">
+        authorization_code = #{record.authorizationCode,jdbcType=VARCHAR},
       </if>
     </set>
     <if test="_parameter != null">
@@ -153,7 +153,7 @@
     update tb_role_authorization
     set id = #{record.id,jdbcType=INTEGER},
       role_id = #{record.roleId,jdbcType=INTEGER},
-      premission_word = #{record.premissionWord,jdbcType=VARCHAR}
+      authorization_code = #{record.authorizationCode,jdbcType=VARCHAR}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -164,8 +164,8 @@
       <if test="roleId != null">
         role_id = #{roleId,jdbcType=INTEGER},
       </if>
-      <if test="premissionWord != null">
-        premission_word = #{premissionWord,jdbcType=VARCHAR},
+      <if test="authorizationCode != null">
+        authorization_code = #{authorizationCode,jdbcType=VARCHAR},
       </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
@@ -173,7 +173,7 @@
   <update id="updateByPrimaryKey" parameterType="org.tm.pro.entity.RoleAuthorization">
     update tb_role_authorization
     set role_id = #{roleId,jdbcType=INTEGER},
-      premission_word = #{premissionWord,jdbcType=VARCHAR}
+      authorization_code = #{authorizationCode,jdbcType=VARCHAR}
     where id = #{id,jdbcType=INTEGER}
   </update>
 </mapper>

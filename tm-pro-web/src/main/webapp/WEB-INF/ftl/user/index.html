@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- BootStrap Css -->
+<link href="${rc.contextPath}/statics/ui-frame/css/bootstrap.min14ed.css?v=3.3.6" rel="stylesheet">
+<!-- 字体图标 Css -->
+<link href="${rc.contextPath}/statics/ui-frame/css/font-awesome.min93e3.css?v=4.4.0" rel="stylesheet">
+<!-- 下拉选择插件 -->
+<link href="${rc.contextPath}/statics/ui-frame/css/plugins/chosen/chosen.css" rel="stylesheet">
+<!-- 开关按钮插件 -->
+<link href="${rc.contextPath}/statics/ui-frame/css/plugins/switchery/switchery.css" rel="stylesheet">
+<!-- BootStrap 扩展插件 -->
+<link href="${rc.contextPath}/statics/ui-frame/css/plugins/jasny/jasny-bootstrap.min.css" rel="stylesheet">
+<!-- BootStrap 日期插件 -->
+<link href="${rc.contextPath}/statics/ui-frame/css/plugins/datapicker/datepicker3.css" rel="stylesheet">
+<!-- Checkbox的美化插件 -->
+<link href="${rc.contextPath}/statics/ui-frame/css/plugins/iCheck/custom.css" rel="stylesheet">
+<!-- Css 动画 -->
+<link href="${rc.contextPath}/statics/ui-frame/css/animate.min.css" rel="stylesheet">
+<!-- 基本样式 -->
+<link href="${rc.contextPath}/statics/ui-frame/css/style.min862f.css?v=4.1.0" rel="stylesheet">
+<style type="text/css">
+thead>tr>th, tbody>tr>td{text-align:center}
+.wrapper-content{padding:0}
+.ui-pagination-container{height:34px;line-height:34px}
+.ui-pagination-container .ui-pagination-page-item{font-size:14px;padding:4px 10px;background:#fff;border:1px solid #c5b7b7;color:#888;margin:0 3px;text-decoration:none}
+.ui-pagination-container .ui-pagination-page-item:hover{border-color:#568dbd;color:#568dbd;text-decoration:none}
+.ui-pagination-container .ui-pagination-page-item.active{background:#568dbd;border-color:#568dbd;color:#fff;cursor:default}
+.float-e-margins .btn{margin-bottom:0}
+.form-group{margin-bottom:4px!important;}
+.input-group{width: 100%;}
+.ibox{margin-bottom:2px}
+.layui-layer-setwin .layui-layer-close{background-position:2px -40px;cursor:pointer}
+.green{color:green;}
+.red{color:red;}
+</style>
+</head>
+<body class="gray-bg" style="display: none">
+	<div id="app" class="wrapper wrapper-content">
+		<div class="row">
+			<div class="col-sm-12">
+
+				<div class="ibox float-e-margins">
+					<div class="ibox-title">
+						<h5>查询条件面板</h5>
+						<div class="ibox-tools">
+							<a @click="add($event)" style="color:#273a4a"> <i class="fa fa-plus"></i> 新增</a>
+						</div>
+					</div>
+					<div class="ibox-content">
+					
+						<div class="row">
+							<div class="col-sm-2 col-xs-3">
+								<div class="form-group">
+	                                <input v-model="searchParm.userName" placeholder="按姓名查询" type="text" class="form-control">
+		                        </div>
+							</div>
+							<div class="col-sm-2 col-xs-3">
+								<div class="form-group">
+	                                <input v-model="searchParm.loginName" placeholder="按登录名查询" type="text" class="form-control">
+		                        </div>
+							</div>
+							<div class="col-sm-2 col-xs-3">
+								<div class="form-group">
+	                                <input v-model="searchParm.phone" placeholder="按手机号查询" type="text" class="form-control">
+		                        </div>
+							</div>
+							<div class="col-sm-2 col-xs-3">
+								<div class="form-group">
+	                                <div class="input-group">
+										<select v-model="searchParm.organizationId" class="form-control">
+											<option value="0" selected="selected" disabled="disabled">选择组织查询</option>
+											<#list organizations as organization>
+												<option value="${organization.id!}">${organization.organizationName!}</option>
+											</#list>
+										</select>
+		                            </div>
+		                        </div>
+							</div>
+							
+							<div class="col-sm-2 col-xs-3">
+								<div class="form-group">
+	                                <div class="input-group">
+										<button class="btn btn-link" type="button" @click="zxClick('search', $event)"><i class="fa fa-search"></i> 查询</button>
+										<button class="btn btn-link" type="button" @click="zxClick('clear', $event)">清空</button>
+		                            </div>
+		                        </div>
+							</div>
+						</div>
+					
+					</div>
+				</div>
+				<div class="ibox float-e-margins">
+					<div class="ibox-content" style="padding-left: 0;padding-right: 0;">
+						<div class="fixed-table-body">
+							<table class="table table-hover table-condensed">
+								<thead>
+									<tr>
+										<th>
+											<div class="th-inner">用户ID<span class="tooltip-box"><i data-toggle="tooltip" data-placement="bottom" title="系统自动生成" class="fa fa-info-circle"></i></span></div>
+										</th>
+										<th><div class="th-inner">姓名</div></th>
+										<th><div class="th-inner">所在组织ID</div></th>
+										<th><div class="th-inner">登录名</div></th>
+										<th><div class="th-inner">性别</div></th>
+										<th><div class="th-inner">手机号</div></th>
+										<th><div class="th-inner">禁用状态</div></th>
+										<th><div class="th-inner">锁定状态</div></th>
+										<th><div class="th-inner">过期时间</div></th>
+										<th><div class="th-inner">最后登录时间</div></th>
+										<th><div class="th-inner">操作</div></th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr v-for="(item, index) in datas">
+										<td>{{item.id}}</td>
+										<td>{{item.username}}</td>
+										<td>{{item.organizationId}}</td>
+										<td>{{item.loginName}}</td>
+										<td>
+											<span v-if="item.gender == 'M'">男</span>
+											<span v-else>女</span>
+										</td>
+										<td>{{item.phone}}</td>
+										<td>
+											<span v-if="item.disabledState == 'N'" class="green">正常</span>
+											<span v-else class="red">禁用</span>
+										</td>
+										<td>
+											<span v-if="item.lockedState == 'N'" class="green">正常</span>
+											<span v-else class="red">锁定</span>
+										</td>
+										<td>
+											<span v-if="item.expiredTime > 0">{{item.expiredTime | formatDateTime}}</span>
+											<span v-else>永不过期</span>
+										</td>
+										<td>
+											<span v-if="item.lastLoginTime > 0">{{item.lastLoginTime | formatDateTime}}</span>
+											<span v-else>未登录</span>
+										</td>
+										<td>
+												<a @click="detail(item.id)">详细</a>
+												<a @click="edit(item.id)">修改</a>
+												<a @click="auth(item.id)">授权</a>
+												<a @click="del(item.id)" class="red">删除</a>
+										</td>
+									</tr>
+								</tbody>
+								<tfoot>
+									<tr>
+										<td align="center" colspan="99">
+											<div id="pager"></div>
+										</td>
+									</tr>
+								</tfoot>
+							</table>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- Jquery Dom -->
+	<script src="${rc.contextPath}/statics/ui-frame/js/jquery.min.js?v=2.1.4"></script>
+	<!-- Jquery 分页插件 -->
+	<script src="${rc.contextPath}/statics/ui-frame/js/jquery.pagination.min.js"></script>
+	<!-- BootStrap Js -->
+	<script src="${rc.contextPath}/statics/ui-frame/js/bootstrap.min.js?v=3.3.6"></script>
+	<!-- Jquery 下拉选择插件 -->
+	<script src="${rc.contextPath}/statics/ui-frame/js/plugins/chosen/chosen.jquery.min.js?v=1.8.2"></script>
+	<!-- Layer 弹框插件 -->
+	<script src="${rc.contextPath}/statics/ui-frame/js/plugins/layer/layer.min.js"></script>
+	<!-- BootStrap 扩展插件 -->
+	<script src="${rc.contextPath}/statics/ui-frame/js/plugins/jasny/jasny-bootstrap.min.js"></script>
+	<!-- 开关按钮插件 -->
+	<script src="${rc.contextPath}/statics/ui-frame/js/plugins/switchery/switchery.js"></script>
+	<!-- 日期插件 -->
+	<script src="${rc.contextPath}/statics/ui-frame/js/plugins/datapicker/bootstrap-datepicker.js"></script>
+	<!-- 日期格式化插件 -->
+	<script src="${rc.contextPath}/statics/ui-frame/plugins/moment/moment.min.js"></script>
+	<!-- Checkbox的美化插件 -->
+	<script src="${rc.contextPath}/statics/ui-frame/js/plugins/iCheck/icheck.min.js"></script>
+	<!-- Vue MV-VM框架 -->
+	<script src="${rc.contextPath}/statics/ui-frame/js/vue.min.js"></script>
+	<!-- 框架工具 -->
+	<script src="${rc.contextPath}/statics/ui-frame/js/frame-util.js"></script>
+
+	<script type="text/javascript">
+	    
+	    "use strict";
+	    !function(_d, _w, _j, _v) {
+	   		var data = {
+	   			datas: [],
+	   	    	searchParm: {
+	   	    		userName: "",
+	   	    		loginName: "",
+	   	    		phone: "",
+	   	    		organizationId: 0,
+	   	    		page: 1
+	   	    	}
+	   	    };
+	   		
+	   		var methods = {
+	   			zxClick: function(type, e){
+	   				const that = this;
+	   				
+	   				switch (type) {
+		   		   		// 查询 检索
+						case "search":
+							that.loadData(1);
+							break;
+						case "clear":
+							that.searchParm = {
+				   	    		userName: "",
+				   	    		loginName: "",
+				   	    		phone: "",
+				   	    		organizationId: 0,
+				   	    		page: 1
+				   	    	};
+							that.loadData(1);
+							break;
+					}
+	   			},
+				loadData: function(page) {
+			   		const that = this;
+			   		if(page) {
+			   			that.searchParm.page = page;
+			   		}
+			   		_j.post("${rc.contextPath}/user/list.do", that.searchParm, function(res){
+			   			that.datas = res.list;
+			   			_j("#pager").empty().pagination({
+							currentPage: that.searchParm.page,
+							totalPage: res.totalPage,
+							isShow: true,
+							count: 5,
+							prevPageText: "上页",
+							nextPageText: "下页",
+							callback: function(current) {
+								that.loadData(current);
+							}
+						});
+		   	        },"json");
+			    },
+			    add: function(){
+			    	parent.layer.open({
+			    	    type: 2,
+			    	    title: '新增',
+			    	    closeBtn: !0,
+			    	    area: ['688px', '445px'],
+			    	    content: ['${rc.contextPath}/user/add.do'],
+			    	    cancel: function(index, layero) {
+			    	    	parent.layer.close(index);
+		    	    	}
+			    	});
+			    },
+			    detail: function(id){
+			    	parent.layer.open({
+			    	    type: 2,
+			    	    title: '详情',
+			    	    closeBtn: !0,
+			    	    area: ['688px', '445px'],
+			    	    content: ['${rc.contextPath}/user/detail.do?id=' + id],
+			    	    cancel: function(index, layero) {
+			    	    	parent.layer.close(index);
+		    	    	}
+			    	});
+			    },
+			    edit: function(id){
+			    	parent.layer.open({
+			    	    type: 2,
+			    	    title: '修改',
+			    	    closeBtn: !0,
+			    	    area: ['688px', '445px'],
+			    	    content: ['${rc.contextPath}/user/edit.do?id=' + id],
+			    	    cancel: function(index, layero) {
+			    	    	parent.layer.close(index);
+	    	    		}
+			    	});
+			    },
+			    auth: function(id){
+			    	parent.layer.open({
+			    	    type: 2,
+			    	    title: '授权',
+			    	    closeBtn: !0,
+			    	    area: ['688px', '445px'],
+			    	    content: ['${rc.contextPath}/user/auth.do?id=' + id],
+			    	    cancel: function(index, layero) {
+			    	    	parent.layer.close(index);
+	    	    		}
+			    	});
+			    },
+			    del: function(id){
+			    	var that = this;
+			    	parent.layer.confirm('是否要删除该用户信息？将会级联删除用户的授权信息。', {
+		    		  btn: ['删除','取消'] //按钮
+		    		}, function(){
+		    			parent.layer.prompt({title: '请输入“delete”进行操作', formType: 1}, function(pass, index){
+	    					if(pass == "delete") {
+	    						_j.post("${rc.contextPath}/user/delete.do?id=" + id, function(result){
+	    		    				var _time = 3000, color = "#8c1717";
+	    				    		if(result.status) {
+	    				    			_time = 1000;
+	    				    			color = "#2f4050";
+	    				    			that.loadData(1);
+	    				    		}
+	    				    		parent.layer.msg("<span style='color:" + color + "'><i class='fa fa-info'></i> " + result.msg  +"</span>", {
+	    				    			time: _time
+	    				    		});
+	    			   	        },"json");
+	    					} else {
+	    						parent.layer.close(index);
+	    					}
+						});
+		    		}, function(index){
+		    			parent.layer.close(index);
+		    		});
+			    	
+			    }
+	   		};
+	   	    new _v({
+	   	    	el: '#app',
+	   	     	data: data,
+	      		methods: methods,
+	      		filters: {
+	      			formatDateTime: function(time) {
+	      				return moment(time).format("YYYY-MM-DD HH:mm:ss");
+	      			}
+	      		},
+	      		created: function (){
+	      		},
+		        mounted: function (){
+		        	var that = this;
+					that.loadData(1);
+					$(".tooltip-box").tooltip({selector:"[data-toggle=tooltip]",container:"body"})
+					setTimeout(function(){
+						_j("body").fadeIn(40);
+					});
+		        }
+	   	    })
+	    }(document, window, jQuery, Vue)
+	</script>
+</body>
+</html>

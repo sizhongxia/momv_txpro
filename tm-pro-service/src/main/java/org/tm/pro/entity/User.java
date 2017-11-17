@@ -11,7 +11,15 @@ public class User implements Serializable {
 
     private String username;
 
+    private Integer organizationId;
+
     private String gender;
+
+    private String email;
+
+    private String phone;
+
+    private String telephone;
 
     private String lockedState;
 
@@ -59,12 +67,44 @@ public class User implements Serializable {
         this.username = username == null ? null : username.trim();
     }
 
+    public Integer getOrganizationId() {
+        return organizationId;
+    }
+
+    public void setOrganizationId(Integer organizationId) {
+        this.organizationId = organizationId;
+    }
+
     public String getGender() {
         return gender;
     }
 
     public void setGender(String gender) {
         this.gender = gender == null ? null : gender.trim();
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email == null ? null : email.trim();
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone == null ? null : phone.trim();
+    }
+
+    public String getTelephone() {
+        return telephone;
+    }
+
+    public void setTelephone(String telephone) {
+        this.telephone = telephone == null ? null : telephone.trim();
     }
 
     public String getLockedState() {

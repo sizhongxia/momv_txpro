@@ -21,8 +21,7 @@ public class UserAgentHandlerInterceptor extends HandlerInterceptorAdapter {
 			UserAgentRecord userAgent = ((HandlerMethod) handler).getMethodAnnotation(UserAgentRecord.class);
 			if (userAgent != null) {
 				UserAgent agent = UserAgent.parseUserAgentString(request.getHeader("User-Agent"));
-				//Console.log("Current Request Client Info:  os: {}, browser: {}, {}", agent.getOperatingSystem(),
-				//		agent.getBrowser(), agent.getBrowserVersion());
+
 				OperatingSystem operatingSystem = agent.getOperatingSystem();
 				if (operatingSystem != null) {
 					request.setAttribute("operatingSystem", operatingSystem.getName());

@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Login</title>
+<style type="text/css">
+html, body {
+	margin: 0;
+	padding: 0;
+	width: 100%;
+	height: 100%;
+}
+</style>
+</head>
+<body>
+	<div class="login">
+		<form action="${rc.contextPath}/auth/login.do" method="post">
+			<input name="referer" type="hidden" value="${referer!}"/>
+			<input name="un" value="sizhongxia"/> <input name="pw" value="123456"/> <input type="submit"
+				value="登陆" />
+		</form>
+		<div>${msg!}</div>
+	</div>
+	
+    <script src="${rc.contextPath}/statics/ui-frame/js/jquery.min.js?v=2.1.4"></script>
+</body>
+</html>

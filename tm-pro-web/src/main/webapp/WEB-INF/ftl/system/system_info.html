@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<script src="${rc.contextPath}/statics/ui-frame/js/frame-util.js"></script>
+<!-- BootStrap Css -->
+<link href="${rc.contextPath}/statics/ui-frame/css/bootstrap.min14ed.css?v=3.3.6" rel="stylesheet">
+<!-- 字体图标 Css -->
+<link href="${rc.contextPath}/statics/ui-frame/css/font-awesome.min93e3.css?v=4.4.0" rel="stylesheet">
+<!-- 下拉选择插件 -->
+<link href="${rc.contextPath}/statics/ui-frame/css/plugins/chosen/chosen.css" rel="stylesheet">
+<!-- 开关按钮插件 -->
+<link href="${rc.contextPath}/statics/ui-frame/css/plugins/switchery/switchery.css" rel="stylesheet">
+<!-- BootStrap 扩展插件 -->
+<link href="${rc.contextPath}/statics/ui-frame/css/plugins/jasny/jasny-bootstrap.min.css" rel="stylesheet">
+<!-- BootStrap 日期插件 -->
+<link href="${rc.contextPath}/statics/ui-frame/css/plugins/datapicker/datepicker3.css" rel="stylesheet">
+<!-- Checkbox的美化插件 -->
+<link href="${rc.contextPath}/statics/ui-frame/css/plugins/iCheck/custom.css" rel="stylesheet">
+<!-- Css 动画 -->
+<link href="${rc.contextPath}/statics/ui-frame/css/animate.min.css" rel="stylesheet">
+<!-- 基本样式 -->
+<link href="${rc.contextPath}/statics/ui-frame/css/style.min862f.css?v=4.1.0" rel="stylesheet">
+<style type="text/css">
+thead>tr>th, tbody>tr>td{text-align:center}
+.wrapper-content{padding:0}
+.float-e-margins .btn{margin-bottom:0}
+.form-group{margin-bottom:4px!important}
+.input-group{width:100%}
+.ibox{margin-bottom:0px}
+.ilabel{color: #000}
+.required {background-color: red;color: red}
+.required:before {content: "|"}
+.col-xs-6 {margin-top: 10px;}
+</style>
+</head>
+<body class="gray-bg" style="display: none">
+	<div id="app" class="wrapper wrapper-content">
+		<div class="row">
+			<div class="col-sm-12">
+				<div class="ibox float-e-margins">
+					<div class="ibox-content">
+							
+							<div class="row" style="padding: 12px 8px;line-height: 38px;">
+								<div class="col-xs-12">
+									<p>说明：系统使用数据为缓存数据，如果要修改配置数据，需要刷新缓存后能正常启用或者重新系统后重新加载配置。</p>
+								</div>
+							</div>
+							
+							<div class="row" style="padding: 12px 8px;line-height: 38px;">
+								<div class="col-xs-3">
+									系统标题
+								</div>
+								<div class="col-xs-9">
+									<input v-model="systemInfo.systemTitle" type="text" class="form-control" style="width: 220px;display: inline;">
+									（缓存数据：{{ systemCacheInfo.systemTitle }}）
+								</div>
+							</div>
+							
+							<div class="row" style="padding: 12px 8px;line-height: 38px;">
+								<div class="col-xs-3">
+									系统描述
+								</div>
+								<div class="col-xs-9">
+									<input v-model="systemInfo.systemDescript" type="text" class="form-control" style="width: 420px;display: inline;">
+									（缓存数据：{{ systemCacheInfo.systemDescript }}）
+								</div>
+							</div>
+					
+							<div class="row" style="padding: 12px 8px;line-height: 38px;">
+								<div class="col-xs-3">
+									账号登陆失败限制
+								</div>
+								<div class="col-xs-9">
+									<input type="checkbox" class="js-switch loginLimit" v-bind:checked="systemInfo.loginFailLimit=='Y'" />
+									（缓存数据：{{ systemCacheInfo.loginFailLimit }}）
+								</div>
+							</div>
+							
+							<div class="row" style="padding: 12px 8px;line-height: 38px;">
+								<div class="col-xs-3">
+									账号非法登陆限制次数
+								</div>
+								<div class="col-xs-9">
+									<input v-model="systemInfo.loginFailCount" type="number" class="form-control" style="width: 90px;display: inline;">
+									（缓存数据：{{ systemCacheInfo.loginFailCount }}）
+								</div>
+							</div>
+							
+							<div class="row" style="padding: 12px 8px;line-height: 38px;">
+								<div class="col-xs-3">
+									非法登陆失败限制时间（秒）
+								</div>
+								<div class="col-xs-9">
+									<input v-model="systemInfo.loginFailExpired" type="number" class="form-control" style="width: 90px;display: inline;"> （缓存数据：{{ systemCacheInfo.loginFailExpired }}秒）
+								</div>
+							</div>
+							
+							<div class="row" style="padding: 12px 8px;line-height: 38px;">
+								<div class="col-xs-3">
+									是否仅允许谷歌浏览器登陆
+								</div>
+								<div class="col-xs-9">
+									<input type="checkbox" class="js-switch onlyChrome"  v-bind:checked="systemInfo.onlyChrome=='Y'" />
+									（缓存数据：{{ systemCacheInfo.onlyChrome }}）
+								</div>
+							</div>
+							<div class="row" style="padding: 12px 8px;line-height: 38px;">
+								<div class="col-xs-12">
+									<div class="col-sm-12 text-center" style="margin: 32px auto">
+				                        <button @click="submitForm" class="btn" style="background-color: #273a4a;border-color: #273a4a;color: #FFF;" type="button">保存信息</button>
+				                        <button @click="updateCache" class="btn" style="background-color: #FFF;border-color: #273a4a;color: #273a4a;" type="button">更新缓存信息</button>
+				                    </div>
+								</div>
+							</div>
+							
+					</div>
+				</div>
+			</div>
+			
+		</div>
+	</div>
+	<!-- Jquery Dom -->
+	<script src="${rc.contextPath}/statics/ui-frame/js/jquery.min.js?v=2.1.4"></script>
+	<!-- BootStrap Js -->
+	<script src="${rc.contextPath}/statics/ui-frame/js/bootstrap.min.js?v=3.3.6"></script>
+	<!-- Jquery 下拉选择插件 -->
+	<script src="${rc.contextPath}/statics/ui-frame/js/plugins/chosen/chosen.jquery.min.js?v=1.8.2"></script>
+	<!-- BootStrap 扩展插件 -->
+	<script src="${rc.contextPath}/statics/ui-frame/js/plugins/jasny/jasny-bootstrap.min.js"></script>
+    <script src="${rc.contextPath}/statics/ui-frame/js/plugins/datapicker/bootstrap-datepicker.js"></script>
+	<!-- 开关按钮插件 -->
+	<script src="${rc.contextPath}/statics/ui-frame/js/plugins/switchery/switchery.js"></script>
+	<!-- Checkbox的美化插件 -->
+	<script src="${rc.contextPath}/statics/ui-frame/js/plugins/iCheck/icheck.min.js"></script>
+	<!-- 下拉选择 -->
+    <script src="${rc.contextPath}/statics/ui-frame/js/plugins/suggest/bootstrap-suggest.min.js"></script>
+    
+	<!-- Vue MV-VM框架 -->
+	<script src="${rc.contextPath}/statics/ui-frame/js/vue.min.js"></script>
+	<script type="text/javascript">
+	    "use strict";
+	    !function(_d, _w, _j, _v) {
+	   		var data = {
+	   			loginLimitCheckBox: {},
+	   			onlyChromeCheckBox: {},
+	   			systemInfo: {
+	   				systemTitle: "${systemInfo.systemTitle!}",
+	   				systemDescript: "${systemInfo.systemDescript!}",
+	   				loginFailCount: "${systemInfo.loginFailCount!}",
+	   				loginFailExpired: "${systemInfo.loginFailExpired!}",
+	   				loginFailLimit: "${systemInfo.loginFailLimit!}",
+	   				onlyChrome: "${systemInfo.onlyChrome!}"
+	   			},
+	   			systemCacheInfo: {
+	   				systemTitle: "",
+	   				systemDescript: "",
+	   				loginFailCount: "",
+	   				loginFailExpired: "",
+	   				loginFailLimit: "",
+	   				onlyChrome: ""
+	   			}
+	   	    };
+	   		
+	   		var methods = {
+	   				loadCacheData: function() {
+   				   		const that = this;
+   				   		_j.post("${rc.contextPath}/system/cache_data.do", function(res){
+	   				   		if(res.status) {
+	   				   			that.systemCacheInfo = res.data;
+	   				   		}
+   			   	        },"json");
+	   				},
+	   				
+	   				submitForm: function() {
+	   					const that = this;
+	   					that.systemInfo.loginFailLimit = that.loginLimitCheckBox.checked?"Y":"N";
+	   					that.systemInfo.onlyChrome = that.onlyChromeCheckBox.checked?"Y":"N";
+	   					
+	   					_j.post("${rc.contextPath}/system/update.do", that.systemInfo, function(result){
+				    		var _time = 3000, color = "#8c1717";
+				    		if(result.status) {
+				    			_time = 1000;
+				    			color = "#2f4050";
+				    		}
+				    		parent.layer.msg("<span style='color:" + color + "'><i class='fa fa-info'></i> " + result.msg  +"</span>", {
+				    			time: _time
+				    		});
+				    	}, "json");
+	   					
+	   				},
+	   				
+	   				updateCache: function() {
+	   					var that = this;
+				    	parent.layer.confirm('是否要更新系统缓存信息？', {
+			    		  btn: ['更新','取消'] //按钮
+			    		}, function(){
+			    			_j.post("${rc.contextPath}/publisher/todo.do?key=UpdateSystemInfoCacheEvent", function(result){
+			    				var _time = 3000, color = "#8c1717";
+					    		if(result.status) {
+					    			_time = 1000;
+					    			color = "#2f4050";
+							   		that.loadCacheData();
+					    		}
+					    		parent.layer.msg("<span style='color:" + color + "'><i class='fa fa-info'></i> " + result.msg  +"</span>", {
+					    			time: _time
+					    		});
+				   	        },"json");
+			    		}, function(index){
+			    			parent.layer.close(index);
+			    		});
+	   				}
+	   		};
+	   		
+	   	    new _v({
+	   	    	el: '#app',
+	   	     	data: data,
+	      		methods: methods,
+	      		mounted: function () { 
+			   	 	var that = this;
+
+			   		that.loginLimitCheckBox = _d.querySelector(".loginLimit");
+			   		new Switchery(that.loginLimitCheckBox, {color:"#273a4a"});
+			   		that.onlyChromeCheckBox = _d.querySelector(".onlyChrome");
+			   		new Switchery(that.onlyChromeCheckBox, {color:"#273a4a"});
+			   	 	
+			   		that.loadCacheData();
+			   		
+					setTimeout(function(){_j("body").fadeIn(40);});
+			   	}
+	   	    });
+	   	    
+	    }(document, window, jQuery, Vue)
+	</script>
+</body>
+</html>

@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- BootStrap Css -->
+<link
+	href="${rc.contextPath}/statics/ui-frame/css/bootstrap.min14ed.css?v=3.3.6"
+	rel="stylesheet">
+<!-- 字体图标 Css -->
+<link
+	href="${rc.contextPath}/statics/ui-frame/css/font-awesome.min93e3.css?v=4.4.0"
+	rel="stylesheet">
+<!-- Css 动画 -->
+<link href="${rc.contextPath}/statics/ui-frame/css/animate.min.css"
+	rel="stylesheet">
+<!-- 基本样式 -->
+<link
+	href="${rc.contextPath}/statics/ui-frame/css/style.min862f.css?v=4.1.0"
+	rel="stylesheet">
+</head>
+<body class="gray-bg">
+	<div id="app" class="wrapper wrapper-content">
+		<div class="row">
+			<div class="col-sm-4">
+				<div class="ibox float-e-margins">
+                    <div class="ibox-content">
+						<h4><i class="fa fa-gg"></i> 缓存日志分析</h4>
+						<p>10 个批次已分析</p>
+						<p>200000 条数据已分析</p>
+						<p>20000  条数据优化建议</p>
+						<p>&nbsp;</p>
+                    </div>
+                </div>
+			</div>
+			<div class="col-sm-4">
+				<div class="ibox float-e-margins">
+                    <div class="ibox-content">
+						<h4><i class="fa fa-gg"></i> 可缓存性分析</h4>
+						<p>23.123 G缓存新增域名累计流量</p>
+						<p>299999 条黑白名单分析结果已入库</p>
+						<p>8899 条域名已下发黑白名单</p>
+						<p>899 条域名已加入缓存白名单</p>
+                    </div>
+                </div>
+			</div>
+			<div class="col-sm-4">
+				<div class="ibox float-e-margins">
+                    <div class="ibox-content">
+						<h4><i class="fa fa-gg"></i> 缓存日志分析</h4>
+						<p>2.56 web缓存增益比(流量)</p>
+						<p>4.56 大文件缓存增益比(流量)</p>
+						<p>299999 条质差域名已发现</p>
+						<p>299999 条错误代码最多域名已分析</p>
+                    </div>
+                </div>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-sm-6">
+				<div class="ibox float-e-margins">
+                    <div class="ibox-title">
+                        <h5>本网率指标趋势</h5>
+                        <div class="ibox-tools">
+                            <a class="collapse-link">
+                                <i class="fa fa-refresh"> 刷新</i>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="ibox-content">
+						<div id="c1"></div>
+                    </div>
+                </div>
+			</div>
+			<div class="col-sm-6">
+				<div class="ibox float-e-margins">
+                    <div class="ibox-title">
+                        <h5>缓存流量趋势（MB）</h5>
+                        <div class="ibox-tools">
+                            <a class="collapse-link">
+                                <i class="fa fa-refresh"> 刷新</i>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="ibox-content">
+						<div id="c2"></div>
+                    </div>
+                </div>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-sm-6">
+				<div class="ibox float-e-margins">
+                    <div class="ibox-title">
+                        <h5>缓存热点域名质量占比</h5>
+                        <div class="ibox-tools">
+                            <a class="collapse-link">
+                                <i class="fa fa-refresh"> 刷新</i>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="ibox-content">
+						<div id="c3"></div>
+                    </div>
+                </div>
+			</div>
+			<div class="col-sm-6">
+				<div class="ibox float-e-margins">
+                    <div class="ibox-title">
+                        <h5>缓存热点域名平均质量</h5>
+                        <div class="ibox-tools">
+                            <a class="collapse-link">
+                                <i class="fa fa-refresh"> 刷新</i>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="ibox-content">
+						<div id="c4"></div>
+                    </div>
+                </div>
+			</div>
+		</div>
+	</div>
+	<!-- Jquery Dom -->
+	<script
+		src="${rc.contextPath}/statics/ui-frame/js/jquery.min.js?v=2.1.4"></script>
+	<!-- BootStrap Js -->
+	<script
+		src="${rc.contextPath}/statics/ui-frame/js/bootstrap.min.js?v=3.3.6"></script>
+	<!-- 日期格式化插件 -->
+	<script
+		src="${rc.contextPath}/statics/ui-frame/plugins/moment/moment.min.js"></script>
+	<!-- 框架工具 -->
+	<script src="${rc.contextPath}/statics/ui-frame/js/frame-util.js"></script>
+	<!-- 图表插件 -->
+	<script
+		src="${rc.contextPath}/statics/ui-frame/plugins/antv/antv-g2-v2.3.13.js"></script>
+	<script src="${rc.contextPath}/statics/ui-frame/plugins/antv/slider.js"></script>
+
+	<script type="text/javascript">
+		"use strict";
+		!function(_d, _w, _j) {
+
+			(function() {
+				var data = [ {
+					"date" : "2011-10-01",
+					"全网" : 63.4,
+					"固网" : 22.7,
+					"手机" : 12.2
+				}, {
+					"date" : "2011-10-02",
+					"全网" : 73.4,
+					"固网" : 52.7,
+					"手机" : 32.2
+				}, {
+					"date" : "2011-10-03",
+					"全网" : 83.4,
+					"固网" : 72.7,
+					"手机" : 52.2
+				}, {
+					"date" : "2011-10-04",
+					"全网" : 93.4,
+					"固网" : 87.7,
+					"手机" : 78.2
+				}, {
+					"date" : "2011-10-05",
+					"全网" : 90.4,
+					"固网" : 82.7,
+					"手机" : 72.2
+				}, {
+					"date" : "2011-10-06",
+					"全网" : 93.4,
+					"固网" : 89.7,
+					"手机" : 72.2
+				}, {
+					"date" : "2011-10-07",
+					"全网" : 98.4,
+					"固网" : 84.7,
+					"手机" : 78.2
+				}, {
+					"date" : "2011-10-08",
+					"全网" : 93.4,
+					"固网" : 82.7,
+					"手机" : 79.2
+				}, {
+					"date" : "2011-10-09",
+					"全网" : 97.4,
+					"固网" : 85.7,
+					"手机" : 70.2
+				}, {
+					"date" : "2011-10-10",
+					"全网" : 93.4,
+					"固网" : 87.7,
+					"手机" : 77.2
+				}, {
+					"date" : "2011-10-11",
+					"全网" : 99.4,
+					"固网" : 82.7,
+					"手机" : 78.2
+				}, {
+					"date" : "2011-10-12",
+					"全网" : 91.4,
+					"固网" : 85.7,
+					"手机" : 74.2
+				}, {
+					"date" : "2011-10-13",
+					"全网" : 91.4,
+					"固网" : 86.7,
+					"手机" : 72.2
+				}, {
+					"date" : "2011-10-14",
+					"全网" : 93.4,
+					"固网" : 82.7,
+					"手机" : 77.2
+				} ];
+
+				var Frame = G2.Frame;
+				var frame = new Frame(data);
+				frame = Frame.combinColumns(frame, [ '全网', '固网', '手机' ],
+						'value', 'type', 'date');
+				var chart = new G2.Chart({
+					id : 'c1',
+					forceFit : true,
+					height : 248,
+					plotCfg : {
+						margin : [ 20, 20, 70, 80 ]
+					}
+				});
+				chart.source(frame, {
+					date : {
+						type : 'time',
+						mask : 'yyyy.mm.dd',
+						tickCount : 12
+					},
+					value : {
+						alias : '本网率（%）'
+					}
+				});
+				chart.legend({
+					position : 'bottom'
+				});
+				chart.axis('date', {
+					line : null,
+					tickLine : {
+						stroke : '#273a4a',
+						value : 8
+					// 刻度线长度
+					},
+					title : null
+				});
+				chart.axis('value', {
+					tickLine : {
+						stroke : '#273a4a',
+						value : 8
+					// 刻度线长度
+					},
+					labels : {
+						label : {
+							fill : '#273a4a'
+						}
+					},
+					line : {
+						stroke : '#273a4a'
+					},
+					grid : null
+				});
+				chart.line().position('date*value').color('type',
+						[ '#1f77b4', '#ff7f0e', '#2ca02c' ]).shape('spline')
+						.size(2);
+				chart.render();
+			})();
+
+			(function() {
+
+				var data = [ {
+					"date" : "2011-10-01",
+					"总流量" : 63.4,
+					"HIT流量" : 22.7,
+					"MISS流量" : 12.2
+				}, {
+					"date" : "2011-10-02",
+					"总流量" : 73.4,
+					"HIT流量" : 52.7,
+					"MISS流量" : 32.2
+				}, {
+					"date" : "2011-10-03",
+					"总流量" : 83.4,
+					"HIT流量" : 72.7,
+					"MISS流量" : 52.2
+				}, {
+					"date" : "2011-10-04",
+					"总流量" : 93.4,
+					"HIT流量" : 87.7,
+					"MISS流量" : 78.2
+				}, {
+					"date" : "2011-10-05",
+					"总流量" : 90.4,
+					"HIT流量" : 82.7,
+					"MISS流量" : 72.2
+				}, {
+					"date" : "2011-10-06",
+					"总流量" : 93.4,
+					"HIT流量" : 89.7,
+					"MISS流量" : 72.2
+				}, {
+					"date" : "2011-10-07",
+					"总流量" : 98.4,
+					"HIT流量" : 84.7,
+					"MISS流量" : 78.2
+				} ];
+
+				var Frame = G2.Frame;
+				var frame = new Frame(data);
+				frame = Frame.combinColumns(frame,
+						[ '总流量', 'HIT流量', 'MISS流量' ], 'value', 'type', 'date');
+				var chart = new G2.Chart({
+					id : 'c2',
+					forceFit : true,
+					height : 248,
+					plotCfg : {
+						margin : [ 20, 20, 70, 80 ]
+					}
+				});
+				chart.source(frame, {
+					date : {
+						type : 'time',
+						mask : 'yyyy.mm.dd',
+						tickCount : 12
+					},
+					value : {
+						alias : '缓存流量（MB）'
+					}
+				});
+
+				chart.legend({
+					position : 'bottom'
+				});
+				chart.axis('date', {
+					line : null,
+					tickLine : {
+						stroke : '#273a4a',
+						value : 8
+					// 刻度线长度
+					},
+					title : null
+				});
+
+				chart.axis('value', {
+					tickLine : {
+						stroke : '#273a4a',
+						value : 8
+					// 刻度线长度
+					},
+					labels : {
+						label : {
+							fill : '#273a4a'
+						}
+					},
+					line : {
+						stroke : '#273a4a'
+					},
+					grid : null
+				});
+
+				chart.line().position('date*value').color('type',
+						[ '#1f77b4', '#ff7f0e', '#2ca02c' ]).shape('spline')
+						.label('value', function(val) {
+							return val + 'MB';
+						}).size(2);
+
+				chart.render();
+			})();
+			
+			(function(){
+				var data = [
+			        {area:'差', profit: 25},
+			        {area:'良', profit: 35},
+			        {area:'优', profit: 40}
+			      ];
+			      var Stat = G2.Stat;
+			      var chart = new G2.Chart({
+			        id: 'c3',
+			        forceFit: true,
+			        height: 248,
+			        plotCfg: {
+						margin : [ 20, 60, 50, 60 ]
+			        }
+			      });
+			      chart.source(data);
+			      chart.legend({
+			        position: 'bottom'
+			      });
+			      chart.coord('theta', {
+			        radius: 1,
+			        inner: 0.35
+			      });
+			      chart.tooltip({
+			        title: null
+			      });
+			      
+			      chart.intervalStack().position(Stat.summary.percent('profit'))
+			        .color('area', [ '#cccccc', '#ff7f0e', '#2ca02c' ])
+			        .label('area', function(val) {
+						return val;
+					}).style({
+			        lineWidth: 1
+			      });
+			      chart.render();
+			})();
+			
+			(function() {
+
+				var data = [];
+			      var getValue = function(){
+			        var value = 0;
+			        return function(){
+			          if(value >= Math.PI*2) {
+			            value = 0
+			          }
+			          var result = Math.sin(value);
+			          value += Math.PI / 6;
+			          return result;
+			        }  
+			      }();
+			      for(var i = 1; i <= 12; i++){
+			        data.push({'month': i, value: getValue() * 8 + 15});
+			      }
+			      var chart = new G2.Chart({
+			        id : 'c4',
+			        forceFit: true,
+			        height: 248,
+			        plotCfg: {
+			          margin: [20, 60, 80, 120]
+			        }
+			      });
+			      chart.source(data, {
+			        'month': {
+			          type: 'cat',
+			          formatter: function(dimValue) {
+			            return dimValue + '月';
+			          }
+			        },
+			        'value':{
+			          min: 0,
+			          max: 30
+			        }
+			      });
+			      chart.interval().position('month*value').color('month');
+			      chart.render();
+
+				})();
+
+		}(document, window, jQuery)
+	</script>
+</body>
+</html>

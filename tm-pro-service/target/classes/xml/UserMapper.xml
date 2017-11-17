@@ -6,7 +6,11 @@
     <result column="login_name" jdbcType="VARCHAR" property="loginName" />
     <result column="login_pass" jdbcType="VARCHAR" property="loginPass" />
     <result column="username" jdbcType="VARCHAR" property="username" />
+    <result column="organization_id" jdbcType="INTEGER" property="organizationId" />
     <result column="gender" jdbcType="VARCHAR" property="gender" />
+    <result column="email" jdbcType="VARCHAR" property="email" />
+    <result column="phone" jdbcType="VARCHAR" property="phone" />
+    <result column="telephone" jdbcType="VARCHAR" property="telephone" />
     <result column="locked_state" jdbcType="VARCHAR" property="lockedState" />
     <result column="disabled_state" jdbcType="VARCHAR" property="disabledState" />
     <result column="expired_time" jdbcType="BIGINT" property="expiredTime" />
@@ -73,8 +77,8 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    id, login_name, login_pass, username, gender, locked_state, disabled_state, expired_time, 
-    created_time, updated_time, last_login_time
+    id, login_name, login_pass, username, organization_id, gender, email, phone, telephone, 
+    locked_state, disabled_state, expired_time, created_time, updated_time, last_login_time
   </sql>
   <select id="selectByExample" parameterType="org.tm.pro.entity.UserExample" resultMap="BaseResultMap">
     select
@@ -111,13 +115,15 @@
       SELECT LAST_INSERT_ID()
     </selectKey>
     insert into tb_user (login_name, login_pass, username, 
-      gender, locked_state, disabled_state, 
-      expired_time, created_time, updated_time, 
-      last_login_time)
+      organization_id, gender, email, 
+      phone, telephone, locked_state, 
+      disabled_state, expired_time, created_time, 
+      updated_time, last_login_time)
     values (#{loginName,jdbcType=VARCHAR}, #{loginPass,jdbcType=VARCHAR}, #{username,jdbcType=VARCHAR}, 
-      #{gender,jdbcType=VARCHAR}, #{lockedState,jdbcType=VARCHAR}, #{disabledState,jdbcType=VARCHAR}, 
-      #{expiredTime,jdbcType=BIGINT}, #{createdTime,jdbcType=BIGINT}, #{updatedTime,jdbcType=BIGINT}, 
-      #{lastLoginTime,jdbcType=BIGINT})
+      #{organizationId,jdbcType=INTEGER}, #{gender,jdbcType=VARCHAR}, #{email,jdbcType=VARCHAR}, 
+      #{phone,jdbcType=VARCHAR}, #{telephone,jdbcType=VARCHAR}, #{lockedState,jdbcType=VARCHAR}, 
+      #{disabledState,jdbcType=VARCHAR}, #{expiredTime,jdbcType=BIGINT}, #{createdTime,jdbcType=BIGINT}, 
+      #{updatedTime,jdbcType=BIGINT}, #{lastLoginTime,jdbcType=BIGINT})
   </insert>
   <insert id="insertSelective" parameterType="org.tm.pro.entity.User">
     <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
@@ -134,8 +140,20 @@
       <if test="username != null">
         username,
       </if>
+      <if test="organizationId != null">
+        organization_id,
+      </if>
       <if test="gender != null">
         gender,
+      </if>
+      <if test="email != null">
+        email,
+      </if>
+      <if test="phone != null">
+        phone,
+      </if>
+      <if test="telephone != null">
+        telephone,
       </if>
       <if test="lockedState != null">
         locked_state,
@@ -166,8 +184,20 @@
       <if test="username != null">
         #{username,jdbcType=VARCHAR},
       </if>
+      <if test="organizationId != null">
+        #{organizationId,jdbcType=INTEGER},
+      </if>
       <if test="gender != null">
         #{gender,jdbcType=VARCHAR},
+      </if>
+      <if test="email != null">
+        #{email,jdbcType=VARCHAR},
+      </if>
+      <if test="phone != null">
+        #{phone,jdbcType=VARCHAR},
+      </if>
+      <if test="telephone != null">
+        #{telephone,jdbcType=VARCHAR},
       </if>
       <if test="lockedState != null">
         #{lockedState,jdbcType=VARCHAR},
@@ -210,8 +240,20 @@
       <if test="record.username != null">
         username = #{record.username,jdbcType=VARCHAR},
       </if>
+      <if test="record.organizationId != null">
+        organization_id = #{record.organizationId,jdbcType=INTEGER},
+      </if>
       <if test="record.gender != null">
         gender = #{record.gender,jdbcType=VARCHAR},
+      </if>
+      <if test="record.email != null">
+        email = #{record.email,jdbcType=VARCHAR},
+      </if>
+      <if test="record.phone != null">
+        phone = #{record.phone,jdbcType=VARCHAR},
+      </if>
+      <if test="record.telephone != null">
+        telephone = #{record.telephone,jdbcType=VARCHAR},
       </if>
       <if test="record.lockedState != null">
         locked_state = #{record.lockedState,jdbcType=VARCHAR},
@@ -242,7 +284,11 @@
       login_name = #{record.loginName,jdbcType=VARCHAR},
       login_pass = #{record.loginPass,jdbcType=VARCHAR},
       username = #{record.username,jdbcType=VARCHAR},
+      organization_id = #{record.organizationId,jdbcType=INTEGER},
       gender = #{record.gender,jdbcType=VARCHAR},
+      email = #{record.email,jdbcType=VARCHAR},
+      phone = #{record.phone,jdbcType=VARCHAR},
+      telephone = #{record.telephone,jdbcType=VARCHAR},
       locked_state = #{record.lockedState,jdbcType=VARCHAR},
       disabled_state = #{record.disabledState,jdbcType=VARCHAR},
       expired_time = #{record.expiredTime,jdbcType=BIGINT},
@@ -265,8 +311,20 @@
       <if test="username != null">
         username = #{username,jdbcType=VARCHAR},
       </if>
+      <if test="organizationId != null">
+        organization_id = #{organizationId,jdbcType=INTEGER},
+      </if>
       <if test="gender != null">
         gender = #{gender,jdbcType=VARCHAR},
+      </if>
+      <if test="email != null">
+        email = #{email,jdbcType=VARCHAR},
+      </if>
+      <if test="phone != null">
+        phone = #{phone,jdbcType=VARCHAR},
+      </if>
+      <if test="telephone != null">
+        telephone = #{telephone,jdbcType=VARCHAR},
       </if>
       <if test="lockedState != null">
         locked_state = #{lockedState,jdbcType=VARCHAR},
@@ -294,7 +352,11 @@
     set login_name = #{loginName,jdbcType=VARCHAR},
       login_pass = #{loginPass,jdbcType=VARCHAR},
       username = #{username,jdbcType=VARCHAR},
+      organization_id = #{organizationId,jdbcType=INTEGER},
       gender = #{gender,jdbcType=VARCHAR},
+      email = #{email,jdbcType=VARCHAR},
+      phone = #{phone,jdbcType=VARCHAR},
+      telephone = #{telephone,jdbcType=VARCHAR},
       locked_state = #{lockedState,jdbcType=VARCHAR},
       disabled_state = #{disabledState,jdbcType=VARCHAR},
       expired_time = #{expiredTime,jdbcType=BIGINT},

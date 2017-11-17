@@ -29,10 +29,10 @@
 			<artifactId>tm-pro-redis</artifactId>
 			<version>${project.version}</version>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>com.tm.pro</groupId>
-			<artifactId>tm-pro-picture</artifactId>
+			<artifactId>tm-pro-es</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 
@@ -160,15 +160,15 @@
 			<artifactId>kaptcha</artifactId>
 			<version>0.0.9</version>
 		</dependency>
-
 	</dependencies>
 
 	<build>
 		<pluginManagement>
 			<plugins>
 				<plugin>
-					<groupId>org.mortbay.jetty</groupId>
+					<groupId>org.eclipse.jetty</groupId>
 					<artifactId>jetty-maven-plugin</artifactId>
+					<version>9.3.0.M2</version>
 					<configuration>
 						<webApp>
 							<contextPath>/</contextPath>

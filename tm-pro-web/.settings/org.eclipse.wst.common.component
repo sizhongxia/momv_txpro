@@ -13,7 +13,7 @@
         <dependent-module archiveName="tm-pro-redis-0.0.1-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/tm-pro-redis/tm-pro-redis">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <dependent-module archiveName="tm-pro-picture-0.0.1-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/tm-pro-picture/tm-pro-picture">
+        <dependent-module archiveName="tm-pro-es-0.0.1-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/tm-pro-es/tm-pro-es">
             <dependency-type>uses</dependency-type>
         </dependent-module>
         <dependent-module archiveName="tm-pro-utils-0.0.1-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/tm-pro-utils/tm-pro-utils">

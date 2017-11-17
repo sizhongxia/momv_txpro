@@ -7,7 +7,7 @@ public class RoleAuthorization implements Serializable {
 
     private Integer roleId;
 
-    private String premissionWord;
+    private String authorizationCode;
 
     private static final long serialVersionUID = 1L;
 
@@ -27,11 +27,11 @@ public class RoleAuthorization implements Serializable {
         this.roleId = roleId;
     }
 
-    public String getPremissionWord() {
-        return premissionWord;
+    public String getAuthorizationCode() {
+        return authorizationCode;
     }
 
-    public void setPremissionWord(String premissionWord) {
-        this.premissionWord = premissionWord == null ? null : premissionWord.trim();
+    public void setAuthorizationCode(String authorizationCode) {
+        this.authorizationCode = authorizationCode == null ? null : authorizationCode.trim();
     }
 }

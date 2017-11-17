@@ -2,6 +2,7 @@
 <beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xmlns="http://www.springframework.org/schema/beans" xmlns:context="http://www.springframework.org/schema/context"
 	xmlns:tx="http://www.springframework.org/schema/tx" xmlns:aop="http://www.springframework.org/schema/aop"
+    xmlns:elasticsearch="http://www.springframework.org/schema/data/elasticsearch"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans
        http://www.springframework.org/schema/beans/spring-beans.xsd
        http://www.springframework.org/schema/context
@@ -9,11 +10,34 @@
        http://www.springframework.org/schema/tx
        http://www.springframework.org/schema/tx/spring-tx.xsd
        http://www.springframework.org/schema/aop
-       http://www.springframework.org/schema/aop/spring-aop.xsd ">
+       http://www.springframework.org/schema/aop/spring-aop.xsd
+       http://www.springframework.org/schema/data/elasticsearch
+       http://www.springframework.org/schema/data/elasticsearch/spring-elasticsearch.xsd ">
 
 	<!-- 只能配置一个property-placeholder，使用通配符加载多个配置文件 -->
 	<context:property-placeholder location="classpath*:conf/*.properties" />
 
+	<bean id="redisConfig" class="com.tm.pro.redis.config.RedisConfig">
+		<property name="urls" value="${redis.urls}"/>
+		<property name="auth" value="${redis.auth}"/>
+		<property name="timeout" value="${redis.timeout}"/>
+		<property name="maxTotal" value="${redis.maxTotal}"/>
+		<property name="maxIdle" value="${redis.maxIdle}"/>
+		<property name="minIdle" value="${redis.minIdle}"/>
+		<property name="maxWaitMillis" value="${redis.maxWaitMillis}"/>
+		<property name="testOnBorrow" value="${redis.testOnBorrow}"/>
+	</bean>
+	
+	<bean id="redisUtil" class="com.tm.pro.redis.util.RedisUtil">
+		<property name="redisConfig" ref="redisConfig"></property>
+	</bean>
+	
+	<bean id="elasticsearchUtil" class="org.tm.pro.es.ElasticsearchUtil">
+		<property name="serverHost" value="${elastic.serverHost}"/>
+		<property name="port" value="${elastic.port}"/>
+		<property name="clusterName" value="${elastic.clusterName}"/>
+	</bean>
+	
 	<context:annotation-config />
 	<!--扫描包进行注入 -->
 	<context:component-scan base-package="org.tm.pro.mapper" />
