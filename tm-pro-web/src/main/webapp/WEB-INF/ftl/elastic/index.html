@@ -153,63 +153,64 @@ thead>tr>th, tbody>tr>td {
 									</tr>
 								</thead>
 								<tbody>
-									<#iflist??>
-								<#list list as item>
-								<tr>
-									<td align="center">${item.back_ttfb!}</td>
-									<td align="center">${item.cache_device_ip!}</td>
-									<td align="center">${item.back_flow!}</td>
-									<td align="center">${item.ttfb!}</td>
-									<td align="center">${item.back_status_code!}</td>
-									<td align="center">${item.houzhui!}</td>
-									<td align="center">${item.type!}</td>
-									<td align="center">${item.ua!}</td>
-									<td align="center">${item.back_host!}</td>
-									<td align="center">${item.patd!}</td>
-									<td align="center">${item.back_metdod!}</td>
-									<td align="center">${item.back_server_port!}</td>
-									<td align="center">${item.len!}</td>
-									<td align="center">${item.back_content_type!}</td>
-									<td align="center">${item.host!}</td>
-									<td align="center">${item.server_ip!}</td>
-									<td align="center">${item.client_ip!}</td>
-									<td align="center">${item.back_cache_ctl!}</td>
-									<td align="center">${item.back_close_status!}</td>
-									<td align="center">${item.cache_save!}</td>
-									<td align="center">${item.metdod!}</td>
-									<td align="center">${item.http_version!}</td>
-									<td align="center">${item.r_end_time!}</td>
-									<td align="center">${item.back_src_server_ip!}</td>
-									<td align="center">${item.domain!}</td>
-									<td align="center">${item.name!}</td>
-									<td align="center">${item.server_port!}</td>
-									<td align="center">${item.device!}</td>
-									<td align="center">${item.back_max_age!}</td>
-									<td align="center">${item.status_code!}</td>
-									<td align="center">${item.flag!}</td>
-									<td align="center">${item.out_flow!}</td>
-									<td align="center">${item.cache_sta!}</td>
-									<td align="center">${item.back_size!}</td>
-									<td align="center">${item.dspeed!}</td>
-									<td align="center">${item.content_type!}</td>
-									<td align="center">${item.back_request_end_time!}</td>
-									<td align="center">${item.r_begin_time!}</td>
-									<td align="center">${item.back_client_ip!}</td>
-									<td align="center">${item.website!}</td>
-									<td align="center">${item.back_uri!}</td>
-									<td align="center">${item.os!}</td>
-									<td align="center">${item.cache_type!}</td>
-									<td align="center">${item.uri!}</td>
-									<td align="center">${item.url!}</td>
-									<td align="center">${item.back_request_begin_time!}</td>
-									<td align="center">${item.refer!}</td>
-									<td align="center">${item.url_hash!}</td>
-									<td align="center">${item.back_http_version!}</td>
-									<td align="center">${item.os_name!}</td>
-									<td align="center">${item.response_time!}</td>
-								</tr>
-								</#list>
-							</#if></tbody>
+									<#if list??>
+										<#list list as item>
+										<tr>
+											<td align="center">${item.back_ttfb!}</td>
+											<td align="center">${item.cache_device_ip!}</td>
+											<td align="center">${item.back_flow!}</td>
+											<td align="center">${item.ttfb!}</td>
+											<td align="center">${item.back_status_code!}</td>
+											<td align="center">${item.houzhui!}</td>
+											<td align="center">${item.type!}</td>
+											<td align="center">${item.ua!}</td>
+											<td align="center">${item.back_host!}</td>
+											<td align="center">${item.patd!}</td>
+											<td align="center">${item.back_metdod!}</td>
+											<td align="center">${item.back_server_port!}</td>
+											<td align="center">${item.len!}</td>
+											<td align="center">${item.back_content_type!}</td>
+											<td align="center">${item.host!}</td>
+											<td align="center">${item.server_ip!}</td>
+											<td align="center">${item.client_ip!}</td>
+											<td align="center">${item.back_cache_ctl!}</td>
+											<td align="center">${item.back_close_status!}</td>
+											<td align="center">${item.cache_save!}</td>
+											<td align="center">${item.metdod!}</td>
+											<td align="center">${item.http_version!}</td>
+											<td align="center">${item.r_end_time!}</td>
+											<td align="center">${item.back_src_server_ip!}</td>
+											<td align="center">${item.domain!}</td>
+											<td align="center">${item.name!}</td>
+											<td align="center">${item.server_port!}</td>
+											<td align="center">${item.device!}</td>
+											<td align="center">${item.back_max_age!}</td>
+											<td align="center">${item.status_code!}</td>
+											<td align="center">${item.flag!}</td>
+											<td align="center">${item.out_flow!}</td>
+											<td align="center">${item.cache_sta!}</td>
+											<td align="center">${item.back_size!}</td>
+											<td align="center">${item.dspeed!}</td>
+											<td align="center">${item.content_type!}</td>
+											<td align="center">${item.back_request_end_time!}</td>
+											<td align="center">${item.r_begin_time!}</td>
+											<td align="center">${item.back_client_ip!}</td>
+											<td align="center">${item.website!}</td>
+											<td align="center">${item.back_uri!}</td>
+											<td align="center">${item.os!}</td>
+											<td align="center">${item.cache_type!}</td>
+											<td align="center">${item.uri!}</td>
+											<td align="center">${item.url!}</td>
+											<td align="center">${item.back_request_begin_time!}</td>
+											<td align="center">${item.refer!}</td>
+											<td align="center">${item.url_hash!}</td>
+											<td align="center">${item.back_http_version!}</td>
+											<td align="center">${item.os_name!}</td>
+											<td align="center">${item.response_time!}</td>
+										</tr>
+										</#list>
+									</#if>
+								</tbody>
 							</table>
 						</table>
 					</div>
