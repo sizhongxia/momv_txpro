@@ -44,7 +44,7 @@ thead>tr>th, tbody>tr>td {
 }
 </style>
 </head>
-<body style="width: 100%;overflow: auto;">
+<body style="width: 100%; overflow: auto;">
 
 	<div class="row">
 		<div class="col-sm-12">
@@ -65,7 +65,8 @@ thead>tr>th, tbody>tr>td {
 									<option value="asc">asc</option>
 									<option value="desc">desc</option>
 								</select> <br /> 起始：<input name="from" value="0" /><br /> 长度：<input
-									name="size" value="10" /><br /> <input type="submit" value="搜索">
+									name="size" value="10" /><br /> <input type="submit"
+									value="搜索">
 							</form>
 							<textarea style="width: 100%; height: 120px;">${json!}</textarea>
 
@@ -80,79 +81,61 @@ thead>tr>th, tbody>tr>td {
 						<table class="table table-hover table-condensed">
 							<thead>
 								<tr>
-									<th>
-										<div class="th-inner">
-											角色ID<span class="tooltip-box"><i data-toggle="tooltip"
-												data-placement="bottom" title="系统自动生成"
-												class="fa fa-info-circle"></i></span>
-										</div>
-									</th>
-									<th><div class="th-inner">角色名</div></th>
-									<th><div class="th-inner">所在组织ID</div></th>
-									<th><div class="th-inner">角色编码</div></th>
-									<th><div class="th-inner">角色说明</div></th>
-									<th><div class="th-inner">启用状态</div></th>
-									<th><div class="th-inner">操作</div></th>
+									<th align="center" width="220">back_ttfb</th>
+									<th align="center" width="220">cache_device_ip</th>
+									<th align="center" width="220">back_flow</th>
+									<th align="center" width="320">ttfb</th>
+									<th align="center" width="220">back_status_code</th>
+									<th align="center" width="220">houzhui</th>
+									<th align="center" width="220">type</th>
+									<th align="center" width="320">ua</th>
+									<th align="center" width="220">back_host</th>
+									<th align="center" width="220">path</th>
+									<th align="center" width="220">back_method</th>
+									<th align="center" width="120">back_server_port</th>
+									<th align="center" width="80">len</th>
+									<th align="center" width="220">back_content_type</th>
+									<th align="center" width="220">host</th>
+									<th align="center" width="220">server_ip</th>
+									<th align="center" width="220">client_ip</th>
+									<th align="center" width="220">back_cache_ctl</th>
+									<th align="center" width="220">back_close_status</th>
+									<th align="center" width="220">cache_save</th>
+									<th align="center" width="80">method</th>
+									<th align="center" width="120">http_version</th>
+									<th align="center" width="220">r_end_time</th>
+									<th align="center" width="220">back_src_server_ip</th>
+									<th align="center" width="220">domain</th>
+									<th align="center" width="220">name</th>
+									<th align="center" width="220">server_port</th>
+									<th align="center" width="220">device</th>
+									<th align="center" width="220">back_max_age</th>
+									<th align="center" width="80">status_code</th>
+									<th align="center" width="220">flag</th>
+									<th align="center" width="220">out_flow</th>
+									<th align="center" width="220">cache_sta</th>
+									<th align="center" width="80">back_size</th>
+									<th align="center" width="220">dspeed</th>
+									<th align="center" width="220">content_type</th>
+									<th align="center" width="220">back_request_end_time</th>
+									<th align="center" width="220">r_begin_time</th>
+									<th align="center" width="220">back_client_ip</th>
+									<th align="center" width="220">website</th>
+									<th align="center" width="220">back_uri</th>
+									<th align="center" width="220">os</th>
+									<th align="center" width="220">cache_type</th>
+									<th align="center" width="220">uri</th>
+									<th align="center" width="220">url</th>
+									<th align="center" width="220">back_request_begin_time</th>
+									<th align="center" width="220">refer</th>
+									<th align="center" width="220">url_hash</th>
+									<th align="center" width="220">back_http_version</th>
+									<th align="center" width="220">os_name</th>
+									<th align="center" width="220">response_time</th>
 								</tr>
 							</thead>
-							<table class="table table-hover table-condensed">
-								<thead>
-									<tr>
-										<th align="center" width="220">back_ttfb</th>
-										<th align="center" width="220">cache_device_ip</th>
-										<th align="center" width="220">back_flow</th>
-										<th align="center" width="320">ttfb</th>
-										<th align="center" width="220">back_status_code</th>
-										<th align="center" width="220">houzhui</th>
-										<th align="center" width="220">type</th>
-										<th align="center" width="320">ua</th>
-										<th align="center" width="220">back_host</th>
-										<th align="center" width="220">path</th>
-										<th align="center" width="220">back_method</th>
-										<th align="center" width="120">back_server_port</th>
-										<th align="center" width="80">len</th>
-										<th align="center" width="220">back_content_type</th>
-										<th align="center" width="220">host</th>
-										<th align="center" width="220">server_ip</th>
-										<th align="center" width="220">client_ip</th>
-										<th align="center" width="220">back_cache_ctl</th>
-										<th align="center" width="220">back_close_status</th>
-										<th align="center" width="220">cache_save</th>
-										<th align="center" width="80">method</th>
-										<th align="center" width="120">http_version</th>
-										<th align="center" width="220">r_end_time</th>
-										<th align="center" width="220">back_src_server_ip</th>
-										<th align="center" width="220">domain</th>
-										<th align="center" width="220">name</th>
-										<th align="center" width="220">server_port</th>
-										<th align="center" width="220">device</th>
-										<th align="center" width="220">back_max_age</th>
-										<th align="center" width="80">status_code</th>
-										<th align="center" width="220">flag</th>
-										<th align="center" width="220">out_flow</th>
-										<th align="center" width="220">cache_sta</th>
-										<th align="center" width="80">back_size</th>
-										<th align="center" width="220">dspeed</th>
-										<th align="center" width="220">content_type</th>
-										<th align="center" width="220">back_request_end_time</th>
-										<th align="center" width="220">r_begin_time</th>
-										<th align="center" width="220">back_client_ip</th>
-										<th align="center" width="220">website</th>
-										<th align="center" width="220">back_uri</th>
-										<th align="center" width="220">os</th>
-										<th align="center" width="220">cache_type</th>
-										<th align="center" width="220">uri</th>
-										<th align="center" width="220">url</th>
-										<th align="center" width="220">back_request_begin_time</th>
-										<th align="center" width="220">refer</th>
-										<th align="center" width="220">url_hash</th>
-										<th align="center" width="220">back_http_version</th>
-										<th align="center" width="220">os_name</th>
-										<th align="center" width="220">response_time</th>
-									</tr>
-								</thead>
-								<tbody>
-									<#if list??>
+							<tbody>
+								<#if list??>
 										<#list list as item>
 										<tr>
 											<td align="center">${item.back_ttfb!}</td>
@@ -210,7 +193,6 @@ thead>tr>th, tbody>tr>td {
 										</#list>
 									</#if>
 								</tbody>
-							</table>
 						</table>
 					</div>
 				</div>
