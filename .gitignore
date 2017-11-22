@@ -21,4 +21,28 @@
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
 
-target/*
+
+
+.buildpath
+.project
+.settings/
+META-INF/
+.externalToolBuilders/
+.classpath
+.prefs
+.metadata
+.MF
+.component
+.jsdtscope
+.container
+.name
+.launch
+.gitignore
+.checkstyle
+.externalToolBuilders/
+
+tm-pro-web/target/*
+tm-pro-redis/target/*
+tm-pro-model/target/*
+tm-pro-utils/target/*
+tm-pro-service/target/*
