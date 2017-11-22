@@ -28,11 +28,12 @@ import org.tm.pro.entity.User;
 import org.tm.pro.service.UserService;
 import org.tm.pro.utils.TmNumberUtil;
 import org.tm.pro.web.cache.SystemInfoCacheUtil;
-import org.tm.pro.web.redis.TmRedisKeys;
 
 import com.tm.pro.redis.util.RedisUtil;
 
 public class TmJDBCRealm extends AuthorizingRealm {
+	
+	private static String LoginFailCountKey = "tm:login:fail:count:";
 
 	@Autowired
 	UserService userService;
@@ -109,7 +110,7 @@ public class TmJDBCRealm extends AuthorizingRealm {
 		// 登录限制
 		if ("Y".equals(loginFailLimit)) {
 
-			String loginFailCountKey = TmRedisKeys.LoginFailCountKey + loginName;
+			String loginFailCountKey = LoginFailCountKey + loginName;
 			String failCountStr = redisUtil.get(loginFailCountKey);
 
 			int failCount = TmNumberUtil.toInt(failCountStr, 0);

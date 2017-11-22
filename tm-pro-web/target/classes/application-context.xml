@@ -2,7 +2,7 @@
 <beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xmlns="http://www.springframework.org/schema/beans" xmlns:context="http://www.springframework.org/schema/context"
 	xmlns:tx="http://www.springframework.org/schema/tx" xmlns:aop="http://www.springframework.org/schema/aop"
-    xmlns:elasticsearch="http://www.springframework.org/schema/data/elasticsearch"
+	xmlns:elasticsearch="http://www.springframework.org/schema/data/elasticsearch"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans
        http://www.springframework.org/schema/beans/spring-beans.xsd
        http://www.springframework.org/schema/context
@@ -18,30 +18,35 @@
 	<context:property-placeholder location="classpath*:conf/*.properties" />
 
 	<bean id="redisConfig" class="com.tm.pro.redis.config.RedisConfig">
-		<property name="urls" value="${redis.urls}"/>
-		<property name="auth" value="${redis.auth}"/>
-		<property name="timeout" value="${redis.timeout}"/>
-		<property name="maxTotal" value="${redis.maxTotal}"/>
-		<property name="maxIdle" value="${redis.maxIdle}"/>
-		<property name="minIdle" value="${redis.minIdle}"/>
-		<property name="maxWaitMillis" value="${redis.maxWaitMillis}"/>
-		<property name="testOnBorrow" value="${redis.testOnBorrow}"/>
+		<property name="urls" value="${redis.urls}" />
+		<property name="auth" value="${redis.auth}" />
+		<property name="timeout" value="${redis.timeout}" />
+		<property name="maxTotal" value="${redis.maxTotal}" />
+		<property name="maxIdle" value="${redis.maxIdle}" />
+		<property name="minIdle" value="${redis.minIdle}" />
+		<property name="maxWaitMillis" value="${redis.maxWaitMillis}" />
+		<property name="testOnBorrow" value="${redis.testOnBorrow}" />
 	</bean>
-	
+
 	<bean id="redisUtil" class="com.tm.pro.redis.util.RedisUtil">
 		<property name="redisConfig" ref="redisConfig"></property>
 	</bean>
-	
-	<bean id="elasticsearchUtil" class="org.tm.pro.es.ElasticsearchUtil">
-		<property name="serverHost" value="${elastic.serverHost}"/>
-		<property name="port" value="${elastic.port}"/>
-		<property name="clusterName" value="${elastic.clusterName}"/>
+
+	<bean id="elasticUtil" class="org.tm.pro.es.ElasticUtil">
+		<property name="baseUrl" value="${elastic.baseUrl}" />
 	</bean>
-	
-	<context:annotation-config />
+
+	<bean id="scheduler" lazy-init="false" scope="singleton" class="org.springframework.scheduling.quartz.SchedulerFactoryBean" />
+	<!-- 任务管理器 -->
+	<bean class="org.tm.pro.web.quartz.manager.JobManager">
+		<property name="scheduler" ref="scheduler"></property>
+	</bean>
+
 	<!--扫描包进行注入 -->
 	<context:component-scan base-package="org.tm.pro.mapper" />
 	<context:component-scan base-package="org.tm.pro.service.impl" />
+	<!-- Jobs -->
+	<context:component-scan base-package="org.tm.pro.web.quartz.job.impl" />
 
 	<!-- 数据库连接池管理 -->
 	<bean id="c3p0DataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource"
