@@ -33,7 +33,7 @@ public class IndexController extends BaseController {
 
 	@UserAgentRecord
 	@RequiresAuthentication
-	@RequestMapping(value = { "", "/", "/index" }, method = { RequestMethod.GET })
+	@RequestMapping(value = { "/index" }, method = { RequestMethod.GET })
 	public ModelAndView index(HttpServletRequest request) {
 		ModelAndView mv = new ModelAndView("index");
 
