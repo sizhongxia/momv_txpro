@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- BootStrap Css -->
+<link href="${rc.contextPath}/statics/ui-frame/css/bootstrap.min14ed.css?v=3.3.6" rel="stylesheet">
+<!-- 字体图标 Css -->
+<link href="${rc.contextPath}/statics/ui-frame/css/font-awesome.min93e3.css?v=4.4.0" rel="stylesheet">
+<!-- 下拉选择插件 -->
+<link href="${rc.contextPath}/statics/ui-frame/css/plugins/chosen/chosen.css" rel="stylesheet">
+<!-- 开关按钮插件 -->
+<link href="${rc.contextPath}/statics/ui-frame/css/plugins/switchery/switchery.css" rel="stylesheet">
+<!-- BootStrap 扩展插件 -->
+<link href="${rc.contextPath}/statics/ui-frame/css/plugins/jasny/jasny-bootstrap.min.css" rel="stylesheet">
+<!-- BootStrap 日期插件 -->
+<link href="${rc.contextPath}/statics/ui-frame/css/plugins/datapicker/datepicker3.css" rel="stylesheet">
+<!-- Checkbox的美化插件 -->
+<link href="${rc.contextPath}/statics/ui-frame/css/plugins/iCheck/custom.css" rel="stylesheet">
+<!-- Css 动画 -->
+<link href="${rc.contextPath}/statics/ui-frame/css/animate.min.css" rel="stylesheet">
+<!-- 基本样式 -->
+<link href="${rc.contextPath}/statics/ui-frame/css/style.min862f.css?v=4.1.0" rel="stylesheet">
+<style type="text/css">
+thead>tr>th, tbody>tr>td{text-align:center}
+.wrapper-content{padding:0}
+.float-e-margins .btn{margin-bottom:0}
+.form-group{margin-bottom:4px!important;}
+.input-group{width: 100%;}
+.ibox{margin-bottom:2px}
+.dataTables_info{text-align: center;}
+</style>
+</head>
+<body class="gray-bg" style="display: none">
+	<div id="app" class="wrapper wrapper-content">
+		<div class="row">
+			<div class="col-sm-12">
+
+				<div class="ibox float-e-margins">
+					<div class="ibox-title">
+						<h5>${dict.name!} - 字典项</h5>
+					</div>
+				</div>
+				<div class="ibox float-e-margins">
+					<div class="ibox-content" style="padding-left: 0;padding-right: 0;">
+						<div class="fixed-table-body">
+							<table class="table table-striped table-bordered table-hover " id="editable">
+	                           <thead>
+	                               <tr data-tabullet-map="id">
+	                                   <th width="110" data-tabullet-map="id" data-tabullet-readonly="true">
+	                                   	<div class="th-inner">字典项ID<span class="tooltip-box"><i data-toggle="tooltip" data-placement="bottom" title="系统自动生成" class="fa fa-info-circle"></i></span></div>
+	                                   </th>
+	                                   <th width="267" data-tabullet-map="name">名称</th>
+	                                   <th data-tabullet-map="value">值</th>
+				                       <th width="50" data-tabullet-type="edit"></th>
+				                       <th width="50" data-tabullet-type="delete"></th>
+	                               </tr>
+	                           </thead>
+	                       </table>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- Jquery Dom -->
+	<script src="${rc.contextPath}/statics/ui-frame/js/jquery.min.js?v=2.1.4"></script>
+	<!-- Jquery 分页插件 -->
+	<script src="${rc.contextPath}/statics/ui-frame/js/jquery.pagination.min.js"></script>
+	<!-- BootStrap Js -->
+	<script src="${rc.contextPath}/statics/ui-frame/js/bootstrap.min.js?v=3.3.6"></script>
+	<!-- 可编辑表格 -->
+    <script src="${rc.contextPath}/statics/ui-frame/plugins/edit-table/tabullet.js"></script>
+	<!-- Jquery 下拉选择插件 -->
+	<script src="${rc.contextPath}/statics/ui-frame/js/plugins/chosen/chosen.jquery.min.js?v=1.8.2"></script>
+	<!-- Layer 弹框插件 -->
+	<script src="${rc.contextPath}/statics/ui-frame/js/plugins/layer/layer.min.js"></script>
+	<!-- BootStrap 扩展插件 -->
+	<script src="${rc.contextPath}/statics/ui-frame/js/plugins/jasny/jasny-bootstrap.min.js"></script>
+	<!-- 开关按钮插件 -->
+	<script src="${rc.contextPath}/statics/ui-frame/js/plugins/switchery/switchery.js"></script>
+	<!-- 日期插件 -->
+	<script src="${rc.contextPath}/statics/ui-frame/js/plugins/datapicker/bootstrap-datepicker.js"></script>
+	<!-- 日期格式化插件 -->
+	<script src="${rc.contextPath}/statics/ui-frame/plugins/moment/moment.min.js"></script>
+	<!-- Checkbox的美化插件 -->
+	<script src="${rc.contextPath}/statics/ui-frame/js/plugins/iCheck/icheck.min.js"></script>
+	<!-- Vue MV-VM框架 -->
+	<script src="${rc.contextPath}/statics/ui-frame/js/vue.min.js"></script>
+	<!-- 框架工具 -->
+	<script src="${rc.contextPath}/statics/ui-frame/js/frame-util.js"></script>
+
+	<script type="text/javascript">
+	    
+	    "use strict";
+	    !function(_d, _w, $, _v) {
+	   		var data = {
+	   			id: ${dict.id!},
+	   			datas: []
+	   	    };
+	   		var methods = {
+	   			loadData : function() {
+   					const that = this;
+			   		$.post("${rc.contextPath}/dictionary/itemList.do", {id: that.id}, function(res){
+			   			that.datas = res.list;
+			   			that.setTable();
+		   	        },"json");
+   				},
+   				setTable: function() {
+   					const that = this;
+		   			var list = [];
+		   			
+		   			for(var i=0;i<that.datas.length;i++){
+		   			 	var obj = {
+		   			 		id: that.datas[i].id,
+		   			 		name: that.datas[i].name,
+		   			 		value: that.datas[i].value,
+		   			 	};
+		   			 	list.push(obj);
+		   			}
+		   			
+   					$("#editable").tabullet({
+		                data: list,
+		                action: function(mode, data) {
+		                	var obj = {
+	                    		name: data.name,
+	                    		value: data.value
+	                    	};
+		                    if (mode === 'save') {
+		                    	obj.id = that.id,
+		                    	that.save(obj);
+		                    } else if (mode === 'edit') {
+		                    	obj.id = data.id;
+		                    	that.update(obj);
+		                    } else if (mode == 'delete') {
+		                    	that.del(data);
+		                    }
+		                }
+		            });
+   				},
+   				save: function(obj) {
+			    	const that = this;
+			    	$.post("${rc.contextPath}/dictionary/saveItem.do", obj, function(result){
+			    		var _time = 3000, color = "#8c1717";
+			    		if(result.status) {
+			    			that.loadData();
+			    			_time = 1000;
+			    			color = "#2f4050";
+			    		}
+			    		parent.layer.msg("<span style='color:" + color + "'><i class='fa fa-info'></i> " + result.msg  +"</span>", {
+			    			time: _time
+			    		});
+			    	}, "json");
+			    },
+   				update: function(obj) {
+			    	const that = this;
+			    	$.post("${rc.contextPath}/dictionary/updateItem.do", obj, function(result){
+			    		var _time = 3000, color = "#8c1717";
+			    		if(result.status) {
+			    			that.loadData();
+			    			_time = 1000;
+			    			color = "#2f4050";
+			    		}
+			    		parent.layer.msg("<span style='color:" + color + "'><i class='fa fa-info'></i> " + result.msg  +"</span>", {
+			    			time: _time
+			    		});
+			    	}, "json");
+			    },
+   				del: function(id){
+			    	var that = this;
+			    	parent.layer.confirm('是否要删除该字典项信息？', {
+		    		  btn: ['删除','取消'] //按钮
+		    		}, function(){
+		    			$.post("${rc.contextPath}/dictionary/deleteItem.do",{id: id}, function(result){
+		    				var _time = 3000, color = "#8c1717";
+				    		if(result.status) {
+				    			that.loadData();
+				    			_time = 1000;
+				    			color = "#2f4050";
+				    		}
+				    		parent.layer.msg("<span style='color:" + color + "'><i class='fa fa-info'></i> " + result.msg  +"</span>", {
+				    			time: _time
+				    		});
+			   	        },"json");
+		    		}, function(index){
+		    			that.loadData();
+		    			parent.layer.close(index);
+		    		});
+			    }
+	   		};
+	   	    new _v({
+	   	    	el: '#app',
+	   	     	data: data,
+	      		methods: methods,
+		        mounted: function (){
+		        	var that = this;
+		        	that.loadData();
+					$(".tooltip-box").tooltip({selector:"[data-toggle=tooltip]",container:"body"})
+					setTimeout(function(){
+						$("body").fadeIn(40);
+					});
+		        }
+	   	    })
+	    }(document, window, jQuery, Vue)
+	</script>
+</body>
+</html>

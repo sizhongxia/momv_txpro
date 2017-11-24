@@ -37,12 +37,28 @@
                         </div>
                         <div class="logo-element"><i class="fa fa-th-large"></i></div>
                     </li>
+                    
                     <li>
                         <a class="J_menuItem" href="${rc.contextPath}/welcome.do"><i class="fa fa-gg-circle"></i><span class="nav-label">主面板</span></a>
                     </li>
+                    
                     <li>
-                        <a class="J_menuItem" href="${rc.contextPath}/elastic/index.do"><i class="fa fa-gg-circle"></i><span class="nav-label">简单查询</span></a>
+                        <a href="#"><i class="fa fa-gg-circle"></i> <span class="nav-label">缓存日志分析</span><span class="fa arrow"></span></a>
+                        <ul class="nav nav-second-level">
+                            <li><a class="J_menuItem" href="${rc.contextPath}/cache-log-statistics/global.do"><i class="fa fa-slack"></i> 全局统计</a></li>
+                            <li><a class="J_menuItem" href="${rc.contextPath}/cache-log-statistics/local.do"><i class="fa fa-slack"></i> 地市统计</a></li>
+                            <li><a class="J_menuItem" href="${rc.contextPath}/cache-log-statistics/access-mode.do"><i class="fa fa-slack"></i> 接入方式统计</a></li>
+                            <li><a class="J_menuItem" href="${rc.contextPath}/cache-log-statistics/domain-visit-statistics.do"><i class="fa fa-slack"></i> 域名访问统计</a></li>
+                            <li><a class="J_menuItem" href="${rc.contextPath}/cache-log-statistics/document-type-statistics.do"><i class="fa fa-slack"></i> 文件类型统计</a></li>
+                            <li><a class="J_menuItem" href="${rc.contextPath}/cache-log-statistics/request-method-statistics.do"><i class="fa fa-slack"></i> 请求方式统计</a></li>
+                            <li><a class="J_menuItem" href="${rc.contextPath}/cache-log-statistics/http-status-statistics.do"><i class="fa fa-slack"></i> HTTP状态码统计</a></li>
+                            <li><a class="J_menuItem" href="${rc.contextPath}/cache-log-statistics/node-quality-statistics.do"><i class="fa fa-slack"></i> 节点服务质量统计</a></li>
+                            <li><a class="J_menuItem" href="${rc.contextPath}/cache-log-statistics/user-visit-statistics.do"><i class="fa fa-slack"></i> 用户访问统计</a></li>
+                            <li><a class="J_menuItem" href="${rc.contextPath}/cache-log-statistics/domain-type-statistics.do"><i class="fa fa-slack"></i> 域名类型统计</a></li>
+                            <li><a class="J_menuItem" href="${rc.contextPath}/cache-log-statistics/web-visit-statistics.do"><i class="fa fa-slack"></i> 网站访问统计</a></li>
+                    	</ul>
                     </li>
+                    
                     <li>
                         <a href="#"><i class="fa fa-gg-circle"></i><span class="nav-label">权限管理</span><span class="fa arrow"></span></a>
                         <ul class="nav nav-second-level">
@@ -65,10 +81,13 @@
                                 <a class="J_menuItem" href="${rc.contextPath}/system/illustrate.do"><i class="fa fa-slack"></i> 系统说明</a>
                             </li>
                             <li>
-                                <a class="J_menuItem" href="${rc.contextPath}/system/system_info.do"><i class="fa fa-slack"></i> 系统配置</a>
+                                <a class="J_menuItem" href="${rc.contextPath}/dictionary/index.do"><i class="fa fa-slack"></i> 系统字典</a>
                             </li>
                             <li>
                                 <a class="J_menuItem" href="${rc.contextPath}/system/quartz.do"><i class="fa fa-slack"></i> 任务调度</a>
+                            </li>
+                            <li>
+                                <a class="J_menuItem" href="${rc.contextPath}/system/system_info.do"><i class="fa fa-slack"></i> 系统配置</a>
                             </li>
                         </ul>
                     </li>

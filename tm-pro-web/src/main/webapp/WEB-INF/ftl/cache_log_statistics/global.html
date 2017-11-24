@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- BootStrap Css -->
+<link href="${rc.contextPath}/statics/ui-frame/css/bootstrap.min14ed.css?v=3.3.6" rel="stylesheet">
+<!-- 字体图标 Css -->
+<link href="${rc.contextPath}/statics/ui-frame/css/font-awesome.min93e3.css?v=4.4.0" rel="stylesheet">
+<!-- BootStrap 日期插件 -->
+<link href="${rc.contextPath}/statics/ui-frame/css/plugins/datapicker/datepicker3.css" rel="stylesheet">
+<!-- Css 动画 -->
+<link href="${rc.contextPath}/statics/ui-frame/css/animate.min.css" rel="stylesheet">
+<!-- 基本样式 -->
+<link href="${rc.contextPath}/statics/ui-frame/css/style.min862f.css?v=4.1.0" rel="stylesheet">
+</head>
+<body class="gray-bg">
+	<div id="app" class="wrapper wrapper-content">
+		<div class="row">
+			<div class="col-sm-12">
+
+				<div class="ibox float-e-margins">
+					<div class="ibox-content">
+						<div class="row">
+
+							<div class="col-xs-4">
+								<div class="form-group" id="date_range">
+									<label class="font-noraml">日期</label>
+									<div class="input-daterange input-group" id="datepicker">
+										<input type="text" class="input-sm form-control" name="start" value="" />
+										<span class="input-group-addon">到</span>
+										<input type="text" class="input-sm form-control" name="end" value="" />
+									</div>
+								</div>
+							</div>
+
+							<div class="col-xs-2">
+								<div class="form-group">
+									<label class="font-noraml">厂商</label>
+                                    <select class="form-control m-b" name="manufacturer">
+										<#list manufacturers as item>
+                                       		<option value="${item.value!}">${item.name!}</option>
+                                        </#list>
+                                    </select>
+								</div>
+							</div>
+							
+							<div class="col-xs-2">
+								<div class="form-group">
+									<label class="font-noraml">类型</label>
+									<select class="form-control m-b" name="type">
+										<#list requestHttpUrlTypes as item>
+                                       		<option value="${item.value!}">${item.name!}</option>
+                                        </#list>
+                                    </select>
+								</div>
+							</div>
+							
+							<div class="col-xs-2">
+								<div class="form-group">
+									<label class="font-noraml">节点</label>
+									<select class="form-control m-b" name="node">
+										<#list cacheSystemNodes as item>
+											<option value="${item.value!}">${item.name!}</option>
+                                        </#list>
+                                    </select>
+								</div>
+							</div>
+							
+							<div class="col-xs-2">
+								<div class="form-group" style="min-width: 120px;">
+									<label class="font-noraml">操作</label>
+									<div class="btn-group" style="display: block;">
+										<button class="btn btn-primary" type="button">搜索</button>
+	                                    <button class="btn btn-white" type="button">刷新</button>
+                                    </div>
+								</div>
+							</div>
+
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		
+		<div class="row">
+			<div class="col-xs-6">
+				<div class="ibox float-e-margins">
+					<div class="ibox-title">
+						<h5>Cache状态码分布</h5>
+					</div>
+					<div class="ibox-content" style="padding-left: 0; padding-right: 0;"></div>
+				</div>
+			</div>
+			<div class="col-xs-6">
+				<div class="ibox float-e-margins">
+					<div class="ibox-title">
+						<h5>回源吐出速率</h5>
+					</div>
+					<div class="ibox-content" style="padding-left: 0; padding-right: 0;"></div>
+				</div>
+			</div>
+			<div class="col-xs-6">
+				<div class="ibox float-e-margins">
+					<div class="ibox-title">
+						<h5>Cache HIT/MISS/ERR比例</h5>
+					</div>
+					<div class="ibox-content" style="padding-left: 0; padding-right: 0;"></div>
+				</div>
+			</div>
+			<div class="col-xs-6">
+				<div class="ibox float-e-margins">
+					<div class="ibox-title">
+						<h5>Cache 每秒访问次数</h5>
+					</div>
+					<div class="ibox-content" style="padding-left: 0; padding-right: 0;"></div>
+				</div>
+			</div>
+		</div>
+		
+	</div>
+	<!-- Jquery Dom -->
+	<script src="${rc.contextPath}/statics/ui-frame/js/jquery.min.js?v=2.1.4"></script>
+	<!-- BootStrap Js -->
+	<script src="${rc.contextPath}/statics/ui-frame/js/bootstrap.min.js?v=3.3.6"></script>
+	<!-- 日期插件 -->
+	<script src="${rc.contextPath}/statics/ui-frame/js/plugins/datapicker/bootstrap-datepicker.js"></script>
+	<!-- 日期格式化插件 -->
+	<script src="${rc.contextPath}/statics/ui-frame/plugins/moment/moment.min.js"></script>
+	<!-- 框架工具 -->
+	<script src="${rc.contextPath}/statics/ui-frame/js/frame-util.js"></script>
+	<script type="text/javascript">
+		(function(_j) {
+			// 日期控件初始化
+			_j("#date_range .input-daterange").datepicker({
+				keyboardNavigation : !1,
+				forceParse : !1,
+				autoclose : !0
+			});
+		})(jQuery)
+	</script>
+</body>
+</html>
