@@ -33,14 +33,14 @@ public class IndexController extends BaseController {
 
 	@UserAgentRecord
 	@RequiresAuthentication
-	@RequestMapping(value = "/index", method = { RequestMethod.GET })
+	@RequestMapping(value = { "", "/", "/index" }, method = { RequestMethod.GET })
 	public ModelAndView index(HttpServletRequest request) {
 		ModelAndView mv = new ModelAndView("index");
 
 		SystemInfo systemInfo = SystemInfoCacheUtil.systemInfo;
 		mv.addObject("systemTitle", systemInfo.getSystemTitle());
 		mv.addObject("systemDescript", systemInfo.getSystemDescript());
-		
+
 		mv.addObject("currentTime", System.currentTimeMillis());
 
 		if ("Y".equalsIgnoreCase(systemInfo.getOnlyChrome())) {
@@ -148,7 +148,6 @@ public class IndexController extends BaseController {
 		ModelAndView view = new ModelAndView("operation_timeout");
 		return view;
 	}
-	
 
 	// /***
 	// * 上传文件
