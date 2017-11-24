@@ -133,7 +133,12 @@ public class IndexController extends BaseController {
 
 	@RequestMapping(value = "/page_not_found")
 	public ModelAndView pageNotFound(HttpServletRequest request) {
-		ModelAndView view = new ModelAndView("page_not_found");
+		ModelAndView view = new ModelAndView();
+		if (request.getHeader("Referer") != null) {
+			view.setViewName("page_not_found");
+		} else {
+			view.setViewName("to_skip_index");
+		}
 		return view;
 	}
 
