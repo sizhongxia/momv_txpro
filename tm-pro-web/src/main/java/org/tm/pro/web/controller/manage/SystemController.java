@@ -38,6 +38,7 @@ public class SystemController extends BaseController {
 	}
 
 	@RequiresAuthentication
+	@RequiresPermissions("auth_job_manager")
 	@RequestMapping(value = "/quartz", method = { RequestMethod.GET })
 	public ModelAndView quartz(HttpServletRequest request) {
 		ModelAndView mav = new ModelAndView("system/quartz");

@@ -8,6 +8,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.shiro.authz.annotation.RequiresAuthentication;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.quartz.SchedulerException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
@@ -43,6 +44,7 @@ public class QuartzController extends BaseController implements ApplicationEvent
 	@ResponseBody
 	@RequiresAuthentication
 	@RequestMapping(value = "/data")
+	@RequiresPermissions("auth_job_manager")
 	public Map<String, Object> data(HttpServletRequest request) {
 		Map<String, Object> data = new HashMap<>();
 		List<Job> jobs = null;
@@ -67,10 +69,13 @@ public class QuartzController extends BaseController implements ApplicationEvent
 	@ResponseBody
 	@RequiresAuthentication
 	@RequestMapping(value = "/option")
+	@RequiresPermissions("auth_job_manager")
 	public ApiResultMap option(HttpServletRequest request, @RequestParam(value = "type", required = true) String type,
 			@RequestParam(value = "jobId", required = true) String jobId,
 			@RequestParam(value = "jobGroup", required = true) String jobGroup,
-			@RequestParam(value = "jobCron", required = true) String jobCron) {
+			@RequestParam(value = "jobCron", required = true) String jobCron,
+			@RequestParam(value = "isConcurrent", required = true) String isConcurrent,
+			@RequestParam(value = "isStartupExecution", required = true) String isStartupExecution) {
 
 		ApiResultMap arm = new ApiResultMap();
 		arm.setCode(200);
@@ -89,11 +94,21 @@ public class QuartzController extends BaseController implements ApplicationEvent
 			arm.setMsg("错误：未传入的作业类分组");
 			return arm;
 		}
+		if(!"Y".equals(isConcurrent) && !"N".equals(isConcurrent)) {
+			arm.setMsg("错误：表单参数有误");
+			return arm;
+		}
+		if(!"Y".equals(isStartupExecution) && !"N".equals(isStartupExecution)) {
+			arm.setMsg("错误：表单参数有误");
+			return arm;
+		}
 
 		Job job = new Job();
 		job.setJobId(jobId);
 		job.setJobGroup(jobGroup);
 		job.setCronExpression(jobCron);
+		job.setConcurrent(isConcurrent);
+		job.setStartupExecution(isStartupExecution);
 
 		switch (type) {
 		case "STOP":

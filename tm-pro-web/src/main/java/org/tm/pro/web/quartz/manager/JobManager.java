@@ -113,6 +113,8 @@ public class JobManager implements InitializingBean {
 			scheduler.rescheduleJob(triggerKey, trigger);
 			org.tm.pro.entity.Job _job = jobService.getByJobId(job.getJobId());
 			_job.setCron(job.getCronExpression());
+			_job.setIsConcurrent("Y".equals(job.getConcurrent()));
+			_job.setIsStartupExecution("Y".equals(job.getStartupExecution()));
 			if (jobService.update(_job) > 0) {
 				return true;
 			}

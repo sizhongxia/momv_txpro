@@ -196,7 +196,7 @@ thead>tr>th, tbody>tr>td {
 				<div class="form-group">
 		            <div class="col-xs-12">
 		                <span class="help-block m-b-none">
-		                     <span class="ilabel">&nbsp;并发执行</span>
+		                     <span class="ilabel">&nbsp;并发执行（Y：允许，N：不允许）</span>
 		                </span>
 		                <input id="new_isConcurrent" type="text" value="{{concurrent}}" class="form-control">
 		            </div>
@@ -207,7 +207,7 @@ thead>tr>th, tbody>tr>td {
 				<div class="form-group">
 		            <div class="col-xs-12">
 		                <span class="help-block m-b-none">
-		                     <span class="ilabel">&nbsp;重启自执行</span>
+		                     <span class="ilabel">&nbsp;重启自执行（Y：允许，N：不允许）</span>
 		                </span>
 		                <input id="new_isStartupExecution" type="text" value="{{startupExecution}}" class="form-control">
 		            </div>
@@ -218,7 +218,7 @@ thead>tr>th, tbody>tr>td {
 				<div class="col-sm-12 text-center" style="margin: 32px auto">
 				      <button data-type="STOP" data-jobid="{{jobId}}" data-jobgroup="{{jobGroup}}" class="btn" type="button">暂停</button>
 				      <button data-type="START" data-jobid="{{jobId}}" data-jobgroup="{{jobGroup}}" class="btn" type="button">启动</button>
-				      <button data-type="RESET" data-jobid="{{jobId}}" data-jobgroup="{{jobGroup}}" class="btn" type="button">重置任务时间调度</button>
+				      <button data-type="RESET" data-jobid="{{jobId}}" data-jobgroup="{{jobGroup}}" class="btn" type="button">更新</button>
 				      <button data-type="RUN" data-jobid="{{jobId}}" data-jobgroup="{{jobGroup}}" class="btn" style="background-color: #273a4a;border-color: #273a4a;color: #FFF;" type="button">立即执行</button>
 				      <button data-type="REMOVE" data-jobid="{{jobId}}" data-jobgroup="{{jobGroup}}" class="btn" style="background-color: #ec1e34;border-color: #ec1e34;color: #FFF;" type="button">移除</button>
 				</div>
@@ -304,12 +304,19 @@ thead>tr>th, tbody>tr>td {
 					});
 					
 					_j("body").on('click', 'button', function() {
-						var c_type = _j(this).data("type"), c_job_id = _j(this).data("jobid"), c_job_group = _j(this).data("jobgroup"), c_cron = _j("#new_cronExpressionInput").val();
+						var c_type = _j(this).data("type"), 
+						c_job_id = _j(this).data("jobid"), 
+						c_job_group = _j(this).data("jobgroup"), 
+						c_cron = _j("#new_cronExpressionInput").val(),
+						c_isConcurrent = _j("#new_isConcurrent").val(),
+						c_isStartupExecution = _j("#new_isStartupExecution").val();
 						_j.post("${rc.contextPath}/quartz/option.do", {
 							type: c_type,
 							jobId: c_job_id,
 							jobGroup: c_job_group,
-							jobCron: c_cron
+							jobCron: c_cron,
+							isConcurrent: c_isConcurrent,
+							isStartupExecution: c_isStartupExecution
 						}, function(result){
 							var _time = 3000;
 				    		if(result.status) {
