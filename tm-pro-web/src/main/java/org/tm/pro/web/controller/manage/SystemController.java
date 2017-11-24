@@ -32,8 +32,15 @@ public class SystemController extends BaseController {
 
 	@RequiresAuthentication
 	@RequestMapping(value = "/illustrate", method = { RequestMethod.GET })
-	public ModelAndView info(HttpServletRequest request) {
+	public ModelAndView illustrate(HttpServletRequest request) {
 		ModelAndView mav = new ModelAndView("system/illustrate");
+		return mav;
+	}
+
+	@RequiresAuthentication
+	@RequestMapping(value = "/quartz", method = { RequestMethod.GET })
+	public ModelAndView quartz(HttpServletRequest request) {
+		ModelAndView mav = new ModelAndView("system/quartz");
 		return mav;
 	}
 

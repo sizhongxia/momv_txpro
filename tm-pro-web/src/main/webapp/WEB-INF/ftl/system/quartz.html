@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- BootStrap Css -->
+<link href="${rc.contextPath}/statics/ui-frame/css/bootstrap.min14ed.css?v=3.3.6" rel="stylesheet">
+<!-- 字体图标 Css -->
+<link href="${rc.contextPath}/statics/ui-frame/css/font-awesome.min93e3.css?v=4.4.0" rel="stylesheet">
+<!-- 下拉选择插件 -->
+<link href="${rc.contextPath}/statics/ui-frame/css/plugins/chosen/chosen.css" rel="stylesheet">
+<!-- 开关按钮插件 -->
+<link href="${rc.contextPath}/statics/ui-frame/css/plugins/switchery/switchery.css" rel="stylesheet">
+<!-- BootStrap 扩展插件 -->
+<link href="${rc.contextPath}/statics/ui-frame/css/plugins/jasny/jasny-bootstrap.min.css" rel="stylesheet">
+<!-- BootStrap 日期插件 -->
+<link href="${rc.contextPath}/statics/ui-frame/css/plugins/datapicker/datepicker3.css" rel="stylesheet">
+<!-- Checkbox的美化插件 -->
+<link href="${rc.contextPath}/statics/ui-frame/css/plugins/iCheck/custom.css" rel="stylesheet">
+<!-- Css 动画 -->
+<link href="${rc.contextPath}/statics/ui-frame/css/animate.min.css" rel="stylesheet">
+<!-- 基本样式 -->
+<link href="${rc.contextPath}/statics/ui-frame/css/style.min862f.css?v=4.1.0" rel="stylesheet">
+<style type="text/css">
+thead>tr>th, tbody>tr>td {
+	text-align: center
+}
+.wrapper-content {
+	padding: 0
+}
+.float-e-margins .btn {
+	margin-bottom: 0
+}
+.ibox {
+	margin-bottom: 2px
+}
+</style>
+</head>
+<body class="gray-bg" style="display: none">
+	<div id="app" class="wrapper wrapper-content">
+		<div class="row">
+			<div class="col-sm-12">
+
+				<div class="ibox float-e-margins">
+					<div class="ibox-title">
+						<h5>系统定时任务列表</h5>
+						<div class="ibox-tools">
+							定时刷新 <select v-model="timer" style="width: 62px">
+								<option value="0">无</option>
+								<option value="1">快速</option>
+								<option value="3">中速</option>
+								<option value="5">慢速</option>
+							</select>，
+							<a @click="refresh($event)" style="color:#273a4a"><i class="fa fa-refresh"></i>  立即刷新</a>
+						</div>
+					</div>
+				</div>
+
+				<div class="ibox float-e-margins">
+					<div class="ibox-content"
+						style="padding-left: 0; padding-right: 0;">
+						<div class="fixed-table-body">
+							<table class="table table-hover table-condensed">
+								<thead>
+									<tr>
+										<th><div class="th-inner">任务名</div></th>
+										<th><div class="th-inner">任务组名称</div></th>
+										<th><div class="th-inner">任务类</div></th>
+										<th><div class="th-inner">时间调度</div></th>
+										<th><div class="th-inner">状态</div></th>
+										<th><div class="th-inner">上次执行时间</div></th>
+										<th><div class="th-inner">下次执行时间</div></th>
+										<th><div class="th-inner"></div></th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr v-for="(item, index) in datas">
+										<td>{{item.jobName}}</td>
+										<td>{{item.jobGroupName}}</td>
+										<td>{{item.jobClassName}}</td>
+										<td>{{item.cronExpression}}</td>
+										<td>{{item.jobStatus | setStatus}}</td>
+										<td>{{item.updateTime}}</td>
+										<td>{{item.nextExecureTime}}</td>
+										<td>
+												<a @click="config(item, $event)">操作</a>
+										</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- Jquery Dom -->
+	<script src="${rc.contextPath}/statics/ui-frame/js/jquery.min.js?v=2.1.4"></script>
+	<!-- Jquery 分页插件 -->
+	<script src="${rc.contextPath}/statics/ui-frame/js/jquery.pagination.min.js"></script>
+	<!-- BootStrap Js -->
+	<script src="${rc.contextPath}/statics/ui-frame/js/bootstrap.min.js?v=3.3.6"></script>
+	<!-- Jquery 下拉选择插件 -->
+	<script src="${rc.contextPath}/statics/ui-frame/js/plugins/chosen/chosen.jquery.min.js?v=1.8.2"></script>
+	<!-- Layer 弹框插件 -->
+    <script src="${rc.contextPath}/statics/ui-frame/js/plugins/layer/layer.min.js"></script>
+	<!-- BootStrap 扩展插件 -->
+	<script src="${rc.contextPath}/statics/ui-frame/js/plugins/jasny/jasny-bootstrap.min.js"></script>
+	<!-- 开关按钮插件 -->
+	<script src="${rc.contextPath}/statics/ui-frame/js/plugins/switchery/switchery.js"></script>
+	<!-- 日期插件 -->
+	<script src="${rc.contextPath}/statics/ui-frame/js/plugins/datapicker/bootstrap-datepicker.js"></script>
+	<!-- 日期格式化插件 -->
+	<script src="${rc.contextPath}/statics/ui-frame/plugins/moment/moment.min.js"></script>
+	<!-- Checkbox的美化插件 -->
+	<script src="${rc.contextPath}/statics/ui-frame/js/plugins/iCheck/icheck.min.js"></script>
+	<!-- 模板 -->
+	<script src="${rc.contextPath}/statics/ui-frame/plugins/art-template/art-template-web.js"></script>
+	<!-- Vue MV-VM框架 -->
+	<script src="${rc.contextPath}/statics/ui-frame/js/vue.min.js"></script>
+	<!-- 框架工具 -->
+	<script src="${rc.contextPath}/statics/ui-frame/js/frame-util.js"></script>
+	
+<script id="tpl-job" type="text/html">
+<div class="ibox float-e-margins" style="margin:0">
+	<div class="ibox-content">
+		<div class="row">
+
+			<div class="col-xs-6">
+				<div class="form-group">
+		            <div class="col-xs-12">
+		                <span class="help-block m-b-none">
+		                     <span class="ilabel">&nbsp;任务ID</span>
+		                </span>
+		                <input  type="text" value="{{jobId}}" readonly="readonly" class="form-control">
+		            </div>
+		       </div>
+			</div>
+
+			<div class="col-xs-6">
+				<div class="form-group">
+		            <div class="col-xs-12">
+		                <span class="help-block m-b-none">
+		                     <span class="ilabel">&nbsp;任务组ID</span>
+		                </span>
+		                <input  type="text" value="{{jobGroup}}" readonly="readonly" class="form-control">
+		            </div>
+		       </div>
+			</div>
+
+			<div class="col-xs-6">
+				<div class="form-group">
+		            <div class="col-xs-12">
+		                <span class="help-block m-b-none">
+		                     <span class="ilabel">&nbsp;任务名称</span>
+		                </span>
+		                <input  type="text" value="{{jobName}}" readonly="readonly" class="form-control">
+		            </div>
+		       </div>
+			</div>
+
+			<div class="col-xs-6">
+				<div class="form-group">
+		            <div class="col-xs-12">
+		                <span class="help-block m-b-none">
+		                     <span class="ilabel">&nbsp;任务组名称</span>
+		                </span>
+		                <input  type="text" value="{{jobGroupName}}" readonly="readonly" class="form-control">
+		            </div>
+		       </div>
+			</div>
+
+			<div class="col-xs-6">
+				<div class="form-group">
+		            <div class="col-xs-12">
+		                <span class="help-block m-b-none">
+		                     <span class="ilabel">&nbsp;任务类</span>
+		                </span>
+		                <input  type="text" value="{{jobClassName}}" readonly="readonly" class="form-control">
+		            </div>
+		       </div>
+			</div>
+
+			<div class="col-xs-6">
+				<div class="form-group">
+		            <div class="col-xs-12">
+		                <span class="help-block m-b-none">
+		                     <span class="ilabel">&nbsp;任务时间调度</span>
+		                </span>
+		                <input id="new_cronExpressionInput" type="text" value="{{cronExpression}}" class="form-control">
+		            </div>
+		       </div>
+			</div>
+
+			<div class="col-xs-6">
+				<div class="form-group">
+		            <div class="col-xs-12">
+		                <span class="help-block m-b-none">
+		                     <span class="ilabel">&nbsp;并发执行</span>
+		                </span>
+		                <input id="new_isConcurrent" type="text" value="{{concurrent}}" class="form-control">
+		            </div>
+		       </div>
+			</div>
+
+			<div class="col-xs-6">
+				<div class="form-group">
+		            <div class="col-xs-12">
+		                <span class="help-block m-b-none">
+		                     <span class="ilabel">&nbsp;重启自执行</span>
+		                </span>
+		                <input id="new_isStartupExecution" type="text" value="{{startupExecution}}" class="form-control">
+		            </div>
+		       </div>
+			</div>
+
+			<div class="col-xs-12">
+				<div class="col-sm-12 text-center" style="margin: 32px auto">
+				      <button data-type="STOP" data-jobid="{{jobId}}" data-jobgroup="{{jobGroup}}" class="btn" type="button">暂停</button>
+				      <button data-type="START" data-jobid="{{jobId}}" data-jobgroup="{{jobGroup}}" class="btn" type="button">启动</button>
+				      <button data-type="RESET" data-jobid="{{jobId}}" data-jobgroup="{{jobGroup}}" class="btn" type="button">重置任务时间调度</button>
+				      <button data-type="RUN" data-jobid="{{jobId}}" data-jobgroup="{{jobGroup}}" class="btn" style="background-color: #273a4a;border-color: #273a4a;color: #FFF;" type="button">立即执行</button>
+				      <button data-type="REMOVE" data-jobid="{{jobId}}" data-jobgroup="{{jobGroup}}" class="btn" style="background-color: #ec1e34;border-color: #ec1e34;color: #FFF;" type="button">移除</button>
+				</div>
+			</div>
+
+		</div>
+	</div>
+</div>
+</script>
+
+	<script type="text/javascript">
+		"use strict";
+		!function(_d, _w, _j, _v) {
+			var data = {
+				datas : [],
+				timer : 5
+			};
+
+			var methods = {
+				loadData: function() {
+			   		const that = this;
+			   		_j.post("${rc.contextPath}/quartz/data.do", function(res){
+			   			that.datas = res.jobs;
+		   	        },"json");
+			    },
+			    refresh: function() {
+			    	const that = this;
+			    	that.loadData();
+			    },
+			    config: function(job) {
+			    	console.info(job);
+			    	layer.open({
+			    	    type: 1,
+			    	    title: '任务配置',
+			    	    closeBtn: !0,
+			    	    area: ['688px', '405px'],
+			    	    content: template('tpl-job', job),
+			    	    cancel: function(index, layero) {
+			    	    	parent.layer.close(index);
+		    	    	}
+			    	});
+			    }
+			};
+			new _v({
+				el : '#app',
+				data : data,
+				methods : methods,
+	      		filters: {
+	      			setStatus: function(item) {
+	      				if(item === 'NORMAL') {
+	      					return "就绪";
+	      				} else if(item === 'BLOCKED') {
+	      					return "运行中";
+	      				} else if(item === 'PAUSED') {
+	      					return "暂停";
+	      				} else if(item === 'COMPLETE') {
+	      					return "完成";
+	      				} else if(item === 'ERROR') {
+	      					return "错误";
+	      				} else {
+	      					return "-";
+	      				}
+	      			}
+	      		},
+				created : function() {
+				},
+				mounted : function() {
+					var that = this;
+					
+					that.loadData();
+					var timerCount = 0;
+					setInterval(function(){
+						if(that.timer > 0 && (++timerCount) % that.timer == 0) {
+							if(timerCount > 15) {
+								timerCount = 0;
+							}
+							that.loadData();
+						}
+					}, 1000);
+
+					setTimeout(function() {
+						_j("body").fadeIn(40);
+					});
+					
+					_j("body").on('click', 'button', function() {
+						var c_type = _j(this).data("type"), c_job_id = _j(this).data("jobid"), c_job_group = _j(this).data("jobgroup"), c_cron = _j("#new_cronExpressionInput").val();
+						_j.post("${rc.contextPath}/quartz/option.do", {
+							type: c_type,
+							jobId: c_job_id,
+							jobGroup: c_job_group,
+							jobCron: c_cron
+						}, function(result){
+							var _time = 3000;
+				    		if(result.status) {
+				    			_time = 1000;
+				    		}
+				    		layer.msg("<span style='color:#fff'><i class='fa fa-info'></i> " + result.msg  +"</span>", {
+				    			time: _time
+				    		});
+			   	        },"json");
+					});
+				}
+			})
+		}(document, window, jQuery, Vue)
+	</script>
+</body>
+</html>
