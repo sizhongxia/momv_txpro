@@ -10,8 +10,8 @@
        http://www.springframework.org/schema/mvc/spring-mvc.xsd  ">
 
 	<!-- 系统缓存类 -->
+	<bean class="org.tm.pro.web.cache.SystemAppEvents"></bean>
 	<bean class="org.tm.pro.web.cache.SystemInfoCacheUtil"></bean>
-	<bean class="org.tm.pro.web.cache.SystemAppEventCacheUtil"></bean>
 	
 	<!-- 扫描Controller -->
 	<context:component-scan base-package="org.tm.pro.web.controller" />

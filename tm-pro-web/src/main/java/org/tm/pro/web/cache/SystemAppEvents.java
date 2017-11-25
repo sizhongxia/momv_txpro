@@ -4,7 +4,7 @@ import java.util.Vector;
 
 import org.springframework.beans.factory.InitializingBean;
 
-public class SystemAppEventCacheUtil implements InitializingBean {
+public class SystemAppEvents implements InitializingBean {
 
 	public static Vector<String> keys = new Vector<>();
 
@@ -16,6 +16,7 @@ public class SystemAppEventCacheUtil implements InitializingBean {
 	public void afterPropertiesSet() throws Exception {
 		keys.add("UpdateSystemInfoCacheEvent");
 		keys.add("UpdateAuthorizationCacheEvent");
+		keys.add("UpdateSystemJobCacheEvent");
 	}
 
 }

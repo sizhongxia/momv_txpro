@@ -8,7 +8,6 @@ import java.util.Vector;
 
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationListener;
 import org.springframework.scheduling.support.CronSequenceGenerator;
 import org.tm.pro.entity.Authorization;
 import org.tm.pro.entity.JobGroup;
@@ -16,10 +15,13 @@ import org.tm.pro.entity.SystemInfo;
 import org.tm.pro.service.AuthorizationService;
 import org.tm.pro.service.JobService;
 import org.tm.pro.service.SystemInfoService;
-import org.tm.pro.web.event.TmApplicationEvent;
 import org.tm.pro.web.quartz.model.Job;
 
-public class SystemInfoCacheUtil implements InitializingBean, ApplicationListener<TmApplicationEvent> {
+import com.tm.pro.redis.util.RedisUtil;
+
+import redis.clients.jedis.JedisPubSub;
+// , ApplicationListener<TmApplicationEvent> 
+public class SystemInfoCacheUtil implements InitializingBean {
 
 	@Autowired
 	SystemInfoService systemInfoService;
@@ -27,6 +29,8 @@ public class SystemInfoCacheUtil implements InitializingBean, ApplicationListene
 	AuthorizationService authorizationService;
 	@Autowired
 	JobService jobService;
+	@Autowired
+	RedisUtil redisUtil;
 
 	// 系统任务
 	public static Vector<Job> jobs = new Vector<>();
@@ -109,16 +113,40 @@ public class SystemInfoCacheUtil implements InitializingBean, ApplicationListene
 		initAuthorizations();
 		// 初始化系统Job
 		initSystemJobs();
-	}
 
-	@Override
-	public void onApplicationEvent(TmApplicationEvent e) {
-		if ("UpdateSystemInfoCacheEvent".equals(e.getSource().toString())) {
-			initSystemInfo();
-		} else if ("UpdateAuthorizationCacheEvent".equals(e.getSource().toString())) {
-			initAuthorizations();
-		} else if ("UpdateSystemJobCacheEvent".equals(e.getSource().toString())) {
-			initSystemJobs();
-		}
+		new Thread(new Runnable() {
+			@Override
+			public void run() {
+				redisUtil.subscribe(new JedisPubSub() {
+					@Override
+					public void onMessage(String channel, String message) {
+						switch (message) {
+						case "UpdateSystemInfoCacheEvent":
+							initSystemInfo();
+							break;
+						case "UpdateAuthorizationCacheEvent":
+							// 初始化权限字数据
+							initAuthorizations();
+							break;
+						case "UpdateSystemJobCacheEvent":
+							// 初始化系统Job
+							initSystemJobs();
+							break;
+						}
+					}
+				}, "channel_update_system_cache");
+			}
+		}).start();
 	}
+//
+//	@Override
+//	public void onApplicationEvent(TmApplicationEvent e) {
+//		if ("UpdateSystemInfoCacheEvent".equals(e.getSource().toString())) {
+//			initSystemInfo();
+//		} else if ("UpdateAuthorizationCacheEvent".equals(e.getSource().toString())) {
+//			initAuthorizations();
+//		} else if ("UpdateSystemJobCacheEvent".equals(e.getSource().toString())) {
+//			initSystemJobs();
+//		}
+//	}
 }

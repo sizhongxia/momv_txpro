@@ -14,6 +14,17 @@
        http://www.springframework.org/schema/data/elasticsearch
        http://www.springframework.org/schema/data/elasticsearch/spring-elasticsearch.xsd ">
 
+	<bean id="propertyConfigurer"
+		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="locations">
+			<list>
+				<value>classpath:/mysql.properties</value>
+				<value>classpath:/redis.properties</value>
+				<value>classpath:/elasticsearch.properties</value>
+			</list>
+		</property>
+	</bean>
+
 	<bean id="redisConfig" class="com.tm.pro.redis.config.RedisConfig">
 		<property name="urls" value="${redis.urls}" />
 		<property name="auth" value="${redis.auth}" />
@@ -33,7 +44,8 @@
 		<property name="baseUrl" value="${elastic.baseUrl}" />
 	</bean>
 
-	<bean id="scheduler" lazy-init="false" scope="singleton" class="org.springframework.scheduling.quartz.SchedulerFactoryBean" />
+	<bean id="scheduler" lazy-init="false" scope="singleton"
+		class="org.springframework.scheduling.quartz.SchedulerFactoryBean" />
 	<!-- 任务管理器 -->
 	<bean class="org.tm.pro.web.quartz.manager.JobManager">
 		<property name="scheduler" ref="scheduler"></property>
@@ -136,11 +148,4 @@
 		<aop:advisor pointcut-ref="pc" advice-ref="userTxAdvice" />
 	</aop:config>
 
-	<!-- 只能配置一个property-placeholder，使用通配符加载多个配置文件 -->
-    <beans profile="dev">
-    	<context:property-placeholder location="classpath*:conf/dev/*.properties" />
-    </beans>
-    <beans profile="prod">
-    	<context:property-placeholder location="classpath*:conf/dev/*.properties" />
-    </beans>
 </beans>

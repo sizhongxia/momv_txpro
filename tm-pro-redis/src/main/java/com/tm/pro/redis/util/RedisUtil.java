@@ -11,7 +11,10 @@ import org.tm.pro.utils.TmStringUtil;
 import com.tm.pro.redis.RedisExecutor;
 import com.tm.pro.redis.config.RedisConfig;
 
+import redis.clients.jedis.Jedis;
+import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.JedisPoolConfig;
+import redis.clients.jedis.JedisPubSub;
 import redis.clients.jedis.JedisShardInfo;
 import redis.clients.jedis.ShardedJedis;
 import redis.clients.jedis.ShardedJedisPool;
@@ -25,6 +28,7 @@ import redis.clients.util.Hashing;
 public class RedisUtil implements InitializingBean, DisposableBean {
 
 	private ShardedJedisPool shardedJedisPool = null;
+	private JedisPool jedisPool = null;
 
 	private RedisConfig redisConfig;
 
@@ -370,6 +374,19 @@ public class RedisUtil implements InitializingBean, DisposableBean {
 	@Override
 	public void destroy() {
 		this.shardedJedisPool.close();
+		this.jedisPool.close();
+	}
+
+	public void subscribe(JedisPubSub jedisPubSub, String... channels) {
+		Jedis jedis = this.jedisPool.getResource();
+		jedis.subscribe(jedisPubSub, channels);
+		jedis.close();
+	}
+
+	public void publish(String channel, String message) {
+		Jedis jedis = this.jedisPool.getResource();
+		jedis.publish(channel, message);
+		jedis.close();
 	}
 
 	@Override
@@ -388,6 +405,7 @@ public class RedisUtil implements InitializingBean, DisposableBean {
 		String auth = redisConfig.getAuth();
 		String[] urls = redisConfig.getUrls().split(",");
 		JedisShardInfo Jedisinfo = null;
+
 		for (String url : urls) {
 			String[] urlInfo = url.split(":");
 			Jedisinfo = new JedisShardInfo(urlInfo[0], Integer.parseInt(urlInfo[1]), redisConfig.getTimeout());
@@ -398,5 +416,14 @@ public class RedisUtil implements InitializingBean, DisposableBean {
 		}
 		// 构造池
 		this.shardedJedisPool = new ShardedJedisPool(poolConfig, shardedPoolList, Hashing.MURMUR_HASH);
+		String firstUrlInfo = urls[0];
+		String[] urlInfo = firstUrlInfo.split(":");
+		if (TmStringUtil.isNotBlank(auth)) {
+			this.jedisPool = new JedisPool(poolConfig, urlInfo[0], Integer.parseInt(urlInfo[1]),
+					redisConfig.getTimeout(), auth);
+		} else {
+			this.jedisPool = new JedisPool(poolConfig, urlInfo[0], Integer.parseInt(urlInfo[1]),
+					redisConfig.getTimeout());
+		}
 	}
 }
