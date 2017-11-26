@@ -36,7 +36,11 @@ public class CacheLogStatisticsController extends BaseController {
 	@RequestMapping(value = "/local")
 	public ModelAndView local(HttpServletRequest request) {
 		ModelAndView mav = new ModelAndView("cache_log_statistics/local");
-		mav.addObject("page", "local");
+		
+		mav.addObject("manufacturers", dictionaryService.getItemsByVCode("SYSTEM_MANUFACTURERS"));
+		mav.addObject("requestHttpUrlTypes", dictionaryService.getItemsByVCode("REQUEST_HTTP_URL_TYPE"));
+		mav.addObject("cacheSystemCitys", dictionaryService.getItemsByVCode("CACHE_SYSTEM_CITY"));
+
 		return mav;
 	}
 
@@ -45,7 +49,11 @@ public class CacheLogStatisticsController extends BaseController {
 	@RequestMapping(value = "/access-mode")
 	public ModelAndView accessMode(HttpServletRequest request) {
 		ModelAndView mav = new ModelAndView("cache_log_statistics/access_mode");
-		mav.addObject("page", "access-mode");
+
+		mav.addObject("manufacturers", dictionaryService.getItemsByVCode("SYSTEM_MANUFACTURERS"));
+		mav.addObject("requestHttpUrlTypes", dictionaryService.getItemsByVCode("REQUEST_HTTP_URL_TYPE"));
+		mav.addObject("cacheSystemEthernets", dictionaryService.getItemsByVCode("CACHE_SYSTEM_ETHERNET"));
+
 		return mav;
 	}
 
