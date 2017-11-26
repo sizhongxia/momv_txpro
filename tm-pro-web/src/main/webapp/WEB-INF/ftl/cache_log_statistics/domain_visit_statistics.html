@@ -41,10 +41,10 @@ thead>tr>th, tbody>tr>td{text-align:center}
 		                        </div>
 							</div>
 							
-							<div class="col-xs-2">
+							<div class="col-xs-1">
 								<div class="form-group">
 									<label class="font-noraml">范围</label>
-                                    <select class="form-control" name="range">
+                                    <select class="form-control" name="range" style="padding: 6px 0px;font-size: 12px">
                                     	<#list ranges as item>
 											<option value="${item.value!}">${item.name!}</option>
                                         </#list>
@@ -52,10 +52,10 @@ thead>tr>th, tbody>tr>td{text-align:center}
 								</div>
 							</div>
 							
-							<div class="col-xs-2">
+							<div class="col-xs-1">
 								<div class="form-group">
 									<label class="font-noraml">Top</label>
-                                    <select class="form-control" name="top">
+                                    <select class="form-control" name="top" style="padding: 6px 0px;font-size: 12px">
                                     	<#list tops as item>
 											<option value="${item.value!}">${item.name!}</option>
                                         </#list>
