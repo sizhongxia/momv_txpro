@@ -1,10 +1,181 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta charset="UTF-8">
-<title>Insert title here</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- BootStrap Css -->
+<link href="${rc.contextPath}/statics/ui-frame/css/bootstrap.min14ed.css?v=3.3.6" rel="stylesheet">
+<!-- 字体图标 Css -->
+<link href="${rc.contextPath}/statics/ui-frame/css/font-awesome.min93e3.css?v=4.4.0" rel="stylesheet">
+<!-- BootStrap 日期插件 -->
+<link href="${rc.contextPath}/statics/ui-frame/css/plugins/datapicker/datepicker3.css" rel="stylesheet">
+<!-- Css 动画 -->
+<link href="${rc.contextPath}/statics/ui-frame/css/animate.min.css" rel="stylesheet">
+<!-- 基本样式 -->
+<link href="${rc.contextPath}/statics/ui-frame/css/style.min862f.css?v=4.1.0" rel="stylesheet">
+<style type="text/css">
+thead>tr>th, tbody>tr>td{text-align:center}
+.wrapper-content{padding:0}
+.float-e-margins .btn{margin-bottom:0}
+.form-group{margin-bottom:4px!important;}
+.input-group{width: 100%;}
+</style>
 </head>
-<body>
-${page!}
+<body class="gray-bg">
+	<div id="app" class="wrapper wrapper-content" style="padding: 20px">
+	
+		<div class="row">
+			<div class="col-sm-12">
+
+				<div class="ibox float-e-margins">
+					<div class="ibox-content">
+						<div class="row">
+
+							<div class="col-xs-2">
+								<div class="form-group" id="data_1">
+		                            <label class="font-noraml">日期</label>
+		                            <div class="input-group date">
+		                                <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+		                                <input type="text" class="form-control" value="">
+		                            </div>
+		                        </div>
+							</div>
+							
+							<div class="col-xs-2">
+								<div class="form-group">
+									<label class="font-noraml">范围</label>
+                                    <select class="form-control" name="range">
+                                    	<#list ranges as item>
+											<option value="${item.value!}">${item.name!}</option>
+                                        </#list>
+                                    </select>
+								</div>
+							</div>
+							
+							<div class="col-xs-2">
+								<div class="form-group">
+									<label class="font-noraml">Top</label>
+                                    <select class="form-control" name="top">
+                                    	<#list tops as item>
+											<option value="${item.value!}">${item.name!}</option>
+                                        </#list>
+                                    </select>
+								</div>
+							</div>
+							
+							<div class="col-xs-2">
+								<div class="form-group">
+									<label class="font-noraml">域名</label>
+									<input class="form-control" name="domain"/>
+								</div>
+							</div>
+							
+							<div class="col-xs-2">
+								<label class="font-noraml">请求命中率%</label>
+								<div class="form-inline">
+		                            <div class="col-xs-5 form-group" style="padding: 0">
+		                                <input type="number" min="0" max="100" style="width: 100%" class="form-control">
+		                            </div>
+									<div class="col-xs-1" style="padding:8px 8px 0 4px">-</div>
+		                            <div class="col-xs-5 form-group" style="padding: 0">
+		                                <input type="number" min="0" max="100" style="width: 100%" class="form-control">
+		                            </div>
+	                            </div>
+							</div>
+							<div class="col-xs-2">
+								<label class="font-noraml">流量命中率%</label>
+								<div class="form-inline">
+		                            <div class="col-xs-5 form-group" style="padding: 0">
+		                                <input type="number" min="0" max="100" style="width: 100%" class="form-control">
+		                            </div>
+									<div class="col-xs-1" style="padding:8px 8px 0 4px">-</div>
+		                            <div class="col-xs-5 form-group" style="padding: 0">
+		                                <input type="number" min="0" max="100" style="width: 100%" class="form-control">
+		                            </div>
+	                            </div>
+							</div>
+							
+							<div class="col-xs-2">
+								<div class="form-group" style="min-width: 120px;">
+									<label class="font-noraml">操作</label>
+									<div class="btn-group" style="display: block;">
+										<button class="btn btn-primary" type="button">搜索</button>
+	                                    <button class="btn btn-white" type="button">刷新</button>
+                                    </div>
+								</div>
+							</div>
+
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	
+	
+		<div class="row">
+			<div class="col-sm-12">
+
+				<div class="ibox float-e-margins">
+					<div class="ibox-content" style="padding-left: 0;padding-right: 0;">
+						<div class="fixed-table-body">
+							<table class="table table-hover table-condensed">
+								<thead>
+									<tr>
+										<th><div class="th-inner">序号</div></th>
+										<th><div class="th-inner">域名</div></th>
+										<th><div class="th-inner">总请求次数</div></th>
+										<th><div class="th-inner">请求成功率</div></th>
+										<th><div class="th-inner">请求命中率</div></th>
+										<th><div class="th-inner">总流量（M）</div></th>
+										<th><div class="th-inner">更新时间</div></th>
+										<th><div class="th-inner">操作</div></th>
+										<!-- 
+										<th><div class="th-inner">成功次数</div></th>
+										<th><div class="th-inner">失败次数</div></th>
+										<th><div class="th-inner">HIT次数</div></th>
+										<th><div class="th-inner">MISS次数</div></th>
+										<th><div class="th-inner">DENIED次数</div></th>
+										<th><div class="th-inner">HIT流量（M）</div></th>
+										<th><div class="th-inner">MISS流量（M）</div></th>
+										<th><div class="th-inner">DENIED流量（M）</div></th>
+										<th><div class="th-inner">平均下载速率（KB/S)</div></th>
+										<th><div class="th-inner">趋势图</div></th>
+										<th><div class="th-inner">流量命中率</div></th>
+										<th><div class="th-inner">流量占比</div></th>
+										<th><div class="th-inner">请求次数占比</div></th>
+										 -->
+									</tr>
+								</thead>
+								<tbody>
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- Jquery Dom -->
+	<script src="${rc.contextPath}/statics/ui-frame/js/jquery.min.js?v=2.1.4"></script>
+	<!-- BootStrap Js -->
+	<script src="${rc.contextPath}/statics/ui-frame/js/bootstrap.min.js?v=3.3.6"></script>
+	<!-- 日期插件 -->
+	<script src="${rc.contextPath}/statics/ui-frame/js/plugins/datapicker/bootstrap-datepicker.js"></script>
+	<!-- 日期格式化插件 -->
+	<script src="${rc.contextPath}/statics/ui-frame/plugins/moment/moment.min.js"></script>
+	<!-- 框架工具 -->
+	<script src="${rc.contextPath}/statics/ui-frame/js/frame-util.js"></script>
+
+	<script type="text/javascript">
+	    (function(_d, _w, _j) {
+	    	_j("#data_1 .input-group.date").datepicker({
+	    		todayBtn:"linked",
+	    		keyboardNavigation:!1,
+	    		forceParse:!1,
+	    		calendarWeeks:!0,
+	    		autoclose:!0
+	    	});
+	    })(document, window, jQuery)
+	</script>
 </body>
 </html>

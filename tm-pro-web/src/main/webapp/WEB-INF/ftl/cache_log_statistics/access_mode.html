@@ -37,7 +37,7 @@
 							<div class="col-xs-2">
 								<div class="form-group">
 									<label class="font-noraml">厂商</label>
-                                    <select class="form-control m-b" name="manufacturer">
+                                    <select class="form-control" name="manufacturer">
 										<#list manufacturers as item>
                                        		<option value="${item.value!}">${item.name!}</option>
                                         </#list>
@@ -48,7 +48,7 @@
 							<div class="col-xs-2">
 								<div class="form-group">
 									<label class="font-noraml">类型</label>
-									<select class="form-control m-b" name="type">
+									<select class="form-control" name="type">
 										<#list requestHttpUrlTypes as item>
                                        		<option value="${item.value!}">${item.name!}</option>
                                         </#list>
@@ -59,7 +59,7 @@
 							<div class="col-xs-2">
 								<div class="form-group">
 									<label class="font-noraml">接入方式</label>
-									<select class="form-control m-b" name="ethernet">
+									<select class="form-control" name="ethernet">
 										<#list cacheSystemEthernets as item>
 											<option value="${item.value!}">${item.name!}</option>
                                         </#list>

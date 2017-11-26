@@ -141,8 +141,6 @@ public class QuartzController extends BaseController {
 			try {
 				if (jobManager.updateJobCron(job)) {
 					redisUtil.publish("channel_update_system_cache", "UpdateSystemJobCacheEvent");
-					// applicationEventPublisher.publishEvent(new
-					// TmApplicationEvent("UpdateSystemJobCacheEvent"));
 					arm.setStatus(true);
 					arm.setData(job);
 					arm.setMsg("更新成功");
@@ -180,7 +178,7 @@ public class QuartzController extends BaseController {
 			arm.setMsg("错误：无效的类别");
 			return arm;
 		}
-		arm.setMsg("错误：操作失败");
+		arm.setMsg("错误：操作失败，可能当前服务未开启！");
 		return arm;
 	}
 

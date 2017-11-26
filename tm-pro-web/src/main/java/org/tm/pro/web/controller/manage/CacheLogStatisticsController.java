@@ -62,7 +62,10 @@ public class CacheLogStatisticsController extends BaseController {
 	@RequestMapping(value = "/domain-visit-statistics")
 	public ModelAndView domainVsit(HttpServletRequest request) {
 		ModelAndView mav = new ModelAndView("cache_log_statistics/domain_visit_statistics");
-		mav.addObject("page", "domain-visit-statistics");
+
+		mav.addObject("ranges", dictionaryService.getItemsByVCode("DOMAIN_VISIT_RANGE"));
+		mav.addObject("tops", dictionaryService.getItemsByVCode("DOMAIN_VISIT_TOP"));
+		
 		return mav;
 	}
 
