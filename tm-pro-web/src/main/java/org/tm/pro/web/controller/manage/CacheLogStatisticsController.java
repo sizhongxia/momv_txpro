@@ -69,6 +69,15 @@ public class CacheLogStatisticsController extends BaseController {
 		return mav;
 	}
 
+	// 域名访问统计 - 趋势图
+	@RequiresAuthentication
+	@RequestMapping(value = "/domain-visit-statistics/trend-chart")
+	public ModelAndView domainVsitTrendChart(HttpServletRequest request, String domain) {
+		ModelAndView mav = new ModelAndView("cache_log_statistics/domain_visit_statistics_trend_chart");
+		mav.addObject("domain", domain);
+		return mav;
+	}
+
 	// 文档类型统计
 	@RequiresAuthentication
 	@RequestMapping(value = "/document-type-statistics")
