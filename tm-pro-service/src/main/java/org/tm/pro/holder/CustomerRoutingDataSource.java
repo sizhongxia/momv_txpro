@@ -1,7 +1,6 @@
-package org.tm.pro.web.data.source;
+package org.tm.pro.holder;
 
 import org.springframework.jdbc.datasource.lookup.AbstractRoutingDataSource;
-import org.tm.pro.web.data.holder.CustomerContextHolder;
 
 public class CustomerRoutingDataSource extends AbstractRoutingDataSource {
 

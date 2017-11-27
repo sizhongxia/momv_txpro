@@ -89,7 +89,7 @@
 		<property name="password" value="${db.slave.password}"></property>
 	</bean>
 	
-	<bean id="manyDataSource" class="org.tm.pro.web.data.source.CustomerRoutingDataSource">
+	<bean id="manyDataSource" class="org.tm.pro.holder.CustomerRoutingDataSource">
 		<property name="targetDataSources">
 			<map key-type="java.lang.String">
 				<entry key="master" value-ref="masterDb" />
@@ -156,7 +156,7 @@
 		<aop:advisor pointcut-ref="pc" advice-ref="userTxAdvice" />
 	</aop:config>
 	
-	<bean id="manyDataSourceAspect" class="org.tm.pro.web.data.holder.ManyDataSourceAspect" />
+	<bean id="manyDataSourceAspect" class="org.tm.pro.holder.ManyDataSourceAspect" />
 	<aop:config>
 		<aop:aspect id="cds" ref="manyDataSourceAspect">
 			<aop:pointcut id="tx" expression="execution(public * org.tm.pro.service.*.*(..))" />

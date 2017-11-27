@@ -1,4 +1,4 @@
-package org.tm.pro.web.data.holder;
+package org.tm.pro.holder;
 
 import java.lang.reflect.Method;
 
