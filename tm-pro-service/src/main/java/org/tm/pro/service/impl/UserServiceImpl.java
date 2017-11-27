@@ -7,6 +7,7 @@ import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.tm.pro.anno.DataSource;
 import org.tm.pro.entity.Role;
 import org.tm.pro.entity.User;
 import org.tm.pro.entity.UserExample;
@@ -36,11 +37,13 @@ public class UserServiceImpl implements UserService {
 	RoleMapper roleMapper;
 
 	@Override
+	@DataSource("slave")
 	public User getById(Integer id) {
 		return userMapper.selectByPrimaryKey(id);
 	}
 
 	@Override
+	@DataSource("slave")
 	public User getByLoginName(String loginName) {
 		UserExample example = new UserExample();
 		example.createCriteria().andLoginNameEqualTo(loginName);
@@ -53,12 +56,14 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
+	@DataSource("slave")
 	public long getUserCount(Map<String, Object> params) {
 		UserExample example = initParams(params);
 		return userMapper.countByExample(example);
 	}
 
 	@Override
+	@DataSource("slave")
 	public List<User> getUserList(Map<String, Object> params, int page, int size) {
 		UserExample example = initParams(params);
 		example.setOrderByClause("id asc");
@@ -91,11 +96,13 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
+	@DataSource("master")
 	public int insert(User record) {
 		return userMapper.insertSelective(record);
 	}
 
 	@Override
+	@DataSource("slave")
 	public Set<String> getUserAuthorizations(Integer id) {
 		Set<String> authorizationCodes = new HashSet<>();
 		Set<Role> userRoles = getUserRoles(id);
@@ -115,6 +122,7 @@ public class UserServiceImpl implements UserService {
 	 * 
 	 */
 	@Override
+	@DataSource("slave")
 	public Set<Role> getUserRoles(Integer id) {
 		UserRoleExample example = new UserRoleExample();
 		Set<Role> roles = new HashSet<>();
@@ -138,16 +146,19 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
+	@DataSource("master")
 	public int update(User user) {
 		return userMapper.updateByPrimaryKey(user);
 	}
 
 	@Override
+	@DataSource("master")
 	public int delete(User user) {
 		return userMapper.deleteByPrimaryKey(user.getId());
 	}
 
 	@Override
+	@DataSource("master")
 	public int removeRole(Integer userId, Integer roleId) {
 		UserRoleExample example = new UserRoleExample();
 		example.createCriteria().andUserIdEqualTo(userId).andRoleIdEqualTo(roleId);
@@ -155,6 +166,7 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
+	@DataSource("master")
 	public int authRole(Integer userId, Integer roleId, Integer organizationId) {
 		UserRole record = new UserRole();
 		record.setUserId(userId);
@@ -164,6 +176,7 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
+	@DataSource("slave")
 	public boolean checkUserRole(Integer userId, Integer roleId, Integer organizationId) {
 		UserRoleExample example = new UserRoleExample();
 		example.createCriteria().andUserIdEqualTo(userId).andRoleIdEqualTo(roleId)

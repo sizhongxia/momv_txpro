@@ -7,6 +7,7 @@ import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.tm.pro.anno.DataSource;
 import org.tm.pro.entity.Role;
 import org.tm.pro.entity.RoleAuthorization;
 import org.tm.pro.entity.RoleAuthorizationExample;
@@ -27,11 +28,13 @@ public class RoleServiceImpl implements RoleService {
 	RoleAuthorizationMapper roleAuthorizationMapper;
 
 	@Override
+	@DataSource("slave")
 	public Role getById(Integer id) {
 		return roleMapper.selectByPrimaryKey(id);
 	}
 
 	@Override
+	@DataSource("slave")
 	public Role getByCode(String code) {
 		RoleExample example = new RoleExample();
 		example.createCriteria().andRoleCodeEqualTo(code);
@@ -43,6 +46,7 @@ public class RoleServiceImpl implements RoleService {
 	}
 
 	@Override
+	@DataSource("slave")
 	public List<Role> getRoleList(Map<String, Object> params) {
 		RoleExample example = new RoleExample();
 
@@ -71,6 +75,7 @@ public class RoleServiceImpl implements RoleService {
 	}
 
 	@Override
+	@DataSource("slave")
 	public Set<String> getRoleAuthorizations(Integer id) {
 		RoleAuthorizationExample example = new RoleAuthorizationExample();
 		example.createCriteria().andRoleIdEqualTo(id);
@@ -85,16 +90,19 @@ public class RoleServiceImpl implements RoleService {
 	}
 
 	@Override
+	@DataSource("master")
 	public int insert(Role role) {
 		return roleMapper.insert(role);
 	}
 
 	@Override
+	@DataSource("master")
 	public int update(Role role) {
 		return roleMapper.updateByPrimaryKey(role);
 	}
 
 	@Override
+	@DataSource("master")
 	public int delete(Role role) {
 		return roleMapper.deleteByPrimaryKey(role.getId());
 	}
