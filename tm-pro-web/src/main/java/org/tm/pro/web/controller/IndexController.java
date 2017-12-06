@@ -154,6 +154,13 @@ public class IndexController extends BaseController {
 		return view;
 	}
 
+	@RequestMapping(value = "/socket_io")
+	public ModelAndView socketIo(HttpServletRequest request) {
+		ModelAndView view = new ModelAndView("socket_io");
+		return view;
+	}
+	
+
 	// /***
 	// * 上传文件
 	// *

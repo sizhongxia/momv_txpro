@@ -27,9 +27,9 @@
 								<div class="form-group" id="date_range">
 									<label class="font-noraml">日期</label>
 									<div class="input-daterange input-group" id="datepicker">
-										<input type="text" class="input-sm form-control" name="start" value="" />
+										<input type="text" class="input-sm form-control" id="startDate" value="" />
 										<span class="input-group-addon">到</span>
-										<input type="text" class="input-sm form-control" name="end" value="" />
+										<input type="text" class="input-sm form-control" id="endDate" value="" />
 									</div>
 								</div>
 							</div>
@@ -59,7 +59,7 @@
 							<div class="col-xs-2">
 								<div class="form-group">
 									<label class="font-noraml">节点</label>
-									<select class="form-control" name="node">
+									<select class="form-control" id="node">
 										<#list cacheSystemNodes as item>
 											<option value="${item.value!}">${item.name!}</option>
                                         </#list>
@@ -71,8 +71,8 @@
 								<div class="form-group" style="min-width: 120px;">
 									<label class="font-noraml">操作</label>
 									<div class="btn-group" style="display: block;">
-										<button class="btn btn-primary" type="button">搜索</button>
-	                                    <button class="btn btn-white" type="button">刷新</button>
+										<button class="btn btn-primary" id="searchBtn" type="button">搜索</button>
+	                                    <button class="btn btn-white" id="refreshBtn" type="button">刷新</button>
                                     </div>
 								</div>
 							</div>
@@ -93,7 +93,7 @@
 						</div>
 					</div>
 					<div class="ibox-content" style="padding-left: 0; padding-right: 0;">
-						<div id="c1"></div>
+						<div id="c1"><p style='line-height: 315px;text-align: center;'>无数据</p></div>
 					</div>
 				</div>
 			</div>
@@ -106,7 +106,7 @@
 						</div>
 					</div>
 					<div class="ibox-content" style="padding-left: 0; padding-right: 0;">
-						<div id="c2"></div>
+						<div id="c2"><p style='line-height: 315px;text-align: center;'>无数据</p></div>
 					</div>
 				</div>
 			</div>
@@ -119,7 +119,7 @@
 						</div>
 					</div>
 					<div class="ibox-content" style="padding-left: 0; padding-right: 0;">
-						<div id="c3"></div>
+						<div id="c3"><p style='line-height: 255px;text-align: center;'>无数据</p></div>
 					</div>
 				</div>
 			</div>
@@ -132,7 +132,7 @@
 						</div>
 					</div>
 					<div class="ibox-content" style="padding-left: 0; padding-right: 0;">
-						<div id="c4"></div>
+						<div id="c4"><p style='line-height: 255px;text-align: center;'>无数据</p></div>
 					</div>
 				</div>
 			</div>
@@ -155,80 +155,72 @@
 	<script type="text/javascript">
 		(function(_j) {
 			
-			(function() {
-				var data = [
-			        {value:1335,type:'状态码正常',name:'200'},
-			        {value:35,type:'状态码正常',name:'201'},
-			        {value:0,type:'状态码正常',name:'202'},
-			        {value:0,type:'状态码正常',name:'204'},
-			        {value:0,type:'状态码正常',name:'206'},
-			        {value:0,type:'状态码正常',name:'300'},
-			        {value:0,type:'状态码正常',name:'301'},
-			        {value:0,type:'状态码正常',name:'302'},
-			        {value:0,type:'状态码正常',name:'303'},
-			        {value:35,type:'状态码正常',name:'304'},
-			        {value:0,type:'状态码正常',name:'306'},
-			        {value:0,type:'状态码正常',name:'307'},
-			        {value:0,type:'状态码正常',name:'400'},
-			        {value:0,type:'状态码正常',name:'401'},
-			        {value:35,type:'状态码正常',name:'403'},
-			        {value:35,type:'状态码异常',name:'404'},
-			        {value:35,type:'状态码异常',name:'405'},
-			        {value:35,type:'状态码异常',name:'415'},
-			        {value:1,type:'状态码异常',name:'500'},
-			        {value:0,type:'状态码异常',name:'504'}
-			      ];
-			      var Stat = G2.Stat;
-			      var chart = new G2.Chart({
-			        id: 'c1',
-			        forceFit: true,
-			        height: 320,
-			        plotCfg: {
-				        margin: [50, 50, 100, 50]
-			        }
-			      });
-			      chart.legend('name', {
-			    	   position: 'bottom',
-			    	   spacingX: 50,
-			    	   title: null,
-			    	   itemWrap: true,
-			    	   marker: 'square',
-			    	   dy: 18
-			      });
-			      chart.legend('type', {
-				    	position: 'top',
-				    	title: null,
-				    	itemWrap: true,
-				    	marker: 'square',
-				    	dy: 0
-			      });
-			      var viewBack = chart.createView();
-			      viewBack.source(data);
-			      viewBack.coord('theta', {
-			        	radius: .7
-			      });
-			      // 绘制内部的饼图
-			      viewBack.intervalStack()
-				        .position(Stat.summary.percent('value'))
-				        .color('type',['#4ecda5','#c82b3d']);
-			      // 绘制外圈饼图
-			      var view = chart.createView();
-			      view.source(data);
-			      view.coord('theta', {
-			        	inner: 0.78 // 设置空心部分的大小
-			      });
-			      view.intervalStack()
-				        .position(Stat.summary.percent('value'))
-				        .color('name')
-				        .selected({
-				        mode: 'multiple'
-			      });
-			      chart.render();
-			})();
+			function initC1Chart() {
+				_j("#c1").html("<p style='line-height: 315px;text-align: center;'>Loading...</p>");
+				_j.post("${rc.contextPath}/data/status-code-statistics.do", {
+					startDate: $("#startDate").val(),
+					endDate: $("#endDate").val(),
+					node: $("#node").val()
+				}, function(result) {
+					if (result.status) {
+						_j("#c1").html("");
+						var data = result.list;
+						var Stat = G2.Stat;
+						var chart = new G2.Chart({
+							id : 'c1',
+							forceFit : true,
+							height : 320,
+							plotCfg : {
+								margin : [ 50, 50, 100, 50 ]
+							}
+						});
+						chart.legend('name', {
+							position : 'bottom',
+							spacingX : 50,
+							title : null,
+							itemWrap : true,
+							marker : 'square',
+							dy : 18
+						});
+						chart.legend('type', {
+							position : 'top',
+							title : null,
+							itemWrap : true,
+							marker : 'square',
+							dy : 0
+						});
+						var viewBack = chart.createView();
+						viewBack.source(data);
+						viewBack.coord('theta', {
+							radius : .7
+						});
+						// 绘制内部的饼图
+						viewBack.intervalStack().position(Stat.summary.percent('value')).color('type', [ '#4ecda5', '#c82b3d' ]);
+						// 绘制外圈饼图
+						var view = chart.createView();
+						view.source(data);
+						view.coord('theta', {
+							inner : 0.78
+						});
+						view.intervalStack().position(Stat.summary.percent('value')).color('name').selected({
+							mode : 'multiple'
+						});
+						chart.render();
+					} else {
+						_j("#c1").html("<p style='line-height: 315px;text-align: center;'>无数据</p>");
+					}
+				}, "json");
+			}
 			
-			(function() {
-				_j.post("${rc.contextPath}/data/line.do", function(result){
+			function initC2Chart() {
+				_j("#c2").html("<p style='line-height: 255px;text-align: center;'>Loading...</p>");
+				_j.post("${rc.contextPath}/data/avg-dspeed-statistics.do", {
+					startDate: $("#startDate").val(),
+					endDate: $("#endDate").val(),
+					node: $("#node").val()
+				}, function(result){
 		    		if(result.status) {
+		    			_j("#c2").html("");
 						var Frame = G2.Frame;
 				        var frame = new Frame(result.list);
 				        frame = Frame.combinColumns(frame, ['吐出流量', '回源流量'], 'value', 'type', 'date'); 
@@ -237,23 +229,22 @@
 				          forceFit: true,
 				          height: 320,
 				          plotCfg: {
-				            margin: [20, 50, 130, 100]
+				            margin: [20, 90, 100,100]
 				          }
 				        });
 				        chart.source(frame, {
 				          date: {
 				            type: 'time',
-				            mask: 'yyyy-mm-dd HH:MM:ss',
-				            tickCount: 5
+				            mask: 'yyyy-mm-dd HH:MM',
 				          },
 				          value: {
 				            alias: '速度 (Mpbs)'
 				          }
 				        });
 				        chart.legend({
-					            position: 'bottom',
-						    	marker: 'square',
-						    	dy: 13
+				            position: 'bottom',
+					    	marker: 'square',
+					    	dy: 13
 				        });
 				        chart.axis('date', {
 					          tickLine: {
@@ -282,48 +273,72 @@
 				        });
 				        chart.line().position('date*value').color('type', ['#1f77b4', '#ff7f0e']).shape('line').size(2);
 				        chart.render();
-		    		}
+		    		} else {
+						_j("#c2").html("<p style='line-height: 315px;text-align: center;'>无数据</p>");
+					}
 		    	}, "json");
-			})();
+			}
 			
-			(function() {
-				var data = [
-			        {name: 'MISS', value: 56.33 },
-			        {name: 'HIT', value: 24.03},
-			        {name: 'ERROR', value: 4.03}
-			      ];
-			      var Stat = G2.Stat;
-			      var chart = new G2.Chart({
-			          id: 'c3',
-			          forceFit: true,
-			          height: 260,
-			          plotCfg: {
-			            margin: [30, 50, 70, 50]
-			          }
-			      });
-			      chart.source(data);
-			      chart.coord('theta', {
-			        radius: 0.8 // 设置饼图的大小
-			      });
-			      chart.legend('name', {
-			        position: 'bottom',
-			    	marker: 'square'
-			      });
-			      chart.tooltip({
-			        title: null,
-			        map: {
-			          value: 'value'
-			        }
-			      });
-			      chart.intervalStack()
-			        .position(Stat.summary.percent('value'))
-			        .color('name')
-			        .label('name*..percent',function(name, percent){
-			        percent = (percent * 100).toFixed(2) + '%';
-			        return name + ' ' + percent;
-			      });
-			      chart.render();
-			})();
+			function initC3Chart() {
+				_j("#c3").html("<p style='line-height: 255px;text-align: center;'>Loading...</p>");
+				_j.post("${rc.contextPath}/data/cache-stat-statistics.do", {
+					startDate: $("#startDate").val(),
+					endDate: $("#endDate").val(),
+					node: $("#node").val()
+				}, function(result) {
+					if (result.status) {
+						_j("#c3").html("");
+						var data = result.list;
+					    var Stat = G2.Stat;
+					    var chart = new G2.Chart({
+					          id: 'c3',
+					          forceFit: true,
+					          height: 260,
+					          plotCfg: {
+					            margin: [30, 50, 70, 50]
+					          }
+					      });
+					      chart.source(data);
+					      chart.coord('theta', {
+					        radius: 0.8 // 设置饼图的大小
+					      });
+					      chart.legend('name', {
+					        position: 'bottom',
+					    	marker: 'square'
+					      });
+					      chart.tooltip({
+					        title: null,
+					        map: {
+					          value: 'value'
+					        }
+					      });
+					      chart.intervalStack().position(Stat.summary.percent('value')).color('name').label('name*..percent',function(name, percent){
+					        percent = (percent * 100).toFixed(2) + '%';
+					        return name + ' ' + percent;
+					      });
+					      chart.render();
+					} else {
+						_j("#c3").html("<p style='line-height: 255px;text-align: center;'>无数据</p>");
+					}
+				}, "json");
+			}
+
+			initC1Chart();
+			initC2Chart();
+			initC3Chart();
+			
+			_j("#searchBtn").on("click", function() {
+				initC1Chart();
+				initC2Chart();
+				initC3Chart();
+			});
+			_j("#refreshBtn").on("click", function() {
+				initC1Chart();
+				initC2Chart();
+				initC3Chart();
+			});
+			
+			
 			
 			(function() {
 				var data = [
@@ -340,6 +355,7 @@
 			        {date: '2011-10-11 11:11:21', visitCount: 13},
 			        {date: '2011-10-11 11:11:22', visitCount: 6}
 			      ];
+    			_j("#c4").html("");
 			      var chart = new G2.Chart({
 			        id: 'c4',
 			        forceFit: true,
