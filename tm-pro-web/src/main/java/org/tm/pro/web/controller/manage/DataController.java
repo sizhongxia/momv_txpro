@@ -192,53 +192,53 @@ public class DataController extends BaseController {
 	}
 	
 	
-	@ResponseBody
-	@RequiresAuthentication
-	@RequestMapping(value = "/avg-dspeed-statistics")
-	public ApiResultMap avgDspeedStatistics2(HttpServletRequest request) {
-		ApiResultMap arm = new ApiResultMap();
-		arm.setCode(200);
-		arm.setStatus(false);
-		String index = request.getParameter("index");
-		if (TmStringUtil.isBlank(index)) {
-			index = "ppc_log_test*";
-		}
-		String type = request.getParameter("type");
-		if (TmStringUtil.isBlank(type)) {
-			type = "access";
-		}
-		String startDate = request.getParameter("startDate");
-		if (TmStringUtil.isBlank(startDate)) {
-			startDate = null;
-		}
-		String endDate = request.getParameter("endDate");
-		if (TmStringUtil.isBlank(endDate)) {
-			endDate = null;
-		}
-		String node = request.getParameter("node");
-		if (TmStringUtil.isBlank(node)) {
-			node = null;
-		}
-		EsSearchResult result = elasticUtil.avgDspeedStatistics(index, type, startDate, endDate, node);
-
-		List<EsSearchItem> datas = result.getDatas();
-		if (datas == null || datas.isEmpty()) {
-			return arm;
-		}
-		List<Map<String, Object>> list = new ArrayList<>();
-		Map<String, Object> _item = null;
-		DecimalFormat df = new DecimalFormat("#.00");
-		for (EsSearchItem item : datas) {
-			_item = new HashMap<>();
-			_item.put("date", item.getName());
-			_item.put("吐出流量", new Double(df.format(item.getValue().divide(new BigDecimal(1024 * 1024)))));
-			_item.put("回源流量", new Double(0.00));
-			list.add(_item);
-		}
-		arm.setStatus(true);
-		arm.setList(list);
-		return arm;
-	}
+//	@ResponseBody
+//	@RequiresAuthentication
+//	@RequestMapping(value = "/avg-dspeed-statistics")
+//	public ApiResultMap avgDspeedStatistics2(HttpServletRequest request) {
+//		ApiResultMap arm = new ApiResultMap();
+//		arm.setCode(200);
+//		arm.setStatus(false);
+//		String index = request.getParameter("index");
+//		if (TmStringUtil.isBlank(index)) {
+//			index = "ppc_log_test*";
+//		}
+//		String type = request.getParameter("type");
+//		if (TmStringUtil.isBlank(type)) {
+//			type = "access";
+//		}
+//		String startDate = request.getParameter("startDate");
+//		if (TmStringUtil.isBlank(startDate)) {
+//			startDate = null;
+//		}
+//		String endDate = request.getParameter("endDate");
+//		if (TmStringUtil.isBlank(endDate)) {
+//			endDate = null;
+//		}
+//		String node = request.getParameter("node");
+//		if (TmStringUtil.isBlank(node)) {
+//			node = null;
+//		}
+//		EsSearchResult result = elasticUtil.avgDspeedStatistics(index, type, startDate, endDate, node);
+//
+//		List<EsSearchItem> datas = result.getDatas();
+//		if (datas == null || datas.isEmpty()) {
+//			return arm;
+//		}
+//		List<Map<String, Object>> list = new ArrayList<>();
+//		Map<String, Object> _item = null;
+//		DecimalFormat df = new DecimalFormat("#.00");
+//		for (EsSearchItem item : datas) {
+//			_item = new HashMap<>();
+//			_item.put("date", item.getName());
+//			_item.put("吐出流量", new Double(df.format(item.getValue().divide(new BigDecimal(1024 * 1024)))));
+//			_item.put("回源流量", new Double(0.00));
+//			list.add(_item);
+//		}
+//		arm.setStatus(true);
+//		arm.setList(list);
+//		return arm;
+//	}
 
 	@ResponseBody
 	@RequiresAuthentication
