@@ -1,17 +1,15 @@
 package org.tm.pro.es;
 
-import org.junit.Test;
+import org.tm.pro.es.entity.EsSearchResult;
 
 public class TestElasticUtil {
 
-	@Test
-	public void getTest() {
-//		ElasticUtil elasticUtil = new ElasticUtil();
-//		elasticUtil.setBaseUrl("http://127.0.0.1:9200/");
-//		System.out.println(elasticUtil.getHttpStatusInfo("ppc_log_test-20170930", "access"));
-//		System.out.println(elasticUtil.getBackFlowInfo("ppc_log_test-20170930", "access"));
-//		System.out.println(elasticUtil.getCacheStatusInfo("ppc_log_test-20170930", "access"));
-//		System.out.println(elasticUtil.getUrlInfo("ppc_log_test-20170930", "access"));
+	public static void main(String[] args) {
+		ElasticUtil elasticUtil = new ElasticUtil();
+		elasticUtil.setBaseUrl("http://127.0.0.1:9200/");
+		System.out.println("start");
+		EsSearchResult result = elasticUtil.avgDspeedStatistics("ppc_log_test*", "access", "2017-03-11", "2017-12-11", "1");
+		System.out.println(result.getDatas().size());
 	}
 
 }
