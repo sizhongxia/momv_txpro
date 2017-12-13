@@ -12,6 +12,13 @@ public class StartApp {
 
 	public static void main(String[] args) throws IOException {
 		SpringApplication.run(StartApp.class, args);
-		System.in.read();
+		byte[] input = new byte[20];
+		while (true) {
+			System.out.println("input `exit` to quit!");
+			System.in.read(input);
+			if (new String(input).trim().equals("exit")) {
+				break;
+			}
+		}
 	}
 }
