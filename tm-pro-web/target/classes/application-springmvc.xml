@@ -1,17 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xmlns="http://www.springframework.org/schema/beans" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns="http://www.springframework.org/schema/beans" 
+	xmlns:context="http://www.springframework.org/schema/context"
 	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans
        http://www.springframework.org/schema/beans/spring-beans.xsd
        http://www.springframework.org/schema/context
        http://www.springframework.org/schema/context/spring-context.xsd
        http://www.springframework.org/schema/mvc
-       http://www.springframework.org/schema/mvc/spring-mvc.xsd  ">
+       http://www.springframework.org/schema/mvc/spring-mvc.xsd
+       http://code.alibabatech.com/schema/dubbo  
+       http://code.alibabatech.com/schema/dubbo/dubbo.xsd  ">
 
 	<!-- 系统缓存类 -->
 	<bean class="org.tm.pro.web.cache.SystemAppEvents"></bean>
 	<bean class="org.tm.pro.web.cache.SystemInfoCacheUtil"></bean>
+	
+	<!-- 消费方应用名，用于计算依赖关系 -->  
+    <dubbo:application name="tm_consumer" />  
+  
+    <!-- 使用zookeeper注册中心暴露服务地址 -->  
+    <dubbo:registry address="zookeeper://127.0.0.1:2181" />  
+    <!-- 生成远程服务代理，可以像使用本地bean一样使用demoService -->  
+    <dubbo:reference id="demoService" interface="org.tm.pro.zk.service.DemoService" />  
 	
 	<!-- 扫描Controller -->
 	<context:component-scan base-package="org.tm.pro.web.controller" />

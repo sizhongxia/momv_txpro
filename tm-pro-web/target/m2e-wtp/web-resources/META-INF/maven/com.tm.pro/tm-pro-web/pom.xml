@@ -4,7 +4,6 @@
 	xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 	<modelVersion>4.0.0</modelVersion>
 	<artifactId>tm-pro-web</artifactId>
-	<version>${project.version}</version>
 	<packaging>war</packaging>
 
 	<name>tm-pro-web</name>
@@ -42,6 +41,12 @@
 			<version>${project.version}</version>
 		</dependency>
 
+		<dependency>
+			<groupId>com.tm.pro</groupId>
+			<artifactId>tm-pro-zk-service</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+
 		<!-- Spring MVC -->
 		<dependency>
 			<groupId>org.springframework</groupId>
@@ -68,7 +73,6 @@
 			<artifactId>freemarker</artifactId>
 			<version>2.3.23</version>
 		</dependency>
-
 
 		<!-- 文件上传 -->
 		<dependency>
@@ -193,15 +197,30 @@
 			<version>${easypoi.version}</version>
 		</dependency>
 
-		<!-- IO通信 -->
 		<dependency>
-			<groupId>org.t-io</groupId>
-			<artifactId>tio-core</artifactId>
-			<version>2.0.1.v20171015-RELEASE</version>
+			<groupId>com.alibaba</groupId>
+			<artifactId>dubbo</artifactId>
+			<version>${dubbo.version}</version>
+			<exclusions>
+				<exclusion>
+					<groupId>org.springframework</groupId>
+					<artifactId>spring</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.zookeeper</groupId>
+			<artifactId>zookeeper</artifactId>
+			<version>${zookeeper.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.github.sgroschupf</groupId>
+			<artifactId>zkclient</artifactId>
+			<version>${zkclient.version}</version>
 		</dependency>
 
 	</dependencies>
-
 
 	<profiles>
 		<profile>
@@ -234,14 +253,13 @@
 			</build>
 		</profile>
 	</profiles>
-
 	<build>
 		<pluginManagement>
 			<plugins>
 				<plugin>
 					<groupId>org.eclipse.jetty</groupId>
 					<artifactId>jetty-maven-plugin</artifactId>
-					<version>9.3.0.M2</version>
+					<version>9.2.18.v20160721</version>
 					<configuration>
 						<webApp>
 							<contextPath>/</contextPath>
