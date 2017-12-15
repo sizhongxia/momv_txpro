@@ -14,6 +14,16 @@
        http://www.springframework.org/schema/data/elasticsearch
        http://www.springframework.org/schema/data/elasticsearch/spring-elasticsearch.xsd ">
 
+	<bean id="propertyConfigurer"
+		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="locations">
+			<list>
+				<value>classpath:/mysql.properties</value>
+				<value>classpath:/redis.properties</value>
+			</list>
+		</property>
+	</bean>
+
 	<bean id="redisConfig" class="com.tm.pro.redis.config.RedisConfig">
 		<property name="urls" value="${redis.urls}" />
 		<property name="auth" value="${redis.auth}" />
@@ -29,11 +39,8 @@
 		<property name="redisConfig" ref="redisConfig"></property>
 	</bean>
 
-	<bean id="elasticUtil" class="org.tm.pro.es.ElasticUtil">
-		<property name="baseUrl" value="${elastic.baseUrl}" />
-	</bean>
-
-	<bean id="scheduler" lazy-init="false" scope="singleton" class="org.springframework.scheduling.quartz.SchedulerFactoryBean" />
+	<bean id="scheduler" lazy-init="false" scope="singleton"
+		class="org.springframework.scheduling.quartz.SchedulerFactoryBean" />
 	<!-- 任务管理器 -->
 	<bean class="org.tm.pro.web.quartz.manager.JobManager">
 		<property name="scheduler" ref="scheduler"></property>
@@ -45,23 +52,13 @@
 	<!-- Jobs -->
 	<context:component-scan base-package="org.tm.pro.web.quartz.job.impl" />
 
-	<!-- 数据库连接池管理 -->
-	<bean id="c3p0DataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource"
-		destroy-method="close">
-		<property name="driverClass" value="${db.driverClass}"></property>
-		<property name="jdbcUrl" value="${db.jdbcUrl}"></property>
-		<property name="user" value="${db.user}"></property>
-		<property name="password" value="${db.password}"></property>
-
-
+	<bean id="baseDataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource" destroy-method="close">
 		<property name="initialPoolSize" value="${db.initialPoolSize}"></property>
-
 		<!--最大空闲时间,60秒内未使用则连接被丢弃。若为0则永不丢弃。Default: 0 -->
 		<property name="maxIdleTime" value="${db.maxIdleTime}"></property>
 		<!--连接池中保留的最大连接数。Default: 15 -->
 		<property name="maxPoolSize" value="${db.maxPoolSize}"></property>
 		<property name="minPoolSize" value="${db.minPoolSize}"></property>
-
 		<!--当连接池中的连接耗尽的时候c3p0一次同时获取的连接数。Default: 3 -->
 		<property name="acquireIncrement" value="${db.acquireIncrement}"></property>
 		<!--两次连接中间隔时间，单位毫秒。Default: 1000 -->
@@ -73,8 +70,33 @@
 		<property name="breakAfterAcquireFailure" value="${db.breakAfterAcquireFailure}"></property>
 	</bean>
 
+	<!-- 数据库连接池管理 -->
+	<bean id="masterDb" parent="baseDataSource">
+		<property name="driverClass" value="${db.master.driverClass}"></property>
+		<property name="jdbcUrl" value="${db.master.jdbcUrl}"></property>
+		<property name="user" value="${db.master.user}"></property>
+		<property name="password" value="${db.master.password}"></property>
+	</bean>
+	<bean id="slaveDb" parent="baseDataSource">
+		<property name="driverClass" value="${db.slave.driverClass}"></property>
+		<property name="jdbcUrl" value="${db.slave.jdbcUrl}"></property>
+		<property name="user" value="${db.slave.user}"></property>
+		<property name="password" value="${db.slave.password}"></property>
+	</bean>
+	
+	<bean id="manyDataSource" class="org.tm.pro.holder.CustomerRoutingDataSource">
+		<property name="targetDataSources">
+			<map key-type="java.lang.String">
+				<entry key="master" value-ref="masterDb" />
+				<entry key="slave" value-ref="slaveDb" />
+			</map>
+		</property>
+		<!-- 默认数据源 -->
+		<property name="defaultTargetDataSource" ref="masterDb" />
+	</bean>
+
 	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
-		<property name="dataSource" ref="c3p0DataSource" />
+		<property name="dataSource" ref="manyDataSource" />
 		<property name="configLocation" value="classpath:mybatis-config.xml" />
 		<property name="typeAliasesPackage" value="org.tm.pro.entity" />
 		<property name="mapperLocations" value="classpath*:**/xml/*Mapper.xml" />
@@ -106,23 +128,17 @@
 	</bean>
 
 	<!-- ================================事务相关控制================================================= -->
-
-	<bean name="transactionManager"
-		class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
-		<property name="dataSource" ref="c3p0DataSource"></property>
+	<bean name="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="manyDataSource"></property>
 	</bean>
 
 	<tx:advice id="userTxAdvice" transaction-manager="transactionManager">
 		<tx:attributes>
 			<!-- PROPAGATION_REQUIRED: 如果当前没有事务，就新建一个事务，如果已经存在一个事务中，加入到这个事务中。 -->
-			<tx:method name="del*" propagation="REQUIRED" read-only="false"
-				rollback-for="java.lang.Exception" no-rollback-for="java.lang.RuntimeException" />
-			<tx:method name="insert*" propagation="REQUIRED" read-only="false"
-				rollback-for="java.lang.RuntimeException" />
-			<tx:method name="save*" propagation="REQUIRED" read-only="false"
-				rollback-for="java.lang.RuntimeException" />
-			<tx:method name="update*" propagation="REQUIRED" read-only="false"
-				rollback-for="java.lang.Exception" />
+			<tx:method name="del*" propagation="REQUIRED" read-only="false" rollback-for="java.lang.Exception" no-rollback-for="java.lang.RuntimeException" />
+			<tx:method name="insert*" propagation="REQUIRED" read-only="false" rollback-for="java.lang.RuntimeException" />
+			<tx:method name="save*" propagation="REQUIRED" read-only="false" rollback-for="java.lang.RuntimeException" />
+			<tx:method name="update*" propagation="REQUIRED" read-only="false" rollback-for="java.lang.Exception" />
 			<tx:method name="find*" propagation="SUPPORTS" />
 			<tx:method name="get*" propagation="SUPPORTS" />
 			<tx:method name="select*" propagation="SUPPORTS" />
@@ -131,16 +147,16 @@
 
 	<aop:config>
 		<!--把事务控制在Service层 -->
-		<aop:pointcut id="pc"
-			expression="execution(public * org.tm.pro.service.*.*(..))" />
+		<aop:pointcut id="pc" expression="execution(public * org.tm.pro.service.*.*(..))" />
 		<aop:advisor pointcut-ref="pc" advice-ref="userTxAdvice" />
 	</aop:config>
+	
+	<bean id="manyDataSourceAspect" class="org.tm.pro.holder.ManyDataSourceAspect" />
+	<aop:config>
+		<aop:aspect id="cds" ref="manyDataSourceAspect">
+			<aop:pointcut id="tx" expression="execution(public * org.tm.pro.service.*.*(..))" />
+			<aop:before pointcut-ref="tx" method="switchDB" />
+		</aop:aspect>
+	</aop:config>
 
-	<!-- 只能配置一个property-placeholder，使用通配符加载多个配置文件 -->
-    <beans profile="dev">
-    	<context:property-placeholder location="classpath*:conf/dev/*.properties" />
-    </beans>
-    <beans profile="prod">
-    	<context:property-placeholder location="classpath*:conf/dev/*.properties" />
-    </beans>
 </beans>

@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+	<p>socket_io</p>
+	<div id="messages"></div>
+	<!-- Jquery Dom -->
+	<script src="${rc.contextPath}/statics/ui-frame/js/jquery.min.js?v=2.1.4"></script>
+
+	<script type="text/javascript">
+		var webSocket = new WebSocket('ws://localhost:6789');
+	
+		webSocket.onerror = function(event) {
+			onError(event)
+		};
+	
+		webSocket.onopen = function(event) {
+			onOpen(event)
+		};
+	
+		webSocket.onmessage = function(event) {
+			onMessage(event)
+		};
+	
+		function onMessage(event) {
+			var blob = event.data;
+			var reader = new FileReader();
+			reader.readAsText(blob, 'utf-8');
+			reader.onload = function(e) {
+				document.getElementById('messages').innerHTML += '<br />' + reader.result;
+			}
+		}
+	
+		function onOpen(event) {
+			document.getElementById('messages').innerHTML = 'Connection established';
+		}
+	
+		function onError(event) {
+			console.info(event.data);
+		}
+	
+		function start() {
+			webSocket.send('hellohellohellohellohellohellohellohellohe');
+		}
+	</script>
+
+</body>
+</html>

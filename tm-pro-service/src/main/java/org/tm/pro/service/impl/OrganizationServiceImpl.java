@@ -5,6 +5,7 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.tm.pro.anno.DataSource;
 import org.tm.pro.entity.Organization;
 import org.tm.pro.entity.OrganizationExample;
 import org.tm.pro.entity.OrganizationExample.Criteria;
@@ -22,11 +23,13 @@ public class OrganizationServiceImpl implements OrganizationService {
 	OrganizationMapper organizationMapper;
 
 	@Override
+	@DataSource("slave")
 	public Organization getById(Integer id) {
 		return organizationMapper.selectByPrimaryKey(id);
 	}
 
 	@Override
+	@DataSource("slave")
 	public long getOrganizationCount(Map<String, Object> params) {
 		OrganizationExample example = initParams(params);
 		return organizationMapper.countByExample(example);
@@ -43,6 +46,7 @@ public class OrganizationServiceImpl implements OrganizationService {
 	}
 
 	@Override
+	@DataSource("slave")
 	public List<Organization> getOrganizationList(Map<String, Object> params, int page, int size) {
 		OrganizationExample example = initParams(params);
 		example.setOrderByClause("sort_number asc");
@@ -51,21 +55,25 @@ public class OrganizationServiceImpl implements OrganizationService {
 	}
 
 	@Override
+	@DataSource("master")
 	public int insert(Organization organization) {
 		return organizationMapper.insert(organization);
 	}
 
 	@Override
+	@DataSource("master")
 	public int delete(Organization organization) {
 		return organizationMapper.deleteByPrimaryKey(organization.getId());
 	}
 
 	@Override
+	@DataSource("master")
 	public int update(Organization organization) {
 		return organizationMapper.updateByPrimaryKey(organization);
 	}
 
 	@Override
+	@DataSource("slave")
 	public List<Organization> getOrganizationAll() {
 		OrganizationExample example = new OrganizationExample();
 		example.setOrderByClause("sort_number asc");

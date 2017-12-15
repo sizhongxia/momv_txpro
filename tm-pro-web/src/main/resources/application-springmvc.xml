@@ -1,17 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xmlns="http://www.springframework.org/schema/beans" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns="http://www.springframework.org/schema/beans" 
+	xmlns:context="http://www.springframework.org/schema/context"
 	xmlns:mvc="http://www.springframework.org/schema/mvc"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans
        http://www.springframework.org/schema/beans/spring-beans.xsd
        http://www.springframework.org/schema/context
        http://www.springframework.org/schema/context/spring-context.xsd
        http://www.springframework.org/schema/mvc
-       http://www.springframework.org/schema/mvc/spring-mvc.xsd  ">
+       http://www.springframework.org/schema/mvc/spring-mvc.xsd ">
 
 	<!-- 系统缓存类 -->
+	<bean class="org.tm.pro.web.cache.SystemAppEvents"></bean>
 	<bean class="org.tm.pro.web.cache.SystemInfoCacheUtil"></bean>
-	<bean class="org.tm.pro.web.cache.SystemAppEventCacheUtil"></bean>
 	
 	<!-- 扫描Controller -->
 	<context:component-scan base-package="org.tm.pro.web.controller" />

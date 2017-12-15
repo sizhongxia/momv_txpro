@@ -68,7 +68,6 @@ thead>tr>th, tbody>tr>td {
 										<th><div class="th-inner">任务类</div></th>
 										<th><div class="th-inner">时间调度</div></th>
 										<th><div class="th-inner">状态</div></th>
-										<th><div class="th-inner">上次执行时间</div></th>
 										<th><div class="th-inner">下次执行时间</div></th>
 										<th><div class="th-inner"></div></th>
 									</tr>
@@ -77,10 +76,9 @@ thead>tr>th, tbody>tr>td {
 									<tr v-for="(item, index) in datas">
 										<td>{{item.jobName}}</td>
 										<td>{{item.jobGroupName}}</td>
-										<td>{{item.jobClassName}}</td>
+										<td align="left">&nbsp;{{item.jobClassName}}</td>
 										<td>{{item.cronExpression}}</td>
 										<td>{{item.jobStatus | setStatus}}</td>
-										<td>{{item.updateTime}}</td>
 										<td>{{item.nextExecureTime}}</td>
 										<td>
 												<a @click="config(item, $event)">操作</a>
@@ -249,7 +247,6 @@ thead>tr>th, tbody>tr>td {
 			    	that.loadData();
 			    },
 			    config: function(job) {
-			    	console.info(job);
 			    	layer.open({
 			    	    type: 1,
 			    	    title: '任务配置',

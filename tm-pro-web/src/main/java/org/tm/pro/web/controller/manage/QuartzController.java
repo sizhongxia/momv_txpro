@@ -11,8 +11,6 @@ import org.apache.shiro.authz.annotation.RequiresAuthentication;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.quartz.SchedulerException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.context.ApplicationEventPublisherAware;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -20,17 +18,21 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.tm.pro.model.ApiResultMap;
 import org.tm.pro.utils.TmStringUtil;
 import org.tm.pro.web.controller.base.BaseController;
-import org.tm.pro.web.event.TmApplicationEvent;
 import org.tm.pro.web.quartz.manager.JobManager;
 import org.tm.pro.web.quartz.model.Job;
 
+import com.tm.pro.redis.util.RedisUtil;
+
+//  implements ApplicationEventPublisherAware
 @Controller
 @RequestMapping(value = "/quartz")
-public class QuartzController extends BaseController implements ApplicationEventPublisherAware {
+public class QuartzController extends BaseController {
 
 	@Autowired
 	JobManager jobManager;
-	private ApplicationEventPublisher applicationEventPublisher;
+	// private ApplicationEventPublisher applicationEventPublisher;
+	@Autowired
+	RedisUtil redisUtil;
 
 	public QuartzController() {
 	}
@@ -94,11 +96,11 @@ public class QuartzController extends BaseController implements ApplicationEvent
 			arm.setMsg("错误：未传入的作业类分组");
 			return arm;
 		}
-		if(!"Y".equals(isConcurrent) && !"N".equals(isConcurrent)) {
+		if (!"Y".equals(isConcurrent) && !"N".equals(isConcurrent)) {
 			arm.setMsg("错误：表单参数有误");
 			return arm;
 		}
-		if(!"Y".equals(isStartupExecution) && !"N".equals(isStartupExecution)) {
+		if (!"Y".equals(isStartupExecution) && !"N".equals(isStartupExecution)) {
 			arm.setMsg("错误：表单参数有误");
 			return arm;
 		}
@@ -138,7 +140,7 @@ public class QuartzController extends BaseController implements ApplicationEvent
 		case "RESET":
 			try {
 				if (jobManager.updateJobCron(job)) {
-					applicationEventPublisher.publishEvent(new TmApplicationEvent("UpdateSystemJobCacheEvent"));
+					redisUtil.publish("channel_update_system_cache", "UpdateSystemJobCacheEvent");
 					arm.setStatus(true);
 					arm.setData(job);
 					arm.setMsg("更新成功");
@@ -176,12 +178,13 @@ public class QuartzController extends BaseController implements ApplicationEvent
 			arm.setMsg("错误：无效的类别");
 			return arm;
 		}
-		arm.setMsg("错误：操作失败");
+		arm.setMsg("错误：操作失败，可能当前服务未开启！");
 		return arm;
 	}
 
-	@Override
-	public void setApplicationEventPublisher(ApplicationEventPublisher applicationEventPublisher) {
-		this.applicationEventPublisher = applicationEventPublisher;
-	}
+	// @Override
+	// public void setApplicationEventPublisher(ApplicationEventPublisher
+	// applicationEventPublisher) {
+	// this.applicationEventPublisher = applicationEventPublisher;
+	// }
 }
