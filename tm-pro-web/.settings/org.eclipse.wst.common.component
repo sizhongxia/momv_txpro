@@ -14,13 +14,7 @@
         <dependent-module archiveName="tm-pro-redis-0.0.1-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/tm-pro-redis/tm-pro-redis">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <dependent-module archiveName="tm-pro-es-0.0.1-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/tm-pro-es/tm-pro-es">
-            <dependency-type>uses</dependency-type>
-        </dependent-module>
         <dependent-module archiveName="tm-pro-utils-0.0.1-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/tm-pro-utils/tm-pro-utils">
-            <dependency-type>uses</dependency-type>
-        </dependent-module>
-        <dependent-module archiveName="tm-pro-zk-service-0.0.1-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/tm-pro-zk-service/tm-pro-zk-service">
             <dependency-type>uses</dependency-type>
         </dependent-module>
         <property name="java-output-path" value="/tm-pro-web/target/classes"/>

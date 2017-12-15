@@ -20,7 +20,6 @@
 			<list>
 				<value>classpath:/mysql.properties</value>
 				<value>classpath:/redis.properties</value>
-				<value>classpath:/elasticsearch.properties</value>
 			</list>
 		</property>
 	</bean>
@@ -38,10 +37,6 @@
 
 	<bean id="redisUtil" class="com.tm.pro.redis.util.RedisUtil">
 		<property name="redisConfig" ref="redisConfig"></property>
-	</bean>
-
-	<bean id="elasticUtil" class="org.tm.pro.es.ElasticUtil">
-		<property name="baseUrl" value="${elastic.baseUrl}" />
 	</bean>
 
 	<bean id="scheduler" lazy-init="false" scope="singleton"

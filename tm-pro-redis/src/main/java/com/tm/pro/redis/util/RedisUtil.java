@@ -32,9 +32,6 @@ public class RedisUtil implements InitializingBean, DisposableBean {
 
 	private RedisConfig redisConfig;
 
-	private RedisUtil() {
-	}
-
 	public void setRedisConfig(RedisConfig redisConfig) {
 		this.redisConfig = redisConfig;
 	}

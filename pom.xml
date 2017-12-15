@@ -163,8 +163,6 @@
 		<module>tm-pro-service</module>
 		<module>tm-pro-web</module>
 		<module>tm-pro-picture</module>
-		<module>tm-pro-es</module>
-		<module>tm-pro-zk-provider</module>
-		<module>tm-pro-zk-service</module>
+		
 	</modules>
 </project>
