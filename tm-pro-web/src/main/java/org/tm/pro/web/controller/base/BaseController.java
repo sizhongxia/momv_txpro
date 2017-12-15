@@ -38,7 +38,6 @@ public class BaseController {
 			return "redirect:/login.do";
 		}
 	}
-
 	/**
 	 * 授权（未授权）
 	 * 
