@@ -41,12 +41,6 @@
 			<version>${project.version}</version>
 		</dependency>
 
-		<dependency>
-			<groupId>com.tm.pro</groupId>
-			<artifactId>tm-pro-zk-service</artifactId>
-			<version>${project.version}</version>
-		</dependency>
-
 		<!-- Spring MVC -->
 		<dependency>
 			<groupId>org.springframework</groupId>
