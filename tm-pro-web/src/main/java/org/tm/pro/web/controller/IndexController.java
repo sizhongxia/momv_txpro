@@ -19,7 +19,6 @@ import org.tm.pro.entity.SystemInfo;
 import org.tm.pro.web.anno.UserAgentRecord;
 import org.tm.pro.web.cache.SystemInfoCacheUtil;
 import org.tm.pro.web.controller.base.BaseController;
-import org.tm.pro.zk.service.DemoService;
 
 import com.google.code.kaptcha.Producer;
 
@@ -28,8 +27,6 @@ public class IndexController extends BaseController {
 
 	@Autowired
 	Producer captchaProducer;
-	@Autowired
-	DemoService demoService;
 
 	public IndexController() {
 	}
@@ -40,8 +37,6 @@ public class IndexController extends BaseController {
 	public ModelAndView index(HttpServletRequest request) {
 		ModelAndView mv = new ModelAndView("index");
 		
-		// System.out.println(demoService.say("Hi ZooKeeper!"));
-
 		SystemInfo systemInfo = SystemInfoCacheUtil.systemInfo;
 		mv.addObject("systemTitle", systemInfo.getSystemTitle());
 		mv.addObject("systemDescript", systemInfo.getSystemDescript());
