@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.tm.pro.entity.RoleAuthorization;
 import org.tm.pro.mapper.RoleAuthorizationDao;
 import org.tm.pro.service.RoleAuthorizationService;
+import org.tm.pro.web.anno.DataSource;
 
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.mapper.Wrapper;
@@ -22,10 +23,12 @@ import com.baomidou.mybatisplus.service.impl.ServiceImpl;
  * @since 2017-12-18
  */
 @Service
+@DataSource("master")
 public class RoleAuthorizationServiceImpl extends ServiceImpl<RoleAuthorizationDao, RoleAuthorization>
 		implements RoleAuthorizationService {
 
 	@Override
+	@DataSource("slave")
 	public Set<String> getRoleAuthorizations(Integer roleId) {
 		RoleAuthorization entity = new RoleAuthorization();
 		entity.setRoleId(roleId);

@@ -12,6 +12,7 @@ import org.tm.pro.mapper.UserRoleDao;
 import org.tm.pro.service.RoleAuthorizationService;
 import org.tm.pro.service.RoleService;
 import org.tm.pro.service.UserRoleService;
+import org.tm.pro.web.anno.DataSource;
 
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.mapper.Wrapper;
@@ -26,6 +27,7 @@ import com.baomidou.mybatisplus.service.impl.ServiceImpl;
  * @since 2017-12-18
  */
 @Service
+@DataSource("master")
 public class UserRoleServiceImpl extends ServiceImpl<UserRoleDao, UserRole> implements UserRoleService {
 
 	@Autowired
@@ -34,6 +36,7 @@ public class UserRoleServiceImpl extends ServiceImpl<UserRoleDao, UserRole> impl
 	RoleAuthorizationService authorizationService;
 
 	@Override
+	@DataSource("slave")
 	public Set<String> getUserAuthorizations(Integer userId) {
 		Set<Role> roles = getUserRoles(userId);
 		if (roles == null || roles.isEmpty()) {
@@ -47,6 +50,7 @@ public class UserRoleServiceImpl extends ServiceImpl<UserRoleDao, UserRole> impl
 	}
 
 	@Override
+	@DataSource("slave")
 	public Set<Role> getUserRoles(Integer userId) {
 		UserRole entity = new UserRole();
 		entity.setUserId(userId);
@@ -84,6 +88,7 @@ public class UserRoleServiceImpl extends ServiceImpl<UserRoleDao, UserRole> impl
 	}
 
 	@Override
+	@DataSource("slave")
 	public boolean checkUserRole(Integer userId, Integer roleId, Integer organizationId) {
 		UserRole entity = new UserRole();
 		entity.setUserId(userId);

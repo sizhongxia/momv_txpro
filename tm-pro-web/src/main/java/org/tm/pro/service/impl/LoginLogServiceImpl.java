@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.tm.pro.entity.LoginLog;
 import org.tm.pro.mapper.LoginLogDao;
 import org.tm.pro.service.LoginLogService;
+import org.tm.pro.web.anno.DataSource;
 
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.mapper.Wrapper;
@@ -21,6 +22,7 @@ import com.baomidou.mybatisplus.service.impl.ServiceImpl;
  * @since 2017-12-18
  */
 @Service
+@DataSource("master")
 public class LoginLogServiceImpl extends ServiceImpl<LoginLogDao, LoginLog> implements LoginLogService {
 
 	@Override
@@ -29,6 +31,7 @@ public class LoginLogServiceImpl extends ServiceImpl<LoginLogDao, LoginLog> impl
 	}
 
 	@Override
+	@DataSource("slave")
 	public List<LoginLog> getTopTen(String loginName) {
 		LoginLog entity = new LoginLog();
 		entity.setLoginName(loginName);

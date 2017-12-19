@@ -43,23 +43,4 @@ public class HttpClientUtil {
 		}
 		return result;
 	}
-
-	// private static final Logger log = Logger.getLogger(HttpClientUtil.class);
-	// public static String checkDomain(String domain) {
-	// try {
-	// MultipartEntityBuilder builder = MultipartEntityBuilder.create();
-	// builder.setCharset(Charset.forName("UTF-8"));
-	// CloseableHttpClient httpClient = HttpClientBuilder.create().build();
-	// HttpPost httpPost = new
-	// HttpPost("http://panda.www.net.cn/cgi-bin/check.cgi?area_domain=" + domain);
-	// httpPost.setEntity(builder.build());
-	// CloseableHttpResponse response = httpClient.execute(httpPost);
-	// return EntityUtils.toString(response.getEntity(), "UTF-8");
-	// } catch (ClientProtocolException e) {
-	// log.error(e);
-	// } catch (IOException e) {
-	// log.error(e);
-	// }
-	// return null;
-	// }
 }

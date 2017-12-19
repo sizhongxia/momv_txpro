@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import org.tm.pro.entity.Job;
 import org.tm.pro.mapper.JobDao;
 import org.tm.pro.service.JobService;
+import org.tm.pro.web.anno.DataSource;
 
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.mapper.Wrapper;
@@ -20,14 +21,17 @@ import com.baomidou.mybatisplus.service.impl.ServiceImpl;
  * @since 2017-12-18
  */
 @Service
+@DataSource("master")
 public class JobServiceImpl extends ServiceImpl<JobDao, Job> implements JobService {
 
 	@Override
+	@DataSource("slave")
 	public Job getById(Integer id) {
 		return baseMapper.selectById(id);
 	}
 
 	@Override
+	@DataSource("slave")
 	public Job getByJobId(String jobId) {
 		Job entity = new Job();
 		entity.setJobId(jobId);
@@ -35,12 +39,14 @@ public class JobServiceImpl extends ServiceImpl<JobDao, Job> implements JobServi
 	}
 
 	@Override
+	@DataSource("slave")
 	public List<Job> getAllJobs() {
 		Wrapper<Job> wrapper = new EntityWrapper<>();
 		return baseMapper.selectList(wrapper);
 	}
 
 	@Override
+	@DataSource("slave")
 	public List<Job> getStartupExecutionJobs() {
 		Job job = new Job();
 		job.setStatus("NORMAL");

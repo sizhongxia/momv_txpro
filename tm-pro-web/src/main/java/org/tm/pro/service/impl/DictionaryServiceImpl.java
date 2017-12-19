@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import org.tm.pro.entity.Dictionary;
 import org.tm.pro.mapper.DictionaryDao;
 import org.tm.pro.service.DictionaryService;
+import org.tm.pro.web.anno.DataSource;
 
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.mapper.Wrapper;
@@ -20,14 +21,17 @@ import com.baomidou.mybatisplus.service.impl.ServiceImpl;
  * @since 2017-12-18
  */
 @Service
+@DataSource("master")
 public class DictionaryServiceImpl extends ServiceImpl<DictionaryDao, Dictionary> implements DictionaryService {
 
 	@Override
+	@DataSource("slave")
 	public Dictionary getById(Integer id) {
 		return baseMapper.selectById(id);
 	}
 
 	@Override
+	@DataSource("slave")
 	public Dictionary getByVisitCode(String visitCode) {
 		Dictionary entity = new Dictionary();
 		entity.setVisitCode(visitCode);
@@ -50,6 +54,7 @@ public class DictionaryServiceImpl extends ServiceImpl<DictionaryDao, Dictionary
 	}
 
 	@Override
+	@DataSource("slave")
 	public List<Dictionary> getAllDictionarys() {
 		Wrapper<Dictionary> wrapper = new EntityWrapper<>();
 		return baseMapper.selectList(wrapper);

@@ -10,6 +10,7 @@ import org.tm.pro.mapper.OrganizationDao;
 import org.tm.pro.service.OrganizationService;
 import org.tm.pro.utils.TmMapUtil;
 import org.tm.pro.utils.TmStringUtil;
+import org.tm.pro.web.anno.DataSource;
 
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.mapper.Wrapper;
@@ -24,6 +25,7 @@ import com.baomidou.mybatisplus.service.impl.ServiceImpl;
  * @since 2017-12-18
  */
 @Service
+@DataSource("master")
 public class OrganizationServiceImpl extends ServiceImpl<OrganizationDao, Organization> implements OrganizationService {
 
 	@Override
@@ -32,11 +34,13 @@ public class OrganizationServiceImpl extends ServiceImpl<OrganizationDao, Organi
 	}
 
 	@Override
+	@DataSource("slave")
 	public Organization getById(Integer id) {
 		return baseMapper.selectById(id);
 	}
 
 	@Override
+	@DataSource("slave")
 	public long getOrganizationCount(Map<String, Object> params) {
 		Wrapper<Organization> wrapper = new EntityWrapper<Organization>();
 
@@ -49,6 +53,7 @@ public class OrganizationServiceImpl extends ServiceImpl<OrganizationDao, Organi
 	}
 
 	@Override
+	@DataSource("slave")
 	public List<Organization> getOrganizationList(Map<String, Object> params, int page, int size) {
 		Wrapper<Organization> wrapper = new EntityWrapper<Organization>();
 
@@ -62,6 +67,7 @@ public class OrganizationServiceImpl extends ServiceImpl<OrganizationDao, Organi
 	}
 
 	@Override
+	@DataSource("slave")
 	public List<Organization> getOrganizationAll() {
 		Wrapper<Organization> wrapper = new EntityWrapper<>();
 		return baseMapper.selectList(wrapper);

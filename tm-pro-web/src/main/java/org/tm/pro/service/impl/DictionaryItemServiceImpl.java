@@ -9,6 +9,7 @@ import org.tm.pro.entity.DictionaryItem;
 import org.tm.pro.mapper.DictionaryItemDao;
 import org.tm.pro.service.DictionaryItemService;
 import org.tm.pro.service.DictionaryService;
+import org.tm.pro.web.anno.DataSource;
 
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.mapper.Wrapper;
@@ -23,6 +24,7 @@ import com.baomidou.mybatisplus.service.impl.ServiceImpl;
  * @since 2017-12-18
  */
 @Service
+@DataSource("master")
 public class DictionaryItemServiceImpl extends ServiceImpl<DictionaryItemDao, DictionaryItem>
 		implements DictionaryItemService {
 
@@ -30,6 +32,7 @@ public class DictionaryItemServiceImpl extends ServiceImpl<DictionaryItemDao, Di
 	DictionaryService dictionaryService;
 
 	@Override
+	@DataSource("slave")
 	public DictionaryItem getById(Integer id) {
 		return baseMapper.selectById(id);
 	}
@@ -50,6 +53,7 @@ public class DictionaryItemServiceImpl extends ServiceImpl<DictionaryItemDao, Di
 	}
 
 	@Override
+	@DataSource("slave")
 	public List<DictionaryItem> getAllDictionaryItems(Integer dictId) {
 		DictionaryItem entity = new DictionaryItem();
 		entity.setDictId(dictId);
@@ -58,6 +62,7 @@ public class DictionaryItemServiceImpl extends ServiceImpl<DictionaryItemDao, Di
 	}
 
 	@Override
+	@DataSource("slave")
 	public List<DictionaryItem> getItemsByVCode(String visitCode) {
 		Dictionary dictionary = dictionaryService.getByVisitCode(visitCode);
 		if (dictionary == null) {

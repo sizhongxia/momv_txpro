@@ -3,6 +3,8 @@ package org.tm.pro.service.impl;
 import org.tm.pro.entity.News;
 import org.tm.pro.mapper.NewsDao;
 import org.tm.pro.service.NewsService;
+import org.tm.pro.web.anno.DataSource;
+
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
 
@@ -15,6 +17,7 @@ import org.springframework.stereotype.Service;
  * @since 2017-12-18
  */
 @Service
+@DataSource("master")
 public class NewsServiceImpl extends ServiceImpl<NewsDao, News> implements NewsService {
 
 }

@@ -1,14 +1,14 @@
 package org.tm.pro.web.anno;
 
-import static java.lang.annotation.ElementType.METHOD;
-import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 import java.lang.annotation.Documented;
+import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-@Retention(RUNTIME)
-@Target(METHOD)
+@Retention(RetentionPolicy.RUNTIME)
+@Target(value= {ElementType.TYPE, ElementType.METHOD})
 @Documented
 public @interface DataSource {
 	String value();

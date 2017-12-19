@@ -10,6 +10,7 @@ import org.tm.pro.mapper.UserDao;
 import org.tm.pro.service.UserService;
 import org.tm.pro.utils.TmMapUtil;
 import org.tm.pro.utils.TmStringUtil;
+import org.tm.pro.web.anno.DataSource;
 
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.mapper.Wrapper;
@@ -24,14 +25,17 @@ import com.baomidou.mybatisplus.service.impl.ServiceImpl;
  * @since 2017-12-18
  */
 @Service
+@DataSource("master")
 public class UserServiceImpl extends ServiceImpl<UserDao, User> implements UserService {
 
 	@Override
+	@DataSource("slave")
 	public User getById(Integer id) {
 		return baseMapper.selectById(id);
 	}
 
 	@Override
+	@DataSource("slave")
 	public User getByLoginName(String loginName) {
 		User entity = new User();
 		entity.setLoginName(loginName);
@@ -39,6 +43,7 @@ public class UserServiceImpl extends ServiceImpl<UserDao, User> implements UserS
 	}
 
 	@Override
+	@DataSource("slave")
 	public int getUserCount(Map<String, Object> params) {
 		Wrapper<User> wrapper = new EntityWrapper<>();
 		String loginName = TmMapUtil.getMapVal(params, "loginName", "");
@@ -61,6 +66,7 @@ public class UserServiceImpl extends ServiceImpl<UserDao, User> implements UserS
 	}
 
 	@Override
+	@DataSource("slave")
 	public List<User> getUserList(Map<String, Object> params, int page, int size) {
 		RowBounds rowBounds = new RowBounds((page - 1) * size, size);
 		Wrapper<User> wrapper = new EntityWrapper<>();

@@ -9,6 +9,7 @@ import org.tm.pro.mapper.RoleDao;
 import org.tm.pro.service.RoleService;
 import org.tm.pro.utils.TmMapUtil;
 import org.tm.pro.utils.TmStringUtil;
+import org.tm.pro.web.anno.DataSource;
 
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.mapper.Wrapper;
@@ -23,14 +24,17 @@ import com.baomidou.mybatisplus.service.impl.ServiceImpl;
  * @since 2017-12-18
  */
 @Service
+@DataSource("master")
 public class RoleServiceImpl extends ServiceImpl<RoleDao, Role> implements RoleService {
 
 	@Override
+	@DataSource("slave")
 	public Role getById(Integer id) {
 		return baseMapper.selectById(id);
 	}
 
 	@Override
+	@DataSource("slave")
 	public Role getByCode(String code) {
 		Role entity = new Role();
 		entity.setRoleCode(code);
@@ -38,6 +42,7 @@ public class RoleServiceImpl extends ServiceImpl<RoleDao, Role> implements RoleS
 	}
 
 	@Override
+	@DataSource("slave")
 	public List<Role> getRoleList(Map<String, Object> params) {
 		Wrapper<Role> wrapper = new EntityWrapper<Role>();
 		Integer organizationId = TmMapUtil.getMapVal(params, "organizationId", 0);
