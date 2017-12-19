@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.tm.pro.mapper.HouseDao">
+
+    <!-- 开启二级缓存 -->
+    <cache type="org.mybatis.caches.ehcache.LoggingEhcache"/>
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="org.tm.pro.entity.House">
+        <id column="id" property="id" />
+        <result column="name" property="name" />
+        <result column="pinyin" property="pinyin" />
+        <result column="feature" property="feature" />
+        <result column="category" property="category" />
+        <result column="property_type" property="propertyType" />
+        <result column="property_right" property="propertyRight" />
+        <result column="acreage" property="acreage" />
+        <result column="open_quotation_date" property="openQuotationDate" />
+        <result column="handed_house_date" property="handedHouseDate" />
+        <result column="province" property="province" />
+        <result column="city" property="city" />
+        <result column="county" property="county" />
+        <result column="location" property="location" />
+        <result column="longitude" property="longitude" />
+        <result column="latitude" property="latitude" />
+        <result column="sales_offices_location" property="salesOfficesLocation" />
+        <result column="sales_hotline" property="salesHotline" />
+        <result column="average_price" property="averagePrice" />
+        <result column="down_payment" property="downPayment" />
+        <result column="developer" property="developer" />
+        <result column="builder" property="builder" />
+        <result column="property_company" property="propertyCompany" />
+        <result column="planning_area" property="planningArea" />
+        <result column="covered_area" property="coveredArea" />
+        <result column="parking" property="parking" />
+        <result column="building_amount" property="buildingAmount" />
+        <result column="house_amount" property="houseAmount" />
+        <result column="decoration" property="decoration" />
+        <result column="plot_ratio" property="plotRatio" />
+        <result column="greening_ratio" property="greeningRatio" />
+        <result column="sale_status" property="saleStatus" />
+        <result column="show_status" property="showStatus" />
+        <result column="operator" property="operator" />
+        <result column="create_time" property="createTime" />
+        <result column="update_time" property="updateTime" />
+    </resultMap>
+
+</mapper>

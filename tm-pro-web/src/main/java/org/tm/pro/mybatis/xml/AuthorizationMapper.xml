@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.tm.pro.mapper.AuthorizationDao">
+
+    <!-- 开启二级缓存 -->
+    <cache type="org.mybatis.caches.ehcache.LoggingEhcache"/>
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="org.tm.pro.entity.Authorization">
+        <id column="id" property="id" />
+        <result column="pid" property="pid" />
+        <result column="module_name" property="moduleName" />
+        <result column="module_introduce" property="moduleIntroduce" />
+        <result column="authorization_code" property="authorizationCode" />
+    </resultMap>
+
+</mapper>

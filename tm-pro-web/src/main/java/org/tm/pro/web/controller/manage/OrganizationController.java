@@ -110,7 +110,7 @@ public class OrganizationController extends BaseController {
 		organization.setOrganizationDesc(organizationDesc);
 		int id = 0;
 		try {
-			id = organizationService.insert(organization);
+			id = organizationService.saveOrganization(organization);
 		} catch (Exception e) {
 			e.printStackTrace();
 			arm.setMsg("错误：保存失败");
@@ -157,7 +157,7 @@ public class OrganizationController extends BaseController {
 
 		int res = 0;
 		try {
-			res = organizationService.update(organization);
+			res = organizationService.updateOrganization(organization);
 		} catch (Exception e) {
 			e.printStackTrace();
 			arm.setMsg("错误：修改失败");
@@ -189,7 +189,7 @@ public class OrganizationController extends BaseController {
 		}
 		int res = 0;
 		try {
-			res = organizationService.delete(organization);
+			res = organizationService.deleteOrganization(organization);
 		} catch (Exception e) {
 			e.printStackTrace();
 			arm.setMsg("错误：删除失败");

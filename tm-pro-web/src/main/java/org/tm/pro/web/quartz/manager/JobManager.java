@@ -17,6 +17,7 @@ import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.support.CronSequenceGenerator;
 import org.tm.pro.entity.JobGroup;
+import org.tm.pro.service.JobGroupService;
 import org.tm.pro.service.JobService;
 import org.tm.pro.utils.TmDateUtil;
 import org.tm.pro.utils.TmStringUtil;
@@ -33,6 +34,8 @@ public class JobManager implements InitializingBean {
 
 	@Autowired
 	private JobService jobService;
+	@Autowired
+	private JobGroupService jobGroupService;
 
 	// 调度名称
 	public static final String SCHEDULER_NAME = "scheduler";
@@ -113,8 +116,8 @@ public class JobManager implements InitializingBean {
 			scheduler.rescheduleJob(triggerKey, trigger);
 			org.tm.pro.entity.Job _job = jobService.getByJobId(job.getJobId());
 			_job.setCron(job.getCronExpression());
-			_job.setIsConcurrent("Y".equals(job.getConcurrent()));
-			_job.setIsStartupExecution("Y".equals(job.getStartupExecution()));
+			_job.setIsConcurrent("Y".equals(job.getConcurrent()) ? 1 : 0);
+			_job.setIsStartupExecution("Y".equals(job.getStartupExecution()) ? 1 : 0);
 			if (jobService.update(_job) > 0) {
 				return true;
 			}
@@ -186,11 +189,11 @@ public class JobManager implements InitializingBean {
 				for (org.tm.pro.entity.Job job : jobs) {
 					Job jb = new Job();
 					jb.setJobId(job.getJobId());
-					JobGroup jobGroup = jobService.getByGroupId(job.getGroupId());
+					JobGroup jobGroup = jobGroupService.getById(job.getGroupId());
 					jb.setJobGroup(jobGroup.getGroupId());
 					jb.setJobClassName(job.getClazzName());
 					jb.setCronExpression(job.getCron());
-					jb.setConcurrent(job.getIsConcurrent().booleanValue() ? "Y" : "N");
+					jb.setConcurrent(job.getIsConcurrent() == 1 ? "Y" : "N");
 					addJob(jb);
 				}
 			}

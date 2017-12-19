@@ -24,6 +24,7 @@ import org.tm.pro.entity.User;
 import org.tm.pro.model.ApiResultMap;
 import org.tm.pro.service.OrganizationService;
 import org.tm.pro.service.RoleService;
+import org.tm.pro.service.UserRoleService;
 import org.tm.pro.service.UserService;
 import org.tm.pro.utils.TmDateUtil;
 import org.tm.pro.utils.TmMd5Util;
@@ -36,6 +37,8 @@ public class UserController extends BaseController {
 
 	@Autowired
 	UserService userService;
+	@Autowired
+	UserRoleService userRoleService;
 	@Autowired
 	OrganizationService organizationService;
 	@Autowired
@@ -124,7 +127,7 @@ public class UserController extends BaseController {
 	@RequestMapping(value = "/userRoles")
 	public ApiResultMap userRoles(HttpServletRequest request, @RequestParam(value = "id", required = true) Integer id) {
 		ApiResultMap arm = new ApiResultMap();
-		Set<Role> userRoles = userService.getUserRoles(id);
+		Set<Role> userRoles = userRoleService.getUserRoles(id);
 		List<Role> userRoleList = new ArrayList<Role>();
 		if (userRoles != null && !userRoles.isEmpty()) {
 			for (Role r : userRoles) {
@@ -283,7 +286,7 @@ public class UserController extends BaseController {
 
 		int id = 0;
 		try {
-			id = userService.insert(user);
+			id = userService.saveUser(user);
 		} catch (Exception e) {
 			e.printStackTrace();
 			arm.setMsg("错误：保存失败");
@@ -378,7 +381,7 @@ public class UserController extends BaseController {
 
 		int res = 0;
 		try {
-			res = userService.update(user);
+			res = userService.updateUser(user);
 		} catch (Exception e) {
 			e.printStackTrace();
 			arm.setMsg("错误：修改失败");
@@ -410,7 +413,7 @@ public class UserController extends BaseController {
 		}
 		int res = 0;
 		try {
-			res = userService.delete(user);
+			res = userService.deleteUser(user);
 		} catch (Exception e) {
 			e.printStackTrace();
 			arm.setMsg("错误：删除失败");
@@ -444,7 +447,7 @@ public class UserController extends BaseController {
 		}
 		int res = 0;
 		try {
-			res = userService.removeRole(userId, roleId);
+			res = userRoleService.removeRole(userId, roleId);
 		} catch (Exception e) {
 			e.printStackTrace();
 			arm.setMsg("错误：删除失败");
@@ -459,8 +462,6 @@ public class UserController extends BaseController {
 		}
 		return arm;
 	}
-	
-
 
 	@ResponseBody
 	@RequiresAuthentication
@@ -478,13 +479,13 @@ public class UserController extends BaseController {
 			arm.setMsg("错误：无效的ID");
 			return arm;
 		}
-		if(userService.checkUserRole(userId, roleId, user.getOrganizationId())) {
+		if (userRoleService.checkUserRole(userId, roleId, user.getOrganizationId())) {
 			arm.setMsg("错误：角色已授权");
 			return arm;
 		}
 		int res = 0;
 		try {
-			res = userService.authRole(userId, roleId, user.getOrganizationId());
+			res = userRoleService.authRole(userId, roleId, user.getOrganizationId());
 		} catch (Exception e) {
 			e.printStackTrace();
 			arm.setMsg("错误：授权失败");

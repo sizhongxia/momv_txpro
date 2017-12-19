@@ -23,6 +23,7 @@ import org.tm.pro.model.ApiResultMap;
 import org.tm.pro.model.AuthorizationModel;
 import org.tm.pro.service.AuthorizationService;
 import org.tm.pro.service.OrganizationService;
+import org.tm.pro.service.RoleAuthorizationService;
 import org.tm.pro.service.RoleService;
 import org.tm.pro.utils.TmStringUtil;
 import org.tm.pro.web.cache.SystemInfoCacheUtil;
@@ -34,6 +35,8 @@ public class RoleController extends BaseController {
 
 	@Autowired
 	RoleService roleService;
+	@Autowired
+	RoleAuthorizationService roleAuthorizationService;
 	@Autowired
 	OrganizationService organizationService;
 	@Autowired
@@ -92,7 +95,7 @@ public class RoleController extends BaseController {
 
 		mav.addObject("role", role);
 
-		Set<String> authorizations = roleService.getRoleAuthorizations(id);
+		Set<String> authorizations = roleAuthorizationService.getRoleAuthorizations(id);
 
 		mav.addObject("parentAuthorizations", SystemInfoCacheUtil.parentAuthorizations);
 
@@ -183,7 +186,7 @@ public class RoleController extends BaseController {
 
 		int id = 0;
 		try {
-			id = roleService.insert(role);
+			id = roleService.saveRole(role);
 		} catch (Exception e) {
 			e.printStackTrace();
 			arm.setMsg("错误：保存失败");
@@ -240,7 +243,7 @@ public class RoleController extends BaseController {
 
 		int res = 0;
 		try {
-			res = roleService.update(role);
+			res = roleService.updateRole(role);
 		} catch (Exception e) {
 			e.printStackTrace();
 			arm.setMsg("错误：修改失败");
@@ -272,7 +275,7 @@ public class RoleController extends BaseController {
 		}
 		int res = 0;
 		try {
-			res = roleService.delete(role);
+			res = roleService.deleteRole(role);
 		} catch (Exception e) {
 			e.printStackTrace();
 			arm.setMsg("错误：删除失败");
@@ -319,10 +322,10 @@ public class RoleController extends BaseController {
 		String operation = "授权";
 		try {
 			if (checked) {
-				res = roleService.authorization(roleId, authorizationCode);
+				res = roleAuthorizationService.authorization(roleId, authorizationCode);
 			} else {
 				operation = "取消授权";
-				res = roleService.unAuthorization(roleId, authorizationCode);
+				res = roleAuthorizationService.unAuthorization(roleId, authorizationCode);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

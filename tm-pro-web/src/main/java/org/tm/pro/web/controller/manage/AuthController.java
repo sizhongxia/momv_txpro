@@ -119,6 +119,6 @@ public class AuthController extends BaseController {
 		loginLog.setBrowserVersion(request.getAttribute("browserVersion").toString());
 		loginLog.setLoginResult(msg);
 		loginLog.setLoginTime(new Date());
-		loginLogService.insert(loginLog);
+		loginLogService.saveLoginLog(loginLog);
 	}
 }

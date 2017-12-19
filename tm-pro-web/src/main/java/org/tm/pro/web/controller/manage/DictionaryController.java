@@ -15,6 +15,7 @@ import org.springframework.web.servlet.ModelAndView;
 import org.tm.pro.entity.Dictionary;
 import org.tm.pro.entity.DictionaryItem;
 import org.tm.pro.model.ApiResultMap;
+import org.tm.pro.service.DictionaryItemService;
 import org.tm.pro.service.DictionaryService;
 import org.tm.pro.utils.TmStringUtil;
 import org.tm.pro.web.controller.base.BaseController;
@@ -25,6 +26,8 @@ public class DictionaryController extends BaseController {
 
 	@Autowired
 	DictionaryService dictionaryService;
+	@Autowired
+	DictionaryItemService dictionaryItemService;
 
 	@RequiresAuthentication
 	@RequestMapping(value = "/index")
@@ -56,7 +59,7 @@ public class DictionaryController extends BaseController {
 	@RequestMapping(value = "/itemList")
 	public ApiResultMap itemList(HttpServletRequest request, @RequestParam(value = "id", required = true) Integer id) {
 		ApiResultMap arm = new ApiResultMap();
-		List<DictionaryItem> items = dictionaryService.getAllDictionaryItems(id);
+		List<DictionaryItem> items = dictionaryItemService.getAllDictionaryItems(id);
 		if (items == null) {
 			items = new ArrayList<>();
 		}
@@ -253,7 +256,7 @@ public class DictionaryController extends BaseController {
 
 		int rid = 0;
 		try {
-			rid = dictionaryService.saveDictionaryItem(dictionaryItem);
+			rid = dictionaryItemService.saveDictionaryItem(dictionaryItem);
 		} catch (Exception e) {
 			e.printStackTrace();
 			arm.setMsg("错误：保存失败");
@@ -280,7 +283,7 @@ public class DictionaryController extends BaseController {
 		// 默认失败
 		arm.setStatus(false);
 
-		DictionaryItem dictionaryItem = dictionaryService.getItemById(id);
+		DictionaryItem dictionaryItem = dictionaryItemService.getById(id);
 		if (dictionaryItem == null) {
 			arm.setMsg("错误：无效的ID");
 			return arm;
@@ -300,7 +303,7 @@ public class DictionaryController extends BaseController {
 
 		int res = 0;
 		try {
-			res = dictionaryService.updateDictionaryItem(dictionaryItem);
+			res = dictionaryItemService.updateDictionaryItem(dictionaryItem);
 		} catch (Exception e) {
 			e.printStackTrace();
 			arm.setMsg("错误：修改失败");
@@ -326,14 +329,14 @@ public class DictionaryController extends BaseController {
 		// 默认失败
 		arm.setStatus(false);
 
-		DictionaryItem dictionaryItem = dictionaryService.getItemById(id);
+		DictionaryItem dictionaryItem = dictionaryItemService.getById(id);
 		if (dictionaryItem == null) {
 			arm.setMsg("错误：无效的ID");
 			return arm;
 		}
 		int res = 0;
 		try {
-			res = dictionaryService.deleteDictionaryItem(dictionaryItem);
+			res = dictionaryItemService.deleteDictionaryItem(dictionaryItem);
 		} catch (Exception e) {
 			e.printStackTrace();
 			arm.setMsg("错误：删除失败");

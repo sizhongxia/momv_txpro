@@ -25,6 +25,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.tm.pro.entity.Role;
 import org.tm.pro.entity.SystemInfo;
 import org.tm.pro.entity.User;
+import org.tm.pro.service.UserRoleService;
 import org.tm.pro.service.UserService;
 import org.tm.pro.utils.TmNumberUtil;
 import org.tm.pro.web.cache.SystemInfoCacheUtil;
@@ -32,11 +33,13 @@ import org.tm.pro.web.cache.SystemInfoCacheUtil;
 import com.tm.pro.redis.util.RedisUtil;
 
 public class TmJDBCRealm extends AuthorizingRealm {
-	
+
 	private static String LoginFailCountKey = "tm:login:fail:count:";
 
 	@Autowired
 	UserService userService;
+	@Autowired
+	UserRoleService userRoleService;
 	@Autowired
 	RedisUtil redisUtil;
 
@@ -51,7 +54,7 @@ public class TmJDBCRealm extends AuthorizingRealm {
 		User user = (User) subject.getPrincipal();
 		Integer userId = user.getId();
 
-		Set<Role> roles = userService.getUserRoles(userId);
+		Set<Role> roles = userRoleService.getUserRoles(userId);
 		Set<String> roleCodes = new HashSet<String>();
 		if (roles != null) {
 			for (Role role : roles) {
@@ -60,7 +63,7 @@ public class TmJDBCRealm extends AuthorizingRealm {
 		}
 		authorizationInfo.setRoles(roleCodes);
 
-		Set<String> permissions = userService.getUserAuthorizations(userId);
+		Set<String> permissions = userRoleService.getUserAuthorizations(userId);
 		if (permissions == null) {
 			permissions = new HashSet<String>();
 		}
@@ -121,7 +124,7 @@ public class TmJDBCRealm extends AuthorizingRealm {
 				String time = "";
 				int h = (int) (ttl / 3600);
 				if (h == 0) {
-					int m = (int) (ttl  / 60);
+					int m = (int) (ttl / 60);
 					if (m == 0) {
 						time = ttl + "秒后";
 					} else {
@@ -150,7 +153,7 @@ public class TmJDBCRealm extends AuthorizingRealm {
 		}
 
 		user.setLastLoginTime(System.currentTimeMillis());
-		userService.update(user);
+		userService.updateUser(user);
 
 		return new SimpleAuthenticationInfo(user, password.toCharArray(), getName());
 	}

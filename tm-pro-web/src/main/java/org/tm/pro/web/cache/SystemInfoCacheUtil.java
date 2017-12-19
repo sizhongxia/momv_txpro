@@ -13,6 +13,7 @@ import org.tm.pro.entity.Authorization;
 import org.tm.pro.entity.JobGroup;
 import org.tm.pro.entity.SystemInfo;
 import org.tm.pro.service.AuthorizationService;
+import org.tm.pro.service.JobGroupService;
 import org.tm.pro.service.JobService;
 import org.tm.pro.service.SystemInfoService;
 import org.tm.pro.web.quartz.model.Job;
@@ -20,6 +21,7 @@ import org.tm.pro.web.quartz.model.Job;
 import com.tm.pro.redis.util.RedisUtil;
 
 import redis.clients.jedis.JedisPubSub;
+
 // , ApplicationListener<TmApplicationEvent> 
 public class SystemInfoCacheUtil implements InitializingBean {
 
@@ -29,6 +31,8 @@ public class SystemInfoCacheUtil implements InitializingBean {
 	AuthorizationService authorizationService;
 	@Autowired
 	JobService jobService;
+	@Autowired
+	JobGroupService jobGroupService;
 	@Autowired
 	RedisUtil redisUtil;
 
@@ -71,7 +75,7 @@ public class SystemInfoCacheUtil implements InitializingBean {
 				jb.setDescription(job.getDescription());
 				jb.setJobId(job.getJobId());
 				jb.setJobName(job.getJobName());
-				JobGroup jobGroup = jobService.getByGroupId(job.getGroupId());
+				JobGroup jobGroup = jobGroupService.getById(job.getGroupId());
 				jb.setJobGroup(jobGroup.getGroupId());
 				jb.setJobGroupName(jobGroup.getGroupName());
 				jb.setJobStatus(job.getStatus());
@@ -79,8 +83,8 @@ public class SystemInfoCacheUtil implements InitializingBean {
 				jb.setCronExpression(job.getCron());
 				cronGenerator = new CronSequenceGenerator(job.getCron());
 				jb.setNextExecureTime(df.format(cronGenerator.next(new Date())));
-				jb.setConcurrent(job.getIsConcurrent() ? "Y" : "N");
-				jb.setStartupExecution(job.getIsStartupExecution().booleanValue() ? "Y" : "N");
+				jb.setConcurrent(job.getIsConcurrent() == 1 ? "Y" : "N");
+				jb.setStartupExecution(job.getIsStartupExecution() == 1 ? "Y" : "N");
 				jb.setCreateTime(df.format(new Date(job.getCreateTime())));
 				jb.setUpdateTime(df.format(new Date(job.getUpdateTime())));
 				SystemInfoCacheUtil.jobs.add(jb);
@@ -138,15 +142,16 @@ public class SystemInfoCacheUtil implements InitializingBean {
 			}
 		}).start();
 	}
-//
-//	@Override
-//	public void onApplicationEvent(TmApplicationEvent e) {
-//		if ("UpdateSystemInfoCacheEvent".equals(e.getSource().toString())) {
-//			initSystemInfo();
-//		} else if ("UpdateAuthorizationCacheEvent".equals(e.getSource().toString())) {
-//			initAuthorizations();
-//		} else if ("UpdateSystemJobCacheEvent".equals(e.getSource().toString())) {
-//			initSystemJobs();
-//		}
-//	}
+	//
+	// @Override
+	// public void onApplicationEvent(TmApplicationEvent e) {
+	// if ("UpdateSystemInfoCacheEvent".equals(e.getSource().toString())) {
+	// initSystemInfo();
+	// } else if ("UpdateAuthorizationCacheEvent".equals(e.getSource().toString()))
+	// {
+	// initAuthorizations();
+	// } else if ("UpdateSystemJobCacheEvent".equals(e.getSource().toString())) {
+	// initSystemJobs();
+	// }
+	// }
 }
