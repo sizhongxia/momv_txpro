@@ -14,6 +14,15 @@
 </head>
 <body class="gray-bg">
 	<div id="app" class="wrapper wrapper-content">
+	
+		<form action="${rc.contextPath}/upload-image.do" method="post" enctype="multipart/form-data">
+			
+			<input type="file" name="file" />
+			
+			<input type="submit" value="上传" />
+		
+		</form>
+	
 	</div>
 	<!-- Jquery Dom -->
 	<script src="${rc.contextPath}/statics/ui-frame/js/jquery.min.js?v=2.1.4"></script>

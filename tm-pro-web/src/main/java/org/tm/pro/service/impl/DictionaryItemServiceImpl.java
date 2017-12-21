@@ -33,38 +33,10 @@ public class DictionaryItemServiceImpl extends ServiceImpl<DictionaryItemDao, Di
 
 	@Override
 	@DataSource("slave")
-	public DictionaryItem getById(Integer id) {
-		return baseMapper.selectById(id);
-	}
-
-	@Override
-	public int saveDictionaryItem(DictionaryItem dictionaryItem) {
-		return baseMapper.insert(dictionaryItem);
-	}
-
-	@Override
-	public int updateDictionaryItem(DictionaryItem dictionaryItem) {
-		return baseMapper.updateById(dictionaryItem);
-	}
-
-	@Override
-	public int deleteDictionaryItem(DictionaryItem dictionaryItem) {
-		return baseMapper.deleteById(dictionaryItem.getId());
-	}
-
-	@Override
-	@DataSource("slave")
-	public List<DictionaryItem> getAllDictionaryItems(Integer dictId) {
-		DictionaryItem entity = new DictionaryItem();
-		entity.setDictId(dictId);
-		Wrapper<DictionaryItem> wrapper = new EntityWrapper<DictionaryItem>(entity);
-		return baseMapper.selectList(wrapper);
-	}
-
-	@Override
-	@DataSource("slave")
 	public List<DictionaryItem> getItemsByVCode(String visitCode) {
-		Dictionary dictionary = dictionaryService.getByVisitCode(visitCode);
+		Dictionary _entity = new Dictionary();
+		_entity.setVisitCode(visitCode);
+		Dictionary dictionary = dictionaryService.selectOne(new EntityWrapper<Dictionary>(_entity));
 		if (dictionary == null) {
 			return null;
 		}

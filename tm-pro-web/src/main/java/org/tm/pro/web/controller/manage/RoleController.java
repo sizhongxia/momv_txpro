@@ -1,8 +1,6 @@
 package org.tm.pro.web.controller.manage;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import java.util.Vector;
 
@@ -19,6 +17,7 @@ import org.springframework.web.servlet.ModelAndView;
 import org.tm.pro.entity.Authorization;
 import org.tm.pro.entity.Organization;
 import org.tm.pro.entity.Role;
+import org.tm.pro.entity.RoleAuthorization;
 import org.tm.pro.model.ApiResultMap;
 import org.tm.pro.model.AuthorizationModel;
 import org.tm.pro.service.AuthorizationService;
@@ -28,6 +27,9 @@ import org.tm.pro.service.RoleService;
 import org.tm.pro.utils.TmStringUtil;
 import org.tm.pro.web.cache.SystemInfoCacheUtil;
 import org.tm.pro.web.controller.base.BaseController;
+
+import com.baomidou.mybatisplus.mapper.EntityWrapper;
+import com.baomidou.mybatisplus.mapper.Wrapper;
 
 @Controller
 @RequestMapping("role")
@@ -47,10 +49,8 @@ public class RoleController extends BaseController {
 	@RequiresPermissions("auth_role_manager")
 	public ModelAndView index(HttpServletRequest request) {
 		ModelAndView mav = new ModelAndView("role/index");
-
-		List<Organization> organizations = organizationService.getOrganizationAll();
+		List<Organization> organizations = organizationService.selectList(new EntityWrapper<>());
 		mav.addObject("organizations", organizations);
-
 		return mav;
 	}
 
@@ -60,13 +60,24 @@ public class RoleController extends BaseController {
 	public ApiResultMap list(HttpServletRequest request) {
 		ApiResultMap arm = new ApiResultMap();
 
-		Map<String, Object> params = new HashMap<>();
-
-		params.put("roleName", getParameter(request, "roleName", ""));
-		params.put("roleCode", getParameter(request, "roleCode", ""));
-		params.put("organizationId", getParameter(request, "organizationId", 0));
-
-		arm.setList(roleService.getRoleList(params));
+		Wrapper<Role> wrapper = new EntityWrapper<Role>();
+		Integer organizationId = getParameter(request, "organizationId", 0);
+		if (organizationId > 0) {
+			wrapper.eq("organization_id", organizationId);
+		}
+		String roleName = getParameter(request, "roleName", "");
+		if (TmStringUtil.isNotBlank(roleName)) {
+			wrapper.like("role_name", roleName);
+		}
+		String roleCode = getParameter(request, "roleCode", "");
+		if (TmStringUtil.isNotBlank(roleCode)) {
+			wrapper.like("role_code", roleCode);
+		}
+		String usingState = getParameter(request, "usingState", "");
+		if (TmStringUtil.isNotBlank(usingState)) {
+			wrapper.eq("using_state", usingState);
+		}
+		arm.setList(roleService.selectList(wrapper));
 		return arm;
 	}
 
@@ -74,10 +85,8 @@ public class RoleController extends BaseController {
 	@RequestMapping(value = "/add")
 	public ModelAndView add(HttpServletRequest request) {
 		ModelAndView mav = new ModelAndView("role/add");
-
-		List<Organization> organizations = organizationService.getOrganizationAll();
+		List<Organization> organizations = organizationService.selectList(new EntityWrapper<>());
 		mav.addObject("organizations", organizations);
-
 		return mav;
 	}
 
@@ -86,7 +95,7 @@ public class RoleController extends BaseController {
 	public ModelAndView auth(HttpServletRequest request, @RequestParam(value = "id", required = true) Integer id) {
 		ModelAndView mav = new ModelAndView("role/auth");
 
-		Role role = roleService.getById(id);
+		Role role = roleService.selectById(id);
 		if (role == null) {
 			// 无权访问
 			mav.setViewName("redirect:/un_authorized.do");
@@ -129,7 +138,7 @@ public class RoleController extends BaseController {
 	public ModelAndView edit(HttpServletRequest request, @RequestParam(value = "id", required = true) Integer id) {
 
 		ModelAndView mav = new ModelAndView("role/edit");
-		Role role = roleService.getById(id);
+		Role role = roleService.selectById(id);
 		if (role == null) {
 			// 无权访问
 			mav.setViewName("redirect:/un_authorized.do");
@@ -137,10 +146,8 @@ public class RoleController extends BaseController {
 		}
 
 		mav.addObject("role", role);
-
-		List<Organization> organizations = organizationService.getOrganizationAll();
+		List<Organization> organizations = organizationService.selectList(new EntityWrapper<>());
 		mav.addObject("organizations", organizations);
-
 		return mav;
 	}
 
@@ -171,7 +178,10 @@ public class RoleController extends BaseController {
 			return arm;
 		}
 
-		Role role = roleService.getByCode(roleCode);
+		Role entity = new Role();
+		entity.setRoleCode(roleCode);
+		Wrapper<Role> wrapper = new EntityWrapper<Role>(entity);
+		Role role = roleService.selectOne(wrapper);
 		if (role != null) {
 			arm.setMsg("错误：角色编码已存在");
 			return arm;
@@ -184,15 +194,7 @@ public class RoleController extends BaseController {
 		role.setUsingState(usingState);
 		role.setRoleExplain(roleExplain);
 
-		int id = 0;
-		try {
-			id = roleService.saveRole(role);
-		} catch (Exception e) {
-			e.printStackTrace();
-			arm.setMsg("错误：保存失败");
-			return arm;
-		}
-		if (id > 0) {
+		if (roleService.insert(role)) {
 			arm.setStatus(true);
 			arm.setData(role);
 			arm.setMsg("保存成功");
@@ -215,7 +217,7 @@ public class RoleController extends BaseController {
 		// 默认失败
 		arm.setStatus(false);
 
-		Role role = roleService.getById(id);
+		Role role = roleService.selectById(id);
 		if (role == null) {
 			arm.setMsg("错误：无效的ID");
 			return arm;
@@ -229,8 +231,10 @@ public class RoleController extends BaseController {
 			arm.setMsg("错误：请输入角色编码");
 			return arm;
 		}
-
-		Role _role = roleService.getByCode(roleCode);
+		Role entity = new Role();
+		entity.setRoleCode(roleCode);
+		Wrapper<Role> wrapper = new EntityWrapper<Role>(entity);
+		Role _role = roleService.selectOne(wrapper);
 		if (_role != null && _role.getId() != id) {
 			arm.setMsg("错误：角色编码已存在");
 			return arm;
@@ -241,15 +245,7 @@ public class RoleController extends BaseController {
 		role.setUsingState(usingState);
 		role.setRoleExplain(roleExplain);
 
-		int res = 0;
-		try {
-			res = roleService.updateRole(role);
-		} catch (Exception e) {
-			e.printStackTrace();
-			arm.setMsg("错误：修改失败");
-			return arm;
-		}
-		if (res > 0) {
+		if (roleService.updateById(role)) {
 			arm.setStatus(true);
 			arm.setData(role);
 			arm.setMsg("修改成功");
@@ -268,20 +264,12 @@ public class RoleController extends BaseController {
 		// 默认失败
 		arm.setStatus(false);
 
-		Role role = roleService.getById(id);
+		Role role = roleService.selectById(id);
 		if (role == null) {
 			arm.setMsg("错误：无效的ID");
 			return arm;
 		}
-		int res = 0;
-		try {
-			res = roleService.deleteRole(role);
-		} catch (Exception e) {
-			e.printStackTrace();
-			arm.setMsg("错误：删除失败");
-			return arm;
-		}
-		if (res > 0) {
+		if (roleService.deleteById(id)) {
 			arm.setStatus(true);
 			arm.setData(role);
 			arm.setMsg("删除成功");
@@ -303,7 +291,7 @@ public class RoleController extends BaseController {
 		// 默认失败
 		arm.setStatus(false);
 
-		Role role = roleService.getById(roleId);
+		Role role = roleService.selectById(roleId);
 		if (role == null) {
 			arm.setMsg("错误：无效的ID");
 			return arm;
@@ -311,28 +299,37 @@ public class RoleController extends BaseController {
 
 		Authorization authorization = SystemInfoCacheUtil.getAuthorizationByCode(authorizationCode);
 		if (authorization == null) {
-			authorization = authorizationService.getAuthorizationByCode(authorizationCode);
+			
+			Authorization entity = new Authorization();
+			entity.setAuthorizationCode(authorizationCode);
+			Wrapper<Authorization> wrapper = new EntityWrapper<Authorization>(entity);
+			authorization = authorizationService.selectOne(wrapper );
 			if (authorization == null) {
 				arm.setMsg("错误：无效的权限字信息，请关闭当前窗口重试！");
 				return arm;
 			}
 		}
 
-		int res = 0;
+		RoleAuthorization entity = new RoleAuthorization();
+		entity.setRoleId(roleId);
+		entity.setAuthorizationCode(authorizationCode);
+
+		boolean res = false;
 		String operation = "授权";
 		try {
 			if (checked) {
-				res = roleAuthorizationService.authorization(roleId, authorizationCode);
+				res = roleAuthorizationService.insert(entity);
 			} else {
 				operation = "取消授权";
-				res = roleAuthorizationService.unAuthorization(roleId, authorizationCode);
+				Wrapper<RoleAuthorization> wrapper = new EntityWrapper<RoleAuthorization>(entity);
+				res = roleAuthorizationService.delete(wrapper);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 			arm.setMsg("错误：操作失败，请稍后重试");
 			return arm;
 		}
-		if (res > 0) {
+		if (res) {
 			arm.setStatus(true);
 			arm.setMsg("“" + authorization.getModuleName() + "”" + operation + "成功");
 			return arm;

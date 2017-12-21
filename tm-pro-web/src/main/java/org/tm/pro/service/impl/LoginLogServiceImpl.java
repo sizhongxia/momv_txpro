@@ -26,11 +26,6 @@ import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 public class LoginLogServiceImpl extends ServiceImpl<LoginLogDao, LoginLog> implements LoginLogService {
 
 	@Override
-	public int saveLoginLog(LoginLog entity) {
-		return baseMapper.insert(entity);
-	}
-
-	@Override
 	@DataSource("slave")
 	public List<LoginLog> getTopTen(String loginName) {
 		LoginLog entity = new LoginLog();

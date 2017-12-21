@@ -38,6 +38,8 @@
 	<bean id="redisUtil" class="com.tm.pro.redis.util.RedisUtil">
 		<property name="redisConfig" ref="redisConfig"></property>
 	</bean>
+	
+	<bean id="pictureUploadService" class="org.tm.pro.picture.zimg.service.ZimgPictureUploadService" />
 
 	<bean id="scheduler" class="org.springframework.scheduling.quartz.SchedulerFactoryBean" lazy-init="false" scope="singleton" />
 	<!-- 任务管理器 -->
@@ -111,11 +113,11 @@
 		<property name="plugins">
 			<array>
 				<!-- 分页插件配置 -->
-				<bean id="paginationInterceptor"
-					class="com.baomidou.mybatisplus.plugins.PaginationInterceptor">
+				<bean id="paginationInterceptor" class="com.baomidou.mybatisplus.plugins.PaginationInterceptor">
 					<property name="dialectType" value="mysql" />
 				</bean>
 			</array>
+			
 		</property>
 		<!-- 全局配置注入 -->
 		<property name="globalConfig" ref="globalConfig" />

@@ -26,38 +26,12 @@ public class JobServiceImpl extends ServiceImpl<JobDao, Job> implements JobServi
 
 	@Override
 	@DataSource("slave")
-	public Job getById(Integer id) {
-		return baseMapper.selectById(id);
-	}
-
-	@Override
-	@DataSource("slave")
-	public Job getByJobId(String jobId) {
-		Job entity = new Job();
-		entity.setJobId(jobId);
-		return baseMapper.selectOne(entity);
-	}
-
-	@Override
-	@DataSource("slave")
-	public List<Job> getAllJobs() {
-		Wrapper<Job> wrapper = new EntityWrapper<>();
-		return baseMapper.selectList(wrapper);
-	}
-
-	@Override
-	@DataSource("slave")
 	public List<Job> getStartupExecutionJobs() {
 		Job job = new Job();
 		job.setStatus("NORMAL");
 		job.setIsStartupExecution(1);
 		Wrapper<Job> wrapper = new EntityWrapper<Job>(job);
 		return baseMapper.selectList(wrapper);
-	}
-
-	@Override
-	public int update(Job job) {
-		return baseMapper.updateById(job);
 	}
 
 }

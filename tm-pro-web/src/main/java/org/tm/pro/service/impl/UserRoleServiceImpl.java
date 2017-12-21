@@ -61,30 +61,12 @@ public class UserRoleServiceImpl extends ServiceImpl<UserRoleDao, UserRole> impl
 		}
 		Set<Role> roles = new HashSet<>();
 		for (UserRole userRole : userRoles) {
-			Role role = roleService.getById(userRole.getRoleId());
+			Role role = roleService.selectById(userRole.getRoleId());
 			if (role != null && "Y".equals(role.getUsingState())) {
 				roles.add(role);
 			}
 		}
 		return roles;
-	}
-
-	@Override
-	public int removeRole(Integer userId, Integer roleId) {
-		UserRole entity = new UserRole();
-		entity.setUserId(userId);
-		entity.setRoleId(roleId);
-		Wrapper<UserRole> wrapper = new EntityWrapper<UserRole>(entity);
-		return baseMapper.delete(wrapper);
-	}
-
-	@Override
-	public int authRole(Integer userId, Integer roleId, Integer organizationId) {
-		UserRole entity = new UserRole();
-		entity.setUserId(userId);
-		entity.setRoleId(roleId);
-		entity.setOrganizationId(organizationId);
-		return baseMapper.insert(entity);
 	}
 
 	@Override

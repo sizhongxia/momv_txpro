@@ -12,6 +12,4 @@ import com.baomidou.mybatisplus.service.IService;
  * @since 2017-12-18
  */
 public interface JobGroupService extends IService<JobGroup> {
-
-	JobGroup getById(Integer groupId);
 }

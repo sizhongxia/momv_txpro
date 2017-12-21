@@ -48,9 +48,9 @@ public class AuthController extends BaseController {
 		if (TmStringUtil.isBlank(referer)) {
 			referer = "/index.do";
 		}
-		
+
 		String[] rm = referer.split("[?]");
-		if(rm.length > 1) {
+		if (rm.length > 1) {
 			referer = "/operation_timeout.do";
 		} else {
 			referer = rm[0];
@@ -95,6 +95,8 @@ public class AuthController extends BaseController {
 			msg = "帐号不存在.";
 		} catch (UnauthorizedException e) {
 			msg = "您没有得到相应的授权.";
+		} catch (Exception e) {
+			msg = "请稍后重试.";
 		}
 		if (TmStringUtil.isBlank(msg)) {
 			msg = "登录成功";
@@ -119,6 +121,6 @@ public class AuthController extends BaseController {
 		loginLog.setBrowserVersion(request.getAttribute("browserVersion").toString());
 		loginLog.setLoginResult(msg);
 		loginLog.setLoginTime(new Date());
-		loginLogService.saveLoginLog(loginLog);
+		loginLogService.insert(loginLog);
 	}
 }

@@ -4,15 +4,8 @@ import java.util.List;
 
 import org.tm.pro.entity.Job;
 
-public interface JobService {
+import com.baomidou.mybatisplus.service.IService;
 
-	Job getById(Integer id);
-
-	Job getByJobId(String jobId);
-
-	List<Job> getAllJobs();
-
+public interface JobService extends IService<Job> {
 	List<Job> getStartupExecutionJobs();
-
-	int update(Job job);
 }

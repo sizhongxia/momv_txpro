@@ -22,6 +22,7 @@ import org.springframework.stereotype.Service;
  * @since 2017-12-18
  */
 @Service
+@DataSource("master")
 public class AuthorizationServiceImpl extends ServiceImpl<AuthorizationDao, Authorization>
 		implements AuthorizationService {
 
@@ -35,14 +36,6 @@ public class AuthorizationServiceImpl extends ServiceImpl<AuthorizationDao, Auth
 			wrapper.isNotNull("pid");
 		}
 		return baseMapper.selectList(wrapper);
-	}
-
-	@Override
-	@DataSource("slave")
-	public Authorization getAuthorizationByCode(String authorizationCode) {
-		Authorization entity = new Authorization();
-		entity.setAuthorizationCode(authorizationCode);
-		return baseMapper.selectOne(entity);
 	}
 
 }

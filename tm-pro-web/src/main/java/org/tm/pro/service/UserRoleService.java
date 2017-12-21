@@ -20,9 +20,5 @@ public interface UserRoleService extends IService<UserRole> {
 
 	Set<Role> getUserRoles(Integer userId);
 
-	int removeRole(Integer userId, Integer roleId);
-
-	int authRole(Integer userId, Integer roleId, Integer organizationId);
-
 	boolean checkUserRole(Integer userId, Integer roleId, Integer organizationId);
 }

@@ -19,10 +19,4 @@ import org.springframework.stereotype.Service;
 @Service
 @DataSource("master")
 public class JobGroupServiceImpl extends ServiceImpl<JobGroupDao, JobGroup> implements JobGroupService {
-
-	@Override
-	@DataSource("slave")
-	public JobGroup getById(Integer id) {
-		return baseMapper.selectById(id);
-	}
 }

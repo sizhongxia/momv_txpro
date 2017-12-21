@@ -20,6 +20,9 @@ import org.tm.pro.service.DictionaryService;
 import org.tm.pro.utils.TmStringUtil;
 import org.tm.pro.web.controller.base.BaseController;
 
+import com.baomidou.mybatisplus.mapper.EntityWrapper;
+import com.baomidou.mybatisplus.mapper.Wrapper;
+
 @Controller
 @RequestMapping("dictionary")
 public class DictionaryController extends BaseController {
@@ -41,7 +44,7 @@ public class DictionaryController extends BaseController {
 	@RequestMapping(value = "/list")
 	public ApiResultMap list(HttpServletRequest request) {
 		ApiResultMap arm = new ApiResultMap();
-		arm.setList(dictionaryService.getAllDictionarys());
+		arm.setList(dictionaryService.selectList(new EntityWrapper<>()));
 		return arm;
 	}
 
@@ -49,7 +52,7 @@ public class DictionaryController extends BaseController {
 	@RequestMapping(value = "/items")
 	public ModelAndView items(HttpServletRequest request, @RequestParam(value = "id", required = true) Integer id) {
 		ModelAndView mav = new ModelAndView("dictionary/items");
-		Dictionary dict = dictionaryService.getById(id);
+		Dictionary dict = dictionaryService.selectById(id);
 		mav.addObject("dict", dict);
 		return mav;
 	}
@@ -59,7 +62,10 @@ public class DictionaryController extends BaseController {
 	@RequestMapping(value = "/itemList")
 	public ApiResultMap itemList(HttpServletRequest request, @RequestParam(value = "id", required = true) Integer id) {
 		ApiResultMap arm = new ApiResultMap();
-		List<DictionaryItem> items = dictionaryItemService.getAllDictionaryItems(id);
+		DictionaryItem entity = new DictionaryItem();
+		entity.setDictId(id);
+		Wrapper<DictionaryItem> wrapper = new EntityWrapper<DictionaryItem>(entity);
+		List<DictionaryItem> items = dictionaryItemService.selectList(wrapper);
 		if (items == null) {
 			items = new ArrayList<>();
 		}
@@ -93,8 +99,9 @@ public class DictionaryController extends BaseController {
 			arm.setMsg("错误：请输入字典访问编码");
 			return arm;
 		}
-
-		Dictionary dictionary = dictionaryService.getByVisitCode(visitCode);
+		Dictionary entity = new Dictionary();
+		entity.setVisitCode(visitCode);
+		Dictionary dictionary = dictionaryService.selectOne(new EntityWrapper<Dictionary>(entity));
 		if (dictionary != null) {
 			arm.setMsg("错误：字典访问编码已存在");
 			return arm;
@@ -104,16 +111,7 @@ public class DictionaryController extends BaseController {
 		dictionary.setName(name);
 		dictionary.setVisitCode(visitCode);
 		dictionary.setRemarks(remarks);
-
-		int id = 0;
-		try {
-			id = dictionaryService.saveDictionary(dictionary);
-		} catch (Exception e) {
-			e.printStackTrace();
-			arm.setMsg("错误：保存失败");
-			return arm;
-		}
-		if (id > 0) {
+		if (dictionaryService.insert(dictionary)) {
 			arm.setStatus(true);
 			arm.setData(dictionary);
 			arm.setMsg("保存成功");
@@ -127,7 +125,7 @@ public class DictionaryController extends BaseController {
 	@RequestMapping(value = "/edit")
 	public ModelAndView edit(HttpServletRequest request, @RequestParam(value = "id", required = true) Integer id) {
 		ModelAndView mav = new ModelAndView("dictionary/edit");
-		Dictionary dictionary = dictionaryService.getById(id);
+		Dictionary dictionary = dictionaryService.selectById(id);
 		if (dictionary == null) {
 			// 无权访问
 			mav.setViewName("redirect:/un_authorized.do");
@@ -149,7 +147,7 @@ public class DictionaryController extends BaseController {
 		// 默认失败
 		arm.setStatus(false);
 
-		Dictionary dictionary = dictionaryService.getById(id);
+		Dictionary dictionary = dictionaryService.selectById(id);
 		if (dictionary == null) {
 			arm.setMsg("错误：无效的ID");
 			return arm;
@@ -164,7 +162,9 @@ public class DictionaryController extends BaseController {
 			return arm;
 		}
 
-		Dictionary _dictionary = dictionaryService.getByVisitCode(visitCode);
+		Dictionary entity = new Dictionary();
+		entity.setVisitCode(visitCode);
+		Dictionary _dictionary = dictionaryService.selectOne(new EntityWrapper<Dictionary>(entity));
 		if (_dictionary != null && _dictionary.getId() != id) {
 			arm.setMsg("错误：字典访问编码已存在");
 			return arm;
@@ -174,15 +174,7 @@ public class DictionaryController extends BaseController {
 		dictionary.setVisitCode(visitCode);
 		dictionary.setRemarks(remarks);
 
-		int res = 0;
-		try {
-			res = dictionaryService.updateDictionary(dictionary);
-		} catch (Exception e) {
-			e.printStackTrace();
-			arm.setMsg("错误：修改失败");
-			return arm;
-		}
-		if (res > 0) {
+		if (dictionaryService.updateById(dictionary)) {
 			arm.setStatus(true);
 			arm.setData(dictionary);
 			arm.setMsg("修改成功");
@@ -201,20 +193,12 @@ public class DictionaryController extends BaseController {
 		// 默认失败
 		arm.setStatus(false);
 
-		Dictionary dictionary = dictionaryService.getById(id);
+		Dictionary dictionary = dictionaryService.selectById(id);
 		if (dictionary == null) {
 			arm.setMsg("错误：无效的ID");
 			return arm;
 		}
-		int res = 0;
-		try {
-			res = dictionaryService.deleteDictionary(dictionary);
-		} catch (Exception e) {
-			e.printStackTrace();
-			arm.setMsg("错误：删除失败");
-			return arm;
-		}
-		if (res > 0) {
+		if (dictionaryService.deleteById(id)) {
 			arm.setStatus(true);
 			arm.setData(dictionary);
 			arm.setMsg("删除成功");
@@ -235,7 +219,7 @@ public class DictionaryController extends BaseController {
 		// 默认失败
 		arm.setStatus(false);
 
-		Dictionary dictionary = dictionaryService.getById(id);
+		Dictionary dictionary = dictionaryService.selectById(id);
 		if (dictionary == null) {
 			// 无权访问
 			arm.setMsg("错误：无效的表单");
@@ -253,16 +237,7 @@ public class DictionaryController extends BaseController {
 		dictionaryItem.setDictId(id);
 		dictionaryItem.setName(name);
 		dictionaryItem.setValue(value);
-
-		int rid = 0;
-		try {
-			rid = dictionaryItemService.saveDictionaryItem(dictionaryItem);
-		} catch (Exception e) {
-			e.printStackTrace();
-			arm.setMsg("错误：保存失败");
-			return arm;
-		}
-		if (rid > 0) {
+		if (dictionaryItemService.insert(dictionaryItem)) {
 			arm.setStatus(true);
 			arm.setData(dictionaryItem);
 			arm.setMsg("保存成功");
@@ -283,7 +258,7 @@ public class DictionaryController extends BaseController {
 		// 默认失败
 		arm.setStatus(false);
 
-		DictionaryItem dictionaryItem = dictionaryItemService.getById(id);
+		DictionaryItem dictionaryItem = dictionaryItemService.selectById(id);
 		if (dictionaryItem == null) {
 			arm.setMsg("错误：无效的ID");
 			return arm;
@@ -301,15 +276,7 @@ public class DictionaryController extends BaseController {
 		dictionaryItem.setName(name);
 		dictionaryItem.setValue(value);
 
-		int res = 0;
-		try {
-			res = dictionaryItemService.updateDictionaryItem(dictionaryItem);
-		} catch (Exception e) {
-			e.printStackTrace();
-			arm.setMsg("错误：修改失败");
-			return arm;
-		}
-		if (res > 0) {
+		if (dictionaryItemService.updateById(dictionaryItem)) {
 			arm.setStatus(true);
 			arm.setData(dictionaryItem);
 			arm.setMsg("修改成功");
@@ -329,20 +296,13 @@ public class DictionaryController extends BaseController {
 		// 默认失败
 		arm.setStatus(false);
 
-		DictionaryItem dictionaryItem = dictionaryItemService.getById(id);
+		DictionaryItem dictionaryItem = dictionaryItemService.selectById(id);
 		if (dictionaryItem == null) {
 			arm.setMsg("错误：无效的ID");
 			return arm;
 		}
-		int res = 0;
-		try {
-			res = dictionaryItemService.deleteDictionaryItem(dictionaryItem);
-		} catch (Exception e) {
-			e.printStackTrace();
-			arm.setMsg("错误：删除失败");
-			return arm;
-		}
-		if (res > 0) {
+
+		if (dictionaryItemService.deleteById(id)) {
 			arm.setStatus(true);
 			arm.setData(dictionaryItem);
 			arm.setMsg("删除成功");

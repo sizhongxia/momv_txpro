@@ -1,12 +1,12 @@
 package org.tm.pro.service.impl;
 
+import org.springframework.stereotype.Service;
 import org.tm.pro.entity.SystemInfo;
 import org.tm.pro.mapper.SystemInfoDao;
 import org.tm.pro.service.SystemInfoService;
 import org.tm.pro.web.anno.DataSource;
 
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
-import org.springframework.stereotype.Service;
 
 /**
  * <p>
@@ -19,16 +19,4 @@ import org.springframework.stereotype.Service;
 @Service
 @DataSource("master")
 public class SystemInfoServiceImpl extends ServiceImpl<SystemInfoDao, SystemInfo> implements SystemInfoService {
-
-	@Override
-	@DataSource("slave")
-	public SystemInfo getDefaultInfo() {
-		return baseMapper.selectOne(new SystemInfo());
-	}
-
-	@Override
-	public int updateSystemInfo(SystemInfo systemInfo) {
-		return baseMapper.updateById(systemInfo);
-	}
-
 }

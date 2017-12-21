@@ -4,10 +4,8 @@ import java.util.List;
 
 import org.tm.pro.entity.Authorization;
 
-public interface AuthorizationService {
+import com.baomidou.mybatisplus.service.IService;
 
+public interface AuthorizationService extends IService<Authorization> {
 	List<Authorization> getAuthorization(boolean isParent);
-
-	Authorization getAuthorizationByCode(String authorizationCode);
-
 }

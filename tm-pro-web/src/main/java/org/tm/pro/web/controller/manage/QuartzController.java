@@ -23,14 +23,12 @@ import org.tm.pro.web.quartz.model.Job;
 
 import com.tm.pro.redis.util.RedisUtil;
 
-//  implements ApplicationEventPublisherAware
 @Controller
 @RequestMapping(value = "/quartz")
 public class QuartzController extends BaseController {
 
 	@Autowired
 	JobManager jobManager;
-	// private ApplicationEventPublisher applicationEventPublisher;
 	@Autowired
 	RedisUtil redisUtil;
 
@@ -181,10 +179,4 @@ public class QuartzController extends BaseController {
 		arm.setMsg("错误：操作失败，可能当前服务未开启！");
 		return arm;
 	}
-
-	// @Override
-	// public void setApplicationEventPublisher(ApplicationEventPublisher
-	// applicationEventPublisher) {
-	// this.applicationEventPublisher = applicationEventPublisher;
-	// }
 }

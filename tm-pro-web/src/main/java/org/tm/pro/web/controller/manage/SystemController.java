@@ -20,6 +20,8 @@ import org.tm.pro.service.SystemInfoService;
 import org.tm.pro.web.cache.SystemInfoCacheUtil;
 import org.tm.pro.web.controller.base.BaseController;
 
+import com.baomidou.mybatisplus.mapper.EntityWrapper;
+
 @Controller
 @RequestMapping("system")
 public class SystemController extends BaseController {
@@ -50,7 +52,7 @@ public class SystemController extends BaseController {
 	@RequestMapping(value = "/system_info", method = { RequestMethod.GET })
 	public ModelAndView systemInfo(HttpServletRequest request) {
 		ModelAndView mav = new ModelAndView("system/system_info");
-		SystemInfo systemInfo = systemInfoService.getDefaultInfo();
+		SystemInfo systemInfo = systemInfoService.selectOne(new EntityWrapper<>());
 		mav.addObject("systemInfo", systemInfo);
 		return mav;
 	}
@@ -72,22 +74,15 @@ public class SystemController extends BaseController {
 		// 默认失败
 		arm.setStatus(false);
 
-		SystemInfo systemInfo = systemInfoService.getDefaultInfo();
+		SystemInfo systemInfo = systemInfoService.selectOne(new EntityWrapper<>());
 		systemInfo.setSystemTitle(systemTitle);
 		systemInfo.setSystemDescript(systemDescript);
 		systemInfo.setLoginFailCount(loginFailCount);
 		systemInfo.setLoginFailExpired(loginFailExpired);
 		systemInfo.setOnlyChrome(onlyChrome);
 		systemInfo.setLoginFailLimit(loginFailLimit);
-		int res = 0;
-		try {
-			res = systemInfoService.updateSystemInfo(systemInfo);
-		} catch (Exception e) {
-			e.printStackTrace();
-			arm.setMsg("错误：修改失败");
-			return arm;
-		}
-		if (res > 0) {
+
+		if (systemInfoService.updateById(systemInfo)) {
 			arm.setStatus(true);
 			arm.setData(systemInfo);
 			arm.setMsg("修改成功");

@@ -14,10 +14,5 @@ import com.baomidou.mybatisplus.service.IService;
  * @since 2017-12-18
  */
 public interface RoleAuthorizationService extends IService<RoleAuthorization> {
-
 	Set<String> getRoleAuthorizations(Integer roleId);
-
-	int unAuthorization(Integer roleId, String authorizationCode);
-
-	int authorization(Integer roleId, String authorizationCode);
 }

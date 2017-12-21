@@ -2,10 +2,8 @@ package org.tm.pro.service;
 
 import org.tm.pro.entity.SystemInfo;
 
-public interface SystemInfoService {
+import com.baomidou.mybatisplus.service.IService;
 
-	SystemInfo getDefaultInfo();
-
-	int updateSystemInfo(SystemInfo systemInfo);
+public interface SystemInfoService  extends IService<SystemInfo>  {
 
 }

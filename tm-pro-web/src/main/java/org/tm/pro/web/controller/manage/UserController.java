@@ -2,9 +2,7 @@ package org.tm.pro.web.controller.manage;
 
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
@@ -21,6 +19,7 @@ import org.springframework.web.servlet.ModelAndView;
 import org.tm.pro.entity.Organization;
 import org.tm.pro.entity.Role;
 import org.tm.pro.entity.User;
+import org.tm.pro.entity.UserRole;
 import org.tm.pro.model.ApiResultMap;
 import org.tm.pro.service.OrganizationService;
 import org.tm.pro.service.RoleService;
@@ -30,6 +29,10 @@ import org.tm.pro.utils.TmDateUtil;
 import org.tm.pro.utils.TmMd5Util;
 import org.tm.pro.utils.TmStringUtil;
 import org.tm.pro.web.controller.base.BaseController;
+
+import com.baomidou.mybatisplus.mapper.EntityWrapper;
+import com.baomidou.mybatisplus.mapper.Wrapper;
+import com.baomidou.mybatisplus.plugins.pagination.PageHelper;
 
 @Controller
 @RequestMapping("user")
@@ -50,7 +53,7 @@ public class UserController extends BaseController {
 	public ModelAndView index(HttpServletRequest request) {
 		ModelAndView mav = new ModelAndView("user/index");
 
-		List<Organization> organizations = organizationService.getOrganizationAll();
+		List<Organization> organizations = organizationService.selectList(new EntityWrapper<>());
 		mav.addObject("organizations", organizations);
 
 		return mav;
@@ -62,26 +65,32 @@ public class UserController extends BaseController {
 	public ApiResultMap list(HttpServletRequest request) {
 		ApiResultMap arm = new ApiResultMap();
 
-		Map<String, Object> params = new HashMap<>();
-
-		params.put("loginName", getParameter(request, "loginName", ""));
-		params.put("userName", getParameter(request, "userName", ""));
-		params.put("phone", getParameter(request, "phone", ""));
-		params.put("organizationId", getParameter(request, "organizationId", 0));
-
-		long count = userService.getUserCount(params);
+		Wrapper<User> wrapper = new EntityWrapper<>();
+		String loginName = getParameter(request, "loginName", "");
+		if (TmStringUtil.isNotBlank(loginName)) {
+			wrapper.like("login_name", loginName);
+		}
+		String userName = getParameter(request, "userName", "");
+		if (TmStringUtil.isNotBlank(userName)) {
+			wrapper.like("username", userName);
+		}
+		String phone = getParameter(request, "phone", "");
+		if (TmStringUtil.isNotBlank(phone)) {
+			wrapper.like("phone", phone);
+		}
+		Integer organizationId = getParameter(request, "organizationId", 0);
+		if (organizationId > 0) {
+			wrapper.eq("organization_id", organizationId);
+		}
 
 		Integer page = getParameter(request, "page", 1);
 		Integer size = getParameter(request, "size", 10);
 
-		int totalPage = (int) (count % size == 0 ? count / size : (count / size + 1));
-		arm.setTotalPage(totalPage);
+		PageHelper.startPage(page, size);
+		List<User> users = userService.selectList(wrapper);
 
-		if (count > 0) {
-			List<User> users = userService.getUserList(params, page, size);
-			arm.setList(users);
-		}
-
+		arm.setTotalPage(PageHelper.getPagination().getPages());
+		arm.setList(users);
 		return arm;
 	}
 
@@ -90,7 +99,7 @@ public class UserController extends BaseController {
 	public ModelAndView add(HttpServletRequest request) {
 		ModelAndView mav = new ModelAndView("user/add");
 
-		List<Organization> organizations = organizationService.getOrganizationAll();
+		List<Organization> organizations = organizationService.selectList(new EntityWrapper<>());
 		mav.addObject("organizations", organizations);
 
 		return mav;
@@ -101,20 +110,21 @@ public class UserController extends BaseController {
 	public ModelAndView auth(HttpServletRequest request, @RequestParam(value = "id", required = true) Integer id) {
 		ModelAndView mav = new ModelAndView("user/auth");
 
-		User user = userService.getById(id);
+		User user = userService.selectById(id);
 		if (user == null) {
 			// 无权访问
 			mav.setViewName("redirect:/un_authorized.do");
 			return mav;
 		}
 
-		Organization organization = organizationService.getById(user.getOrganizationId());
+		Organization organization = organizationService.selectById(user.getOrganizationId());
 		mav.addObject("organization", organization);
 
-		Map<String, Object> params = new HashMap<>();
-		params.put("organizationId", organization.getId());
-		params.put("usingState", "Y");
-		List<Role> roles = roleService.getRoleList(params);
+		Role entity = new Role();
+		entity.setOrganizationId(organization.getId());
+		entity.setUsingState("Y");
+		Wrapper<Role> wrapper = new EntityWrapper<Role>(entity);
+		List<Role> roles = roleService.selectList(wrapper);
 		mav.addObject("roles", roles);
 
 		mav.addObject("userId", id);
@@ -144,7 +154,7 @@ public class UserController extends BaseController {
 
 		ModelAndView mav = new ModelAndView("user/detail");
 
-		User user = userService.getById(id);
+		User user = userService.selectById(id);
 		if (user == null) {
 			// 无权访问
 			mav.setViewName("redirect:/un_authorized.do");
@@ -170,7 +180,7 @@ public class UserController extends BaseController {
 		mav.addObject("createdTime", TmDateUtil.format(user.getCreatedTime(), "yyyy-MM-dd HH:mm:ss"));
 		mav.addObject("updatedTime", TmDateUtil.format(user.getUpdatedTime(), "yyyy-MM-dd HH:mm:ss"));
 
-		List<Organization> organizations = organizationService.getOrganizationAll();
+		List<Organization> organizations = organizationService.selectList(new EntityWrapper<>());
 		mav.addObject("organizations", organizations);
 
 		return mav;
@@ -181,7 +191,7 @@ public class UserController extends BaseController {
 	public ModelAndView edit(HttpServletRequest request, @RequestParam(value = "id", required = true) Integer id) {
 
 		ModelAndView mav = new ModelAndView("user/edit");
-		User user = userService.getById(id);
+		User user = userService.selectById(id);
 		if (user == null) {
 			// 无权访问
 			mav.setViewName("redirect:/un_authorized.do");
@@ -198,7 +208,7 @@ public class UserController extends BaseController {
 			mav.addObject("expiredTime", "");
 		}
 
-		List<Organization> organizations = organizationService.getOrganizationAll();
+		List<Organization> organizations = organizationService.selectList(new EntityWrapper<>());
 		mav.addObject("organizations", organizations);
 
 		return mav;
@@ -255,7 +265,10 @@ public class UserController extends BaseController {
 			}
 		}
 
-		User user = userService.getByLoginName(loginName);
+		User entity = new User();
+		entity.setLoginName(loginName);
+		Wrapper<User> wrapper = new EntityWrapper<User>(entity);
+		User user = userService.selectOne(wrapper);
 		if (user != null) {
 			arm.setMsg("错误：登录名已存在");
 			return arm;
@@ -283,16 +296,7 @@ public class UserController extends BaseController {
 		} else {
 			user.setExpiredTime(expiredTime.getTime());
 		}
-
-		int id = 0;
-		try {
-			id = userService.saveUser(user);
-		} catch (Exception e) {
-			e.printStackTrace();
-			arm.setMsg("错误：保存失败");
-			return arm;
-		}
-		if (id > 0) {
+		if (userService.insert(user)) {
 			arm.setStatus(true);
 			arm.setData(user);
 			arm.setMsg("保存成功");
@@ -322,7 +326,7 @@ public class UserController extends BaseController {
 		// 默认失败
 		arm.setStatus(false);
 
-		User user = userService.getById(id);
+		User user = userService.selectById(id);
 		if (user == null) {
 			arm.setMsg("错误：无效的ID");
 			return arm;
@@ -359,7 +363,10 @@ public class UserController extends BaseController {
 			}
 		}
 
-		User _user = userService.getByLoginName(loginName);
+		User entity = new User();
+		entity.setLoginName(loginName);
+		Wrapper<User> wrapper = new EntityWrapper<User>(entity);
+		User _user = userService.selectOne(wrapper);
 		if (_user != null && _user.getId() != id) {
 			arm.setMsg("错误：登录名已存在");
 			return arm;
@@ -379,15 +386,7 @@ public class UserController extends BaseController {
 			user.setExpiredTime(expiredTime.getTime());
 		}
 
-		int res = 0;
-		try {
-			res = userService.updateUser(user);
-		} catch (Exception e) {
-			e.printStackTrace();
-			arm.setMsg("错误：修改失败");
-			return arm;
-		}
-		if (res > 0) {
+		if (userService.updateById(user)) {
 			arm.setStatus(true);
 			arm.setData(user);
 			arm.setMsg("修改成功");
@@ -406,20 +405,12 @@ public class UserController extends BaseController {
 		// 默认失败
 		arm.setStatus(false);
 
-		User user = userService.getById(id);
+		User user = userService.selectById(id);
 		if (user == null) {
 			arm.setMsg("错误：无效的ID");
 			return arm;
 		}
-		int res = 0;
-		try {
-			res = userService.deleteUser(user);
-		} catch (Exception e) {
-			e.printStackTrace();
-			arm.setMsg("错误：删除失败");
-			return arm;
-		}
-		if (res > 0) {
+		if (userService.deleteById(id)) {
 			arm.setStatus(true);
 			arm.setData(user);
 			arm.setMsg("删除成功");
@@ -440,20 +431,16 @@ public class UserController extends BaseController {
 		// 默认失败
 		arm.setStatus(false);
 
-		User user = userService.getById(userId);
+		User user = userService.selectById(userId);
 		if (user == null) {
 			arm.setMsg("错误：无效的ID");
 			return arm;
 		}
-		int res = 0;
-		try {
-			res = userRoleService.removeRole(userId, roleId);
-		} catch (Exception e) {
-			e.printStackTrace();
-			arm.setMsg("错误：删除失败");
-			return arm;
-		}
-		if (res > 0) {
+		UserRole entity = new UserRole();
+		entity.setUserId(userId);
+		entity.setRoleId(roleId);
+		Wrapper<UserRole> wrapper = new EntityWrapper<UserRole>(entity);
+		if (userRoleService.delete(wrapper)) {
 			arm.setStatus(true);
 			arm.setData(user);
 			arm.setMsg("删除成功");
@@ -474,7 +461,7 @@ public class UserController extends BaseController {
 		// 默认失败
 		arm.setStatus(false);
 
-		User user = userService.getById(userId);
+		User user = userService.selectById(userId);
 		if (user == null) {
 			arm.setMsg("错误：无效的ID");
 			return arm;
@@ -483,15 +470,11 @@ public class UserController extends BaseController {
 			arm.setMsg("错误：角色已授权");
 			return arm;
 		}
-		int res = 0;
-		try {
-			res = userRoleService.authRole(userId, roleId, user.getOrganizationId());
-		} catch (Exception e) {
-			e.printStackTrace();
-			arm.setMsg("错误：授权失败");
-			return arm;
-		}
-		if (res > 0) {
+		UserRole entity = new UserRole();
+		entity.setUserId(userId);
+		entity.setRoleId(roleId);
+		entity.setOrganizationId(user.getOrganizationId());
+		if (userRoleService.insert(entity)) {
 			arm.setStatus(true);
 			arm.setData(user);
 			arm.setMsg("授权成功");

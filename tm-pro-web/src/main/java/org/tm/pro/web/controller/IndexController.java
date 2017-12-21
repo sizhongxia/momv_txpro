@@ -1,5 +1,8 @@
 package org.tm.pro.web.controller;
 
+import java.io.IOException;
+import java.util.Date;
+
 import javax.imageio.ImageIO;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
@@ -13,13 +16,25 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.tm.pro.entity.Picture;
 import org.tm.pro.entity.SystemInfo;
+import org.tm.pro.model.ApiResultMap;
+import org.tm.pro.picture.PictureUploadService;
+import org.tm.pro.picture.result.FailInfo;
+import org.tm.pro.picture.result.PictureUploadRet;
+import org.tm.pro.picture.result.SucInfo;
+import org.tm.pro.service.PictureService;
+import org.tm.pro.utils.TmMd5Util;
 import org.tm.pro.web.anno.UserAgentRecord;
 import org.tm.pro.web.cache.SystemInfoCacheUtil;
 import org.tm.pro.web.controller.base.BaseController;
 
+import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.google.code.kaptcha.Producer;
 
 @Controller
@@ -27,6 +42,10 @@ public class IndexController extends BaseController {
 
 	@Autowired
 	Producer captchaProducer;
+	@Autowired
+	PictureUploadService pictureUploadService;
+	@Autowired
+	PictureService pictureService;
 
 	public IndexController() {
 	}
@@ -36,7 +55,7 @@ public class IndexController extends BaseController {
 	@RequestMapping(value = { "/index" }, method = { RequestMethod.GET })
 	public ModelAndView index(HttpServletRequest request) {
 		ModelAndView mv = new ModelAndView("index");
-		
+
 		SystemInfo systemInfo = SystemInfoCacheUtil.systemInfo;
 		mv.addObject("systemTitle", systemInfo.getSystemTitle());
 		mv.addObject("systemDescript", systemInfo.getSystemDescript());
@@ -159,49 +178,53 @@ public class IndexController extends BaseController {
 		ModelAndView view = new ModelAndView("socket_io");
 		return view;
 	}
-	
 
-	// /***
-	// * 上传文件
-	// *
-	// * @param request
-	// * @param file
-	// * @return
-	// */
-	// @ResponseBody
-	// @RequiresAuthentication
-	// @RequestMapping(value = "/upload-image")
-	// public ApiResultMap uploadImage(HttpServletRequest request,
-	// @RequestParam("file") MultipartFile file) {
-	// byte[] bytes = null;
-	// try {
-	// bytes = file.getBytes();
-	// } catch (IOException e) {
-	// return new ApiResultMap(301, "未上传图片信息");
-	// }
-	// String md5 = TmMd5Util.md5(bytes);
-	// Picture picture = pictureService.getByMd5(md5);
-	// if (picture != null) {
-	// return new ApiResultMap(picture);
-	// }
-	// Object obj = pictureUploadService.upload(bytes, file.getOriginalFilename());
-	// if (obj == null) {
-	// return new ApiResultMap(302, "上传图片出错");
-	// }
-	// ZimgUploadRet ret = (ZimgUploadRet) obj;
-	// if (ret.isRet()) {
-	// ZimgSucInfo sucInfo = ret.getInfo();
-	// picture = new Picture();
-	// picture.setName(file.getOriginalFilename());
-	// picture.setType(file.getContentType());
-	// picture.setMd5(md5);
-	// picture.setSize(sucInfo.getSize());
-	// picture.setCreatedTime(System.currentTimeMillis());
-	// pictureService.insert(picture);
-	// return new ApiResultMap(picture);
-	// } else {
-	// ZimgFailInfo failInfo = ret.getError();
-	// return new ApiResultMap(failInfo.getCode(), failInfo.getMessage());
-	// }
-	// }
+	/***
+	 * 上传图片文件
+	 *
+	 * @param request
+	 * @param file
+	 * @return
+	 */
+	@ResponseBody
+	@RequiresAuthentication
+	@RequestMapping(value = "/upload-image")
+	public ApiResultMap uploadImage(HttpServletRequest request, @RequestParam("file") MultipartFile file) {
+		byte[] bytes = null;
+		try {
+			bytes = file.getBytes();
+		} catch (IOException e) {
+			return new ApiResultMap(301, "未上传图片信息");
+		}
+		String md5 = TmMd5Util.md5(bytes);
+		Picture entity = new Picture();
+		entity.setMd5(md5);
+		Picture picture = pictureService.selectOne(new EntityWrapper<Picture>(entity ));
+		if (picture != null) {
+			return new ApiResultMap(picture);
+		}
+		// 文件上传服务
+		PictureUploadRet ret = pictureUploadService.upload(bytes, file.getOriginalFilename());
+		if (ret == null) {
+			return new ApiResultMap(302, "上传图片出错");
+		}
+		if (ret.isRet()) {
+			SucInfo sucInfo = ret.getInfo();
+			picture = new Picture();
+			picture.setMd5(md5);
+			picture.setName(file.getOriginalFilename());
+			picture.setType(file.getContentType());
+			picture.setSize(sucInfo.getSize());
+			picture.setUrl(sucInfo.getMd5());
+			picture.setUploadTime(new Date());
+			if (pictureService.insert(picture)) {
+				return new ApiResultMap(picture);
+			} else {
+				return new ApiResultMap(500, "保存文件出错");
+			}
+		} else {
+			FailInfo failInfo = ret.getError();
+			return new ApiResultMap(failInfo.getCode(), failInfo.getMessage());
+		}
+	}
 }

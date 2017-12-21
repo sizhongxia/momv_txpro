@@ -18,6 +18,7 @@ import org.tm.pro.service.JobService;
 import org.tm.pro.service.SystemInfoService;
 import org.tm.pro.web.quartz.model.Job;
 
+import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.tm.pro.redis.util.RedisUtil;
 
 import redis.clients.jedis.JedisPubSub;
@@ -58,7 +59,7 @@ public class SystemInfoCacheUtil implements InitializingBean {
 	 * 初始化系统基本信息数据
 	 */
 	private void initSystemInfo() {
-		systemInfo = systemInfoService.getDefaultInfo();
+		systemInfo = systemInfoService.selectOne(new EntityWrapper<>());
 	}
 
 	/**
@@ -66,7 +67,7 @@ public class SystemInfoCacheUtil implements InitializingBean {
 	 */
 	private void initSystemJobs() {
 		SystemInfoCacheUtil.jobs.clear();
-		List<org.tm.pro.entity.Job> _jobs = jobService.getAllJobs();
+		List<org.tm.pro.entity.Job> _jobs = jobService.selectList(new EntityWrapper<>());
 		if (_jobs != null && !_jobs.isEmpty()) {
 			DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 			CronSequenceGenerator cronGenerator = null;
@@ -75,7 +76,7 @@ public class SystemInfoCacheUtil implements InitializingBean {
 				jb.setDescription(job.getDescription());
 				jb.setJobId(job.getJobId());
 				jb.setJobName(job.getJobName());
-				JobGroup jobGroup = jobGroupService.getById(job.getGroupId());
+				JobGroup jobGroup = jobGroupService.selectById(job.getGroupId());
 				jb.setJobGroup(jobGroup.getGroupId());
 				jb.setJobGroupName(jobGroup.getGroupName());
 				jb.setJobStatus(job.getStatus());

@@ -7,15 +7,15 @@ import org.springframework.stereotype.Controller;
 
 /**
  * <p>
- * 上线新项目提醒 前端控制器
+ * 上传文件 前端控制器
  * </p>
  *
  * @author SiZhongxia
- * @since 2017-12-18
+ * @since 2017-12-21
  */
 @Controller
-@RequestMapping("/onlineSubscribe")
-public class OnlineSubscribeController {
+@RequestMapping("/picture")
+public class PictureController {
 
 }
 

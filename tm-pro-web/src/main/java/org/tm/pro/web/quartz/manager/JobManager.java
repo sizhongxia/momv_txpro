@@ -114,11 +114,11 @@ public class JobManager implements InitializingBean {
 			trigger = trigger.getTriggerBuilder().withIdentity(triggerKey)
 					.withSchedule(CronScheduleBuilder.cronSchedule(job.getCronExpression())).build();
 			scheduler.rescheduleJob(triggerKey, trigger);
-			org.tm.pro.entity.Job _job = jobService.getByJobId(job.getJobId());
+			org.tm.pro.entity.Job _job = jobService.selectById(job.getJobId());
 			_job.setCron(job.getCronExpression());
 			_job.setIsConcurrent("Y".equals(job.getConcurrent()) ? 1 : 0);
 			_job.setIsStartupExecution("Y".equals(job.getStartupExecution()) ? 1 : 0);
-			if (jobService.update(_job) > 0) {
+			if (jobService.updateById(_job)) {
 				return true;
 			}
 		}
@@ -144,7 +144,7 @@ public class JobManager implements InitializingBean {
 			if (TmStringUtil.isBlank(job.getCronExpression())) {
 				return false;
 			}
-			org.tm.pro.entity.Job _job = jobService.getByJobId(job.getJobId());
+			org.tm.pro.entity.Job _job = jobService.selectById(job.getJobId());
 			job.setJobClassName(_job.getClazzName());
 			addJob(job);
 		}
@@ -189,7 +189,7 @@ public class JobManager implements InitializingBean {
 				for (org.tm.pro.entity.Job job : jobs) {
 					Job jb = new Job();
 					jb.setJobId(job.getJobId());
-					JobGroup jobGroup = jobGroupService.getById(job.getGroupId());
+					JobGroup jobGroup = jobGroupService.selectById(job.getGroupId());
 					jb.setJobGroup(jobGroup.getGroupId());
 					jb.setJobClassName(job.getClazzName());
 					jb.setCronExpression(job.getCron());

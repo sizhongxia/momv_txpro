@@ -30,6 +30,8 @@ import org.tm.pro.service.UserService;
 import org.tm.pro.utils.TmNumberUtil;
 import org.tm.pro.web.cache.SystemInfoCacheUtil;
 
+import com.baomidou.mybatisplus.mapper.EntityWrapper;
+import com.baomidou.mybatisplus.mapper.Wrapper;
 import com.tm.pro.redis.util.RedisUtil;
 
 public class TmJDBCRealm extends AuthorizingRealm {
@@ -82,7 +84,11 @@ public class TmJDBCRealm extends AuthorizingRealm {
 		UsernamePasswordToken upToken = (UsernamePasswordToken) authenticationToken;
 		String loginName = upToken.getUsername();
 
-		User user = userService.getByLoginName(loginName);
+		User entity = new User();
+		entity.setLoginName(loginName);
+		Wrapper<User> wrapper = new EntityWrapper<User>(entity);
+		User user = userService.selectOne(wrapper);
+
 		if (user == null) {
 			// 未知账号
 			throw new UnknownAccountException();
@@ -153,7 +159,10 @@ public class TmJDBCRealm extends AuthorizingRealm {
 		}
 
 		user.setLastLoginTime(System.currentTimeMillis());
-		userService.updateUser(user);
+		if (!userService.updateById(user)) {
+			// 未知账号
+			throw new RuntimeException();
+		}
 
 		return new SimpleAuthenticationInfo(user, password.toCharArray(), getName());
 	}

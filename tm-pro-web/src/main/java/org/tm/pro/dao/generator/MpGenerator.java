@@ -51,7 +51,7 @@ public class MpGenerator {
 		StrategyConfig strategy = new StrategyConfig();
 		strategy.setTablePrefix(new String[] { "tb_" });// 此处可以修改为您的表前缀
 		strategy.setNaming(NamingStrategy.underline_to_camel);// 表名生成策略
-		strategy.setInclude(new String[] { "table_name" }); // 需要生成的表
+		strategy.setInclude(new String[] { "tb_picture" }); // 需要生成的表
 		// strategy.setExclude(new String[]{"test"}); // 排除生成的表
 		// 自定义实体父类
 		strategy.setSuperEntityClass("org.tm.pro.entity.BaseEntity");

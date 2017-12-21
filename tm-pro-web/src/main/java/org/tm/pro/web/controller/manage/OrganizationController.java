@@ -1,8 +1,6 @@
 package org.tm.pro.web.controller.manage;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -19,6 +17,10 @@ import org.tm.pro.model.ApiResultMap;
 import org.tm.pro.service.OrganizationService;
 import org.tm.pro.utils.TmStringUtil;
 import org.tm.pro.web.controller.base.BaseController;
+
+import com.baomidou.mybatisplus.mapper.EntityWrapper;
+import com.baomidou.mybatisplus.mapper.Wrapper;
+import com.baomidou.mybatisplus.plugins.pagination.PageHelper;
 
 @Controller
 @RequestMapping("organization")
@@ -41,23 +43,20 @@ public class OrganizationController extends BaseController {
 	public ApiResultMap list(HttpServletRequest request) {
 		ApiResultMap arm = new ApiResultMap();
 
-		Map<String, Object> params = new HashMap<>();
-
-		params.put("organizationName", getParameter(request, "organizationName", ""));
-
-		long count = organizationService.getOrganizationCount(params);
+		Wrapper<Organization> wrapper = new EntityWrapper<Organization>();
+		String organizationName = getParameter(request, "organizationName", "");
+		if (TmStringUtil.isNotBlank(organizationName)) {
+			wrapper.like("organization_name", organizationName);
+		}
 
 		Integer page = getParameter(request, "page", 1);
 		Integer size = getParameter(request, "size", 10);
 
-		int totalPage = (int) (count % size == 0 ? count / size : (count / size + 1));
-		arm.setTotalPage(totalPage);
+		PageHelper.startPage(page, size);
+		List<Organization> organizations = organizationService.selectList(wrapper);
 
-		if (count > 0) {
-			List<Organization> organizations = organizationService.getOrganizationList(params, page, size);
-			arm.setList(organizations);
-		}
-
+		arm.setTotalPage(PageHelper.getPagination().getPages());
+		arm.setList(organizations);
 		return arm;
 	}
 
@@ -73,7 +72,7 @@ public class OrganizationController extends BaseController {
 	public ModelAndView edit(HttpServletRequest request, @RequestParam(value = "id", required = true) Integer id) {
 
 		ModelAndView mav = new ModelAndView("organization/edit");
-		Organization organization = organizationService.getById(id);
+		Organization organization = organizationService.selectById(id);
 		if (organization == null) {
 			// 无权访问
 			mav.setViewName("redirect:/un_authorized.do");
@@ -108,15 +107,7 @@ public class OrganizationController extends BaseController {
 		organization.setOrganizationName(organizationName);
 		organization.setSortNumber(sortNumber);
 		organization.setOrganizationDesc(organizationDesc);
-		int id = 0;
-		try {
-			id = organizationService.saveOrganization(organization);
-		} catch (Exception e) {
-			e.printStackTrace();
-			arm.setMsg("错误：保存失败");
-			return arm;
-		}
-		if (id > 0) {
+		if (organizationService.insert(organization)) {
 			arm.setStatus(true);
 			arm.setData(organization);
 			arm.setMsg("保存成功");
@@ -138,7 +129,7 @@ public class OrganizationController extends BaseController {
 		// 默认失败
 		arm.setStatus(false);
 
-		Organization organization = organizationService.getById(id);
+		Organization organization = organizationService.selectById(id);
 		if (organization == null) {
 			arm.setMsg("错误：无效的ID");
 			return arm;
@@ -155,15 +146,7 @@ public class OrganizationController extends BaseController {
 		organization.setSortNumber(sortNumber);
 		organization.setOrganizationDesc(organizationDesc);
 
-		int res = 0;
-		try {
-			res = organizationService.updateOrganization(organization);
-		} catch (Exception e) {
-			e.printStackTrace();
-			arm.setMsg("错误：修改失败");
-			return arm;
-		}
-		if (res > 0) {
+		if (organizationService.updateById(organization)) {
 			arm.setStatus(true);
 			arm.setData(organization);
 			arm.setMsg("修改成功");
@@ -182,20 +165,12 @@ public class OrganizationController extends BaseController {
 		// 默认失败
 		arm.setStatus(false);
 
-		Organization organization = organizationService.getById(id);
+		Organization organization = organizationService.selectById(id);
 		if (organization == null) {
 			arm.setMsg("错误：无效的ID");
 			return arm;
 		}
-		int res = 0;
-		try {
-			res = organizationService.deleteOrganization(organization);
-		} catch (Exception e) {
-			e.printStackTrace();
-			arm.setMsg("错误：删除失败");
-			return arm;
-		}
-		if (res > 0) {
+		if (organizationService.deleteById(id)) {
 			arm.setStatus(true);
 			arm.setData(organization);
 			arm.setMsg("删除成功");

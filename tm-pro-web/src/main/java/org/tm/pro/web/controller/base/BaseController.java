@@ -19,6 +19,7 @@ import org.tm.pro.utils.TmStringUtil;
 import org.tm.pro.web.utils.RequestUtil;
 
 public class BaseController {
+	
 	/**
 	 * 认证（未登录）
 	 * 

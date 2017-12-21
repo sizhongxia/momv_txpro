@@ -4,9 +4,8 @@ import java.util.List;
 
 import org.tm.pro.entity.LoginLog;
 
-public interface LoginLogService {
+import com.baomidou.mybatisplus.service.IService;
 
-	int saveLoginLog(LoginLog loginLog);
-
+public interface LoginLogService  extends IService<LoginLog>{
 	List<LoginLog> getTopTen(String loginName);
 }

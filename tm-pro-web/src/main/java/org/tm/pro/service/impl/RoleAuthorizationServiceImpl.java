@@ -43,21 +43,4 @@ public class RoleAuthorizationServiceImpl extends ServiceImpl<RoleAuthorizationD
 		}
 		return auths;
 	}
-
-	@Override
-	public int unAuthorization(Integer roleId, String authorizationCode) {
-		RoleAuthorization entity = new RoleAuthorization();
-		entity.setRoleId(roleId);
-		entity.setAuthorizationCode(authorizationCode);
-		Wrapper<RoleAuthorization> wrapper = new EntityWrapper<RoleAuthorization>(entity);
-		return baseMapper.delete(wrapper);
-	}
-
-	@Override
-	public int authorization(Integer roleId, String authorizationCode) {
-		RoleAuthorization entity = new RoleAuthorization();
-		entity.setRoleId(roleId);
-		entity.setAuthorizationCode(authorizationCode);
-		return baseMapper.insert(entity);
-	}
 }

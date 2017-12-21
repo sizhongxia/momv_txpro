@@ -1,8 +1,8 @@
-package org.tm.pro.picture.zimg.model;
+package org.tm.pro.picture.result;
 
 import java.io.Serializable;
 
-public class ZimgFailInfo implements Serializable {
+public class FailInfo implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
