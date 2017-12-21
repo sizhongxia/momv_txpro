@@ -13,6 +13,8 @@ import org.apache.shiro.authz.annotation.RequiresAuthentication;
 import org.apache.shiro.session.Session;
 import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.context.ApplicationEventPublisherAware;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -33,12 +35,15 @@ import org.tm.pro.utils.TmMd5Util;
 import org.tm.pro.web.anno.UserAgentRecord;
 import org.tm.pro.web.cache.SystemInfoCacheUtil;
 import org.tm.pro.web.controller.base.BaseController;
+import org.tm.pro.web.sms.SendSmsEvent;
+import org.tm.pro.web.sms.SendSmsEventObj;
+import org.tm.pro.web.sms.SendSmsWorker;
 
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.google.code.kaptcha.Producer;
 
 @Controller
-public class IndexController extends BaseController {
+public class IndexController extends BaseController implements ApplicationEventPublisherAware {
 
 	@Autowired
 	Producer captchaProducer;
@@ -46,6 +51,10 @@ public class IndexController extends BaseController {
 	PictureUploadService pictureUploadService;
 	@Autowired
 	PictureService pictureService;
+	@Autowired
+	SendSmsWorker sendSmsUtil;
+
+	ApplicationEventPublisher applicationEventPublisher;
 
 	public IndexController() {
 	}
@@ -61,6 +70,13 @@ public class IndexController extends BaseController {
 		mv.addObject("systemDescript", systemInfo.getSystemDescript());
 
 		mv.addObject("currentTime", System.currentTimeMillis());
+
+		// 发送短信验证码
+		SendSmsEventObj source = new SendSmsEventObj();
+		source.setMobile("18518436862");
+		source.setType(SendSmsWorker.JUHE_TPL_ID_VERIFICATION_CODE);
+		SendSmsEvent event = new SendSmsEvent(source);
+		applicationEventPublisher.publishEvent(event);
 
 		if ("Y".equalsIgnoreCase(systemInfo.getOnlyChrome())) {
 			if (!"CHROME".equalsIgnoreCase(request.getAttribute("browser").toString())) {
@@ -199,7 +215,7 @@ public class IndexController extends BaseController {
 		String md5 = TmMd5Util.md5(bytes);
 		Picture entity = new Picture();
 		entity.setMd5(md5);
-		Picture picture = pictureService.selectOne(new EntityWrapper<Picture>(entity ));
+		Picture picture = pictureService.selectOne(new EntityWrapper<Picture>(entity));
 		if (picture != null) {
 			return new ApiResultMap(picture);
 		}
@@ -226,5 +242,10 @@ public class IndexController extends BaseController {
 			FailInfo failInfo = ret.getError();
 			return new ApiResultMap(failInfo.getCode(), failInfo.getMessage());
 		}
+	}
+
+	@Override
+	public void setApplicationEventPublisher(ApplicationEventPublisher applicationEventPublisher) {
+		this.applicationEventPublisher = applicationEventPublisher;
 	}
 }

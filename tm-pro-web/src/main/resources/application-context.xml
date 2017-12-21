@@ -39,6 +39,11 @@
 		<property name="redisConfig" ref="redisConfig"></property>
 	</bean>
 	
+	<!-- 发送短信事件工作类 -->
+	<bean class="org.tm.pro.web.sms.SendSmsWorker">
+		<property name="redisUtil" ref="redisUtil"></property>
+	</bean>
+	
 	<bean id="pictureUploadService" class="org.tm.pro.picture.zimg.service.ZimgPictureUploadService" />
 
 	<bean id="scheduler" class="org.springframework.scheduling.quartz.SchedulerFactoryBean" lazy-init="false" scope="singleton" />
@@ -116,8 +121,8 @@
 				<bean id="paginationInterceptor" class="com.baomidou.mybatisplus.plugins.PaginationInterceptor">
 					<property name="dialectType" value="mysql" />
 				</bean>
+				<bean class="com.baomidou.mybatisplus.plugins.OptimisticLockerInterceptor"/>
 			</array>
-			
 		</property>
 		<!-- 全局配置注入 -->
 		<property name="globalConfig" ref="globalConfig" />

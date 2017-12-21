@@ -1,11 +1,13 @@
 package org.tm.pro.entity;
 
-import com.baomidou.mybatisplus.enums.IdType;
 import java.math.BigDecimal;
 import java.util.Date;
-import com.baomidou.mybatisplus.annotations.TableId;
+
 import com.baomidou.mybatisplus.annotations.TableField;
+import com.baomidou.mybatisplus.annotations.TableId;
 import com.baomidou.mybatisplus.annotations.TableName;
+import com.baomidou.mybatisplus.annotations.Version;
+import com.baomidou.mybatisplus.enums.IdType;
 
 /**
  * <p>
@@ -18,173 +20,176 @@ import com.baomidou.mybatisplus.annotations.TableName;
 @TableName("tb_house")
 public class House extends BaseEntity {
 
-    private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
 
-    /**
-     * 房源ID
-     */
-	@TableId(value="id", type= IdType.AUTO)
+	/**
+	 * 房源ID
+	 */
+	@TableId(value = "id", type = IdType.AUTO)
 	private Integer id;
-    /**
-     * 项目名称
-     */
+	/**
+	 * 项目名称
+	 */
 	private String name;
-    /**
-     * 项目拼音
-     */
+	/**
+	 * 项目拼音
+	 */
 	private String pinyin;
-    /**
-     * 项目特色
-     */
+	/**
+	 * 项目特色
+	 */
 	private String feature;
-    /**
-     * 类别
-     */
+	/**
+	 * 类别
+	 */
 	private String category;
-    /**
-     * 物业类型
-     */
+	/**
+	 * 物业类型
+	 */
 	@TableField("property_type")
 	private String propertyType;
-    /**
-     * 产权
-     */
+	/**
+	 * 产权
+	 */
 	@TableField("property_right")
 	private String propertyRight;
-    /**
-     * （户型）面积范围
-     */
+	/**
+	 * （户型）面积范围
+	 */
 	private String acreage;
-    /**
-     * 开盘日期
-     */
+	/**
+	 * 开盘日期
+	 */
 	@TableField("open_quotation_date")
 	private Date openQuotationDate;
-    /**
-     * 交房时间
-     */
+	/**
+	 * 交房时间
+	 */
 	@TableField("handed_house_date")
 	private Date handedHouseDate;
-    /**
-     * 省份
-     */
+	/**
+	 * 省份
+	 */
 	private String province;
-    /**
-     * 城市
-     */
+	/**
+	 * 城市
+	 */
 	private String city;
-    /**
-     * （区）县
-     */
+	/**
+	 * （区）县
+	 */
 	private String county;
-    /**
-     * 项目位置
-     */
+	/**
+	 * 项目位置
+	 */
 	private String location;
-    /**
-     * （地理位置）经度
-     */
+	/**
+	 * （地理位置）经度
+	 */
 	private String longitude;
-    /**
-     * （地理位置）纬度
-     */
+	/**
+	 * （地理位置）纬度
+	 */
 	private String latitude;
-    /**
-     * 售楼处地址
-     */
+	/**
+	 * 售楼处地址
+	 */
 	@TableField("sales_offices_location")
 	private String salesOfficesLocation;
-    /**
-     * 销售热线
-     */
+	/**
+	 * 销售热线
+	 */
 	@TableField("sales_hotline")
 	private String salesHotline;
-    /**
-     * 房源均价（单位价格）
-     */
+	/**
+	 * 房源均价（单位价格）
+	 */
 	@TableField("average_price")
 	private BigDecimal averagePrice;
-    /**
-     * 首付信息
-     */
+	/**
+	 * 首付信息
+	 */
 	@TableField("down_payment")
 	private String downPayment;
-    /**
-     * 开发商
-     */
+	/**
+	 * 开发商
+	 */
 	private String developer;
-    /**
-     * 施工单位
-     */
+	/**
+	 * 施工单位
+	 */
 	private String builder;
-    /**
-     * 物业公司
-     */
+	/**
+	 * 物业公司
+	 */
 	@TableField("property_company")
 	private String propertyCompany;
-    /**
-     * 规划面积
-     */
+	/**
+	 * 规划面积
+	 */
 	@TableField("planning_area")
 	private String planningArea;
-    /**
-     * 建筑面积
-     */
+	/**
+	 * 建筑面积
+	 */
 	@TableField("covered_area")
 	private String coveredArea;
-    /**
-     * 停车位信息
-     */
+	/**
+	 * 停车位信息
+	 */
 	private String parking;
-    /**
-     * 栋数
-     */
+	/**
+	 * 栋数
+	 */
 	@TableField("building_amount")
 	private Integer buildingAmount;
-    /**
-     * 户数
-     */
+	/**
+	 * 户数
+	 */
 	@TableField("house_amount")
 	private Integer houseAmount;
-    /**
-     * 装修状况
-     */
+	/**
+	 * 装修状况
+	 */
 	private String decoration;
-    /**
-     * 容积率
-     */
+	/**
+	 * 容积率
+	 */
 	@TableField("plot_ratio")
 	private String plotRatio;
-    /**
-     * 绿化率
-     */
+	/**
+	 * 绿化率
+	 */
 	@TableField("greening_ratio")
 	private String greeningRatio;
-    /**
-     * 销售状态
-     */
+	/**
+	 * 销售状态
+	 */
 	@TableField("sale_status")
 	private String saleStatus;
-    /**
-     * 展示状态
-     */
+	/**
+	 * 展示状态
+	 */
 	@TableField("show_status")
 	private String showStatus;
-    /**
-     * 最后操作人
-     */
+
+	@Version
+	@TableField("version")
+	private Integer version;
+	/**
+	 * 最后操作人
+	 */
 	private String operator;
-    /**
-     * 创建时间
-     */
+	/**
+	 * 创建时间
+	 */
 	@TableField("create_time")
 	private Date createTime;
-    /**
-     * 更新时间
-     */
+	/**
+	 * 更新时间
+	 */
 	@TableField("update_time")
 	private Date updateTime;
-
 
 	public Integer getId() {
 		return id;
@@ -450,6 +455,14 @@ public class House extends BaseEntity {
 		this.showStatus = showStatus;
 	}
 
+	public Integer getVersion() {
+		return version;
+	}
+
+	public void setVersion(Integer version) {
+		this.version = version;
+	}
+
 	public String getOperator() {
 		return operator;
 	}
@@ -476,43 +489,18 @@ public class House extends BaseEntity {
 
 	@Override
 	public String toString() {
-		return "House{" +
-			", id=" + id +
-			", name=" + name +
-			", pinyin=" + pinyin +
-			", feature=" + feature +
-			", category=" + category +
-			", propertyType=" + propertyType +
-			", propertyRight=" + propertyRight +
-			", acreage=" + acreage +
-			", openQuotationDate=" + openQuotationDate +
-			", handedHouseDate=" + handedHouseDate +
-			", province=" + province +
-			", city=" + city +
-			", county=" + county +
-			", location=" + location +
-			", longitude=" + longitude +
-			", latitude=" + latitude +
-			", salesOfficesLocation=" + salesOfficesLocation +
-			", salesHotline=" + salesHotline +
-			", averagePrice=" + averagePrice +
-			", downPayment=" + downPayment +
-			", developer=" + developer +
-			", builder=" + builder +
-			", propertyCompany=" + propertyCompany +
-			", planningArea=" + planningArea +
-			", coveredArea=" + coveredArea +
-			", parking=" + parking +
-			", buildingAmount=" + buildingAmount +
-			", houseAmount=" + houseAmount +
-			", decoration=" + decoration +
-			", plotRatio=" + plotRatio +
-			", greeningRatio=" + greeningRatio +
-			", saleStatus=" + saleStatus +
-			", showStatus=" + showStatus +
-			", operator=" + operator +
-			", createTime=" + createTime +
-			", updateTime=" + updateTime +
-			"}";
+		return "House [id=" + id + ", name=" + name + ", pinyin=" + pinyin + ", feature=" + feature + ", category="
+				+ category + ", propertyType=" + propertyType + ", propertyRight=" + propertyRight + ", acreage="
+				+ acreage + ", openQuotationDate=" + openQuotationDate + ", handedHouseDate=" + handedHouseDate
+				+ ", province=" + province + ", city=" + city + ", county=" + county + ", location=" + location
+				+ ", longitude=" + longitude + ", latitude=" + latitude + ", salesOfficesLocation="
+				+ salesOfficesLocation + ", salesHotline=" + salesHotline + ", averagePrice=" + averagePrice
+				+ ", downPayment=" + downPayment + ", developer=" + developer + ", builder=" + builder
+				+ ", propertyCompany=" + propertyCompany + ", planningArea=" + planningArea + ", coveredArea="
+				+ coveredArea + ", parking=" + parking + ", buildingAmount=" + buildingAmount + ", houseAmount="
+				+ houseAmount + ", decoration=" + decoration + ", plotRatio=" + plotRatio + ", greeningRatio="
+				+ greeningRatio + ", saleStatus=" + saleStatus + ", showStatus=" + showStatus + ", version=" + version
+				+ ", operator=" + operator + ", createTime=" + createTime + ", updateTime=" + updateTime + "]";
 	}
+
 }
