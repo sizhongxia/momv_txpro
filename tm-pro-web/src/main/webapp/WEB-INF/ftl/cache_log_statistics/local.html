@@ -8,7 +8,7 @@
 <!-- 字体图标 Css -->
 <link href="${rc.contextPath}/statics/ui-frame/css/font-awesome.min93e3.css?v=4.4.0" rel="stylesheet">
 <!-- BootStrap 日期插件 -->
-<link href="${rc.contextPath}/statics/ui-frame/css/plugins/datapicker/datepicker3.css" rel="stylesheet">
+<link href="${rc.contextPath}/statics/ui-frame/plugins/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css" rel="stylesheet">
 <!-- Css 动画 -->
 <link href="${rc.contextPath}/statics/ui-frame/css/animate.min.css" rel="stylesheet">
 <!-- 基本样式 -->
@@ -23,15 +23,21 @@
 					<div class="ibox-content">
 						<div class="row">
 
-							<div class="col-xs-4">
-								<div class="form-group" id="date_range">
-									<label class="font-noraml">日期</label>
-									<div class="input-daterange input-group" id="datepicker">
-										<input type="text" class="input-sm form-control" name="start" value="" />
-										<span class="input-group-addon">到</span>
-										<input type="text" class="input-sm form-control" name="end" value="" />
-									</div>
-								</div>
+							<div class="col-xs-2">
+								<div class="form-group">
+									<label class="font-noraml">开始日期</label>
+					                <div class='input-group'>
+					                    <input type='text' class="form-control" id="startDate"/>
+					                </div>
+					            </div>
+							</div>
+							<div class="col-xs-2">
+								<div class="form-group">
+									<label class="font-noraml">结束日期</label>
+					                <div class='input-group'>
+					                    <input type='text' class="form-control" id="endDate"/>
+					                </div>
+					            </div>
 							</div>
 
 							<div class="col-xs-2">
@@ -58,8 +64,8 @@
 							
 							<div class="col-xs-2">
 								<div class="form-group">
-									<label class="font-noraml">地市</label>
-									<select class="form-control" name="city">
+									<label class="font-noraml">节点</label>
+									<select class="form-control" id="city">
 										<#list cacheSystemCitys as item>
 											<option value="${item.value!}">${item.name!}</option>
                                         </#list>
@@ -71,8 +77,7 @@
 								<div class="form-group" style="min-width: 120px;">
 									<label class="font-noraml">操作</label>
 									<div class="btn-group" style="display: block;">
-										<button class="btn btn-primary" type="button">搜索</button>
-	                                    <button class="btn btn-white" type="button">刷新</button>
+										<button class="btn btn-primary" id="searchBtn" type="button">检索数据</button>
                                     </div>
 								</div>
 							</div>
@@ -89,11 +94,11 @@
 					<div class="ibox-title">
 						<h5>Cache状态码分布</h5>
 						<div class="ibox-tools">
-							<a style="color:#273a4a"> <i class="fa fa-download"></i> 导出</a>
+							<a style="color:#273a4a" id="downChart1"> <i class="fa fa-download"></i> 导出</a>
 						</div>
 					</div>
 					<div class="ibox-content" style="padding-left: 0; padding-right: 0;">
-						<div id="c1"></div>
+						<div id="c1"><p style='line-height: 315px;text-align: center;'>无数据</p></div>
 					</div>
 				</div>
 			</div>
@@ -102,11 +107,11 @@
 					<div class="ibox-title">
 						<h5>回源吐出速率</h5>
 						<div class="ibox-tools">
-							<a style="color:#273a4a"> <i class="fa fa-download"></i> 导出</a>
+							<a style="color:#273a4a" id="downChart2"> <i class="fa fa-download"></i> 导出</a>
 						</div>
 					</div>
 					<div class="ibox-content" style="padding-left: 0; padding-right: 0;">
-						<div id="c2"></div>
+						<div id="c2"><p style='line-height: 315px;text-align: center;'>无数据</p></div>
 					</div>
 				</div>
 			</div>
@@ -115,24 +120,24 @@
 					<div class="ibox-title">
 						<h5>Cache HIT/MISS/ERR比例</h5>
 						<div class="ibox-tools">
-							<a style="color:#273a4a"> <i class="fa fa-download"></i> 导出</a>
+							<a style="color:#273a4a" id="downChart3"> <i class="fa fa-download"></i> 导出</a>
 						</div>
 					</div>
 					<div class="ibox-content" style="padding-left: 0; padding-right: 0;">
-						<div id="c3"></div>
+						<div id="c3"><p style='line-height: 255px;text-align: center;'>无数据</p></div>
 					</div>
 				</div>
 			</div>
 			<div class="col-xs-6">
 				<div class="ibox float-e-margins">
 					<div class="ibox-title">
-						<h5>Cache 每秒访问次数</h5>
+						<h5>Cache 访问次数 (5分钟)</h5>
 						<div class="ibox-tools">
-							<a style="color:#273a4a"> <i class="fa fa-download"></i> 导出</a>
+							<a style="color:#273a4a" id="downChart4"> <i class="fa fa-download"></i> 导出</a>
 						</div>
 					</div>
 					<div class="ibox-content" style="padding-left: 0; padding-right: 0;">
-						<div id="c4"></div>
+						<div id="c4"><p style='line-height: 255px;text-align: center;'>无数据</p></div>
 					</div>
 				</div>
 			</div>
@@ -143,10 +148,11 @@
 	<script src="${rc.contextPath}/statics/ui-frame/js/jquery.min.js?v=2.1.4"></script>
 	<!-- BootStrap Js -->
 	<script src="${rc.contextPath}/statics/ui-frame/js/bootstrap.min.js?v=3.3.6"></script>
-	<!-- 日期插件 -->
-	<script src="${rc.contextPath}/statics/ui-frame/js/plugins/datapicker/bootstrap-datepicker.js"></script>
 	<!-- 日期格式化插件 -->
 	<script src="${rc.contextPath}/statics/ui-frame/plugins/moment/moment.min.js"></script>
+	<script src="${rc.contextPath}/statics/ui-frame/plugins/moment/locale/zh-cn.js"></script>
+	<!-- 日期插件 -->
+	<script src="${rc.contextPath}/statics/ui-frame/plugins/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js"></script>
 	<!-- 框架工具 -->
 	<script src="${rc.contextPath}/statics/ui-frame/js/frame-util.js"></script>
 	<!-- 图表插件 -->
@@ -154,108 +160,103 @@
 	<script src="${rc.contextPath}/statics/ui-frame/plugins/antv/slider.js"></script>
 	<script type="text/javascript">
 		(function(_j) {
+			// 图标对象变量
+			var chart1, chart2, chart3, chart4;
 			
-			(function() {
-				var data = [
-			        {value:1335,type:'状态码正常',name:'200'},
-			        {value:35,type:'状态码正常',name:'201'},
-			        {value:0,type:'状态码正常',name:'202'},
-			        {value:0,type:'状态码正常',name:'204'},
-			        {value:0,type:'状态码正常',name:'206'},
-			        {value:0,type:'状态码正常',name:'300'},
-			        {value:0,type:'状态码正常',name:'301'},
-			        {value:0,type:'状态码正常',name:'302'},
-			        {value:0,type:'状态码正常',name:'303'},
-			        {value:35,type:'状态码正常',name:'304'},
-			        {value:0,type:'状态码正常',name:'306'},
-			        {value:0,type:'状态码正常',name:'307'},
-			        {value:0,type:'状态码正常',name:'400'},
-			        {value:0,type:'状态码正常',name:'401'},
-			        {value:35,type:'状态码正常',name:'403'},
-			        {value:35,type:'状态码异常',name:'404'},
-			        {value:35,type:'状态码异常',name:'405'},
-			        {value:35,type:'状态码异常',name:'415'},
-			        {value:1,type:'状态码异常',name:'500'},
-			        {value:0,type:'状态码异常',name:'504'}
-			      ];
-			      var Stat = G2.Stat;
-			      var chart = new G2.Chart({
-			        id: 'c1',
-			        forceFit: true,
-			        height: 320,
-			        plotCfg: {
-				        margin: [50, 50, 100, 50]
-			        }
-			      });
-			      chart.legend('name', {
-			    	   position: 'bottom',
-			    	   spacingX: 50,
-			    	   title: null,
-			    	   itemWrap: true,
-			    	   marker: 'square',
-			    	   dy: 18
-			      });
-			      chart.legend('type', {
-				    	position: 'top',
-				    	title: null,
-				    	itemWrap: true,
-				    	marker: 'square',
-				    	dy: 0
-			      });
-			      var viewBack = chart.createView();
-			      viewBack.source(data);
-			      viewBack.coord('theta', {
-			        	radius: .7
-			      });
-			      // 绘制内部的饼图
-			      viewBack.intervalStack()
-				        .position(Stat.summary.percent('value'))
-				        .color('type',['#4ecda5','#c82b3d']);
-			      // 绘制外圈饼图
-			      var view = chart.createView();
-			      view.source(data);
-			      view.coord('theta', {
-			        	inner: 0.78 // 设置空心部分的大小
-			      });
-			      view.intervalStack()
-				        .position(Stat.summary.percent('value'))
-				        .color('name')
-				        .selected({
-				        mode: 'multiple'
-			      });
-			      chart.render();
-			})();
-			
-			(function() {
-				_j.post("${rc.contextPath}/data/line.do", function(result){
+			// 图标1
+			function initC1Chart() {
+				_j("#c1").html("<p style='line-height: 315px;text-align: center;'>Loading...</p>");
+				_j.post("${rc.contextPath}/localData/status-code-statistics.do", {
+					startDate: $("#startDate").val(),
+					endDate: $("#endDate").val(),
+					city: $("#city").val()
+				}, function(result) {
+					if (result.status) {
+						_j("#c1").html("");
+						var data = result.list;
+						var Stat = G2.Stat;
+						chart1 = new G2.Chart({
+							id : 'c1',
+							forceFit : true,
+							height : 320,
+							plotCfg : {
+								margin : [ 50, 50, 100, 50 ]
+							}
+						});
+						chart1.legend('name', {
+							position : 'bottom',
+							spacingX : 50,
+							title : null,
+							itemWrap : true,
+							marker : 'square',
+							dy : 18
+						});
+						chart1.legend('type', {
+							position : 'top',
+							title : null,
+							itemWrap : true,
+							marker : 'square',
+							dy : 0
+						});
+						var viewBack = chart1.createView();
+						viewBack.source(data);
+						viewBack.coord('theta', {
+							radius : .7
+						});
+						// 绘制内部的饼图
+						viewBack.intervalStack().position(Stat.summary.percent('value')).color('type', [ '#4ecda5', '#c82b3d' ]);
+						// 绘制外圈饼图
+						var view = chart1.createView();
+						view.source(data);
+						view.coord('theta', {
+							inner : 0.78
+						});
+						view.intervalStack().position(Stat.summary.percent('value')).color('name').selected({
+							mode : 'multiple'
+						});
+						chart1.render();
+					} else {
+						_j("#c1").html("<p style='line-height: 315px;text-align: center;'>无数据</p>");
+					}
+				}, "json");
+			}
+
+			// 图标2
+			function initC2Chart() {
+				_j("#c2").html("<p style='line-height: 315px;text-align: center;'>Loading...</p>");
+				_j.post("${rc.contextPath}/localData/back-dspeed-statistics.do", {
+					startDate: $("#startDate").val(),
+					endDate: $("#endDate").val(),
+					city: $("#city").val()
+				}, function(result){
 		    		if(result.status) {
+		    			_j("#c2").html("");
 						var Frame = G2.Frame;
 				        var frame = new Frame(result.list);
 				        frame = Frame.combinColumns(frame, ['吐出流量', '回源流量'], 'value', 'type', 'date'); 
-				        var chart = new G2.Chart({
+				        chart2 = new G2.Chart({
 				          id: 'c2',
 				          forceFit: true,
 				          height: 320,
 				          plotCfg: {
-				            margin: [20, 50, 130, 100]
+				            margin: [20, 90, 100,100]
 				          }
 				        });
-				        chart.source(frame, {
+				        chart2.source(frame, {
 				          date: {
 				            type: 'time',
-				            mask: 'yyyy-mm-dd HH:MM:ss',
-				            tickCount: 5
+				            mask: 'yyyy-mm-dd HH:MM'
 				          },
 				          value: {
 				            alias: '速度 (Mpbs)'
 				          }
 				        });
-				        chart.legend({
-					            position: 'bottom',
-						    	marker: 'square',
-						    	dy: 13
+				        chart2.legend({
+				            position: 'bottom',
+					    	marker: 'square',
+					    	dy: 13
 				        });
-				        chart.axis('date', {
+				        chart2.axis('date', {
 					          tickLine: {
 					            stroke: '#000',
 					            value: 3 // 刻度线长度
@@ -263,9 +264,12 @@
 					          line: {
 					            stroke: '#000'
 					          },
-					          title: null
+					          title: null,
+					         formatter: function(value) {
+					            return value.split(" ")[1];
+					         }
 				        });
-				        chart.axis('value', {
+				        chart2.axis('value', {
 				          tickLine: {
 				            stroke: '#000',
 				            value: 3 // 刻度线长度
@@ -280,96 +284,151 @@
 				          },
 				          grid: null
 				        });
-				        chart.line().position('date*value').color('type', ['#1f77b4', '#ff7f0e']).shape('line').size(2);
-				        chart.render();
-		    		}
+				        chart2.line().position('date*value').color('type', ['#1f77b4', '#ff7f0e']).shape('line').size(2);
+				        chart2.render();
+		    		} else {
+						_j("#c2").html("<p style='line-height: 315px;text-align: center;'>无数据</p>");
+					}
 		    	}, "json");
-			})();
+			}
+
+			// 图标3
+			function initC3Chart() {
+				_j("#c3").html("<p style='line-height: 255px;text-align: center;'>Loading...</p>");
+				_j.post("${rc.contextPath}/localData/cache-stat-statistics.do", {
+					startDate: $("#startDate").val(),
+					endDate: $("#endDate").val(),
+					city: $("#city").val()
+				}, function(result) {
+					if (result.status) {
+						_j("#c3").html("");
+						var data = result.list;
+					    var Stat = G2.Stat;
+					    chart3 = new G2.Chart({
+					          id: 'c3',
+					          forceFit: true,
+					          height: 260,
+					          plotCfg: {
+					            margin: [30, 50, 70, 50]
+					          }
+					      });
+					    chart3.source(data);
+					    chart3.coord('theta', {
+					        radius: 0.8 // 设置饼图的大小
+					      });
+					    chart3.legend('name', {
+					        position: 'bottom',
+					    	marker: 'square'
+					      });
+					    chart3.tooltip({
+					        title: null,
+					        map: {
+					          value: 'value'
+					        }
+					      });
+					    chart3.intervalStack().position(Stat.summary.percent('value')).color('name').label('name*..percent',function(name, percent){
+					        percent = (percent * 100).toFixed(2) + '%';
+					        return name + ' ' + percent;
+					      });
+					    chart3.render();
+					} else {
+						_j("#c3").html("<p style='line-height: 255px;text-align: center;'>无数据</p>");
+					}
+				}, "json");
+			}
 			
-			(function() {
-				var data = [
-			        {name: 'MISS', value: 56.33 },
-			        {name: 'HIT', value: 24.03},
-			        {name: 'ERROR', value: 4.03}
-			      ];
-			      var Stat = G2.Stat;
-			      var chart = new G2.Chart({
-			          id: 'c3',
-			          forceFit: true,
-			          height: 260,
-			          plotCfg: {
-			            margin: [30, 50, 70, 50]
-			          }
-			      });
-			      chart.source(data);
-			      chart.coord('theta', {
-			        radius: 0.8 // 设置饼图的大小
-			      });
-			      chart.legend('name', {
-			        position: 'bottom',
-			    	marker: 'square'
-			      });
-			      chart.tooltip({
-			        title: null,
-			        map: {
-			          value: 'value'
-			        }
-			      });
-			      chart.intervalStack()
-			        .position(Stat.summary.percent('value'))
-			        .color('name')
-			        .label('name*..percent',function(name, percent){
-			        percent = (percent * 100).toFixed(2) + '%';
-			        return name + ' ' + percent;
-			      });
-			      chart.render();
-			})();
+			// 图标4
+			function initC4Chart() {
+				_j("#c4").html("<p style='line-height: 255px;text-align: center;'>Loading...</p>");
+				_j.post("${rc.contextPath}/localData/cache-visit-ntps-statistics.do", {
+					startDate: $("#startDate").val(),
+					endDate: $("#endDate").val(),
+					city: $("#city").val()
+				}, function(result) {
+					if (result.status) {
+						var data = result.list;
+		    			_j("#c4").html("");
+		    			chart4 = new G2.Chart({
+					        id: 'c4',
+					        forceFit: true,
+					        height: 260,
+				            plotCfg: {
+					            margin: [20, 50, 46, 90]
+					        }
+					      });
+		    			chart4.source(data, {
+					    	    date: {
+							        mask: 'HH:MM:ss',
+						            tickCount: 8
+						        },
+						        visitCount: {
+						            alias: '访问次数'
+						        }
+					      });
+		    			chart4.axis('date', {
+					    	  title: null,
+						        formatter: function(value) {
+						            return value.split(" ")[1];
+						        }
+					      });
+		    			chart4.line().position('date*visitCount').size(2);
+		    			chart4.render();
+					} else {
+						_j("#c4").html("<p style='line-height: 255px;text-align: center;'>无数据</p>");
+					}
+				}, "json");
+			}
+
+			// 初始化图标
+			function initChartData() {
+				setTimeout(function(){
+					initC1Chart();
+					setTimeout(function(){
+						initC2Chart();
+						setTimeout(function(){
+							initC3Chart();
+							setTimeout(function(){
+								initC4Chart();
+							}, 100);
+						}, 100);
+					}, 100);
+				}, 100);
+			}
 			
-			(function() {
-				var data = [
-			        {date: '2011-10-11 11:11:11', visitCount: 7},
-			        {date: '2011-10-11 11:11:12', visitCount: 6},
-			        {date: '2011-10-11 11:11:13', visitCount: 9},
-			        {date: '2011-10-11 11:11:14', visitCount: 14},
-			        {date: '2011-10-11 11:11:15', visitCount: 12},
-			        {date: '2011-10-11 11:11:16', visitCount: 25},
-			        {date: '2011-10-11 11:11:17', visitCount: 22},
-			        {date: '2011-10-11 11:11:18', visitCount: 26},
-			        {date: '2011-10-11 11:11:19', visitCount: 23},
-			        {date: '2011-10-11 11:11:20', visitCount: 18},
-			        {date: '2011-10-11 11:11:21', visitCount: 13},
-			        {date: '2011-10-11 11:11:22', visitCount: 6}
-			      ];
-			      var chart = new G2.Chart({
-			        id: 'c4',
-			        forceFit: true,
-			        height: 260,
-		            plotCfg: {
-			            margin: [20, 50, 46, 90]
-			        }
-			      });
-			      chart.source(data, {
-			    	    date: {
-					        mask: 'HH:MM:ss',
-				            tickCount: 6
-				        },
-				        visitCount: {
-				            alias: '访问次数'
-				        }
-			      });
-			      chart.axis('date', {
-			    	  title: null 
-			      });
-			      chart.line().position('date*visitCount').size(2);
-			      chart.render();
-			})();
+			// 加载数据
+			initChartData();
+
+			// 点击检索按钮
+			_j("#searchBtn").on("click", function() {
+				initChartData();
+			});
+			// 下载图标
+			_j("#downChart1").on("click", function() {
+				chart1.downloadImage();
+			});
+			_j("#downChart2").on("click", function() {
+				chart2.downloadImage();
+			});
+			_j("#downChart3").on("click", function() {
+				chart3.downloadImage();
+			});
+			_j("#downChart4").on("click", function() {
+				chart4.downloadImage();
+			});
 			
 			// 日期控件初始化
-			_j("#date_range .input-daterange").datepicker({
-				keyboardNavigation : !1,
-				forceParse : !1,
-				autoclose : !0
-			});
+			$('#startDate').datetimepicker({
+				locale: 'zh-cn',
+				format: 'YYYY-MM-DD HH:mm:ss',
+				maxDate: new Date(),
+				useCurrent: false
+            });
+			$('#endDate').datetimepicker({
+				locale: 'zh-cn',
+				format: 'YYYY-MM-DD HH:mm:ss',
+				maxDate: new Date(),
+				useCurrent: false
+            });
 		})(jQuery)
 	</script>
 </body>

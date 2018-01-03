@@ -28,6 +28,8 @@ import org.tm.pro.utils.TmStringUtil;
 import org.tm.pro.web.anno.UserAgentRecord;
 import org.tm.pro.web.controller.base.BaseController;
 
+import com.google.code.kaptcha.Constants;
+
 @Controller
 @RequestMapping("auth")
 public class AuthController extends BaseController {
@@ -48,9 +50,9 @@ public class AuthController extends BaseController {
 		if (TmStringUtil.isBlank(referer)) {
 			referer = "/index.do";
 		}
-		
+
 		String[] rm = referer.split("[?]");
-		if(rm.length > 1) {
+		if (rm.length > 1) {
 			referer = "/operation_timeout.do";
 		} else {
 			referer = rm[0];
@@ -62,6 +64,23 @@ public class AuthController extends BaseController {
 		}
 
 		Session session = subject.getSession(true);
+
+		String verifyCode = request.getParameter("vc");
+		if (TmStringUtil.isBlank(verifyCode)) {
+			session.setAttribute("login_fail_msg", "请输入图片验证码");
+			return "redirect:/login.do";
+		}
+
+		Object KAPTCHA_verifyCode = session.getAttribute(Constants.KAPTCHA_SESSION_KEY);
+		if (KAPTCHA_verifyCode == null) {
+			session.setAttribute("login_fail_msg", "无效的图片验证码");
+			return "redirect:/login.do";
+		}
+		
+		if(!verifyCode.equals(KAPTCHA_verifyCode)) {
+			session.setAttribute("login_fail_msg", "图片验证码输入错误");
+			return "redirect:/login.do";
+		}
 
 		String username = request.getParameter("un");
 		if (TmStringUtil.isBlank(username)) {

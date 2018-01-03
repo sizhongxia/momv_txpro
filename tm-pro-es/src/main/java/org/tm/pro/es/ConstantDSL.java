@@ -203,7 +203,5 @@ public class ConstantDSL {
 		sb.append("{\"from\":0,\"size\":0,\"query\":{\"bool\":{\"must\":[]}},\"aggregations\":{\"gb\":{\"date_histogram\":{\"field\":\"@timestamp\",\"interval\":\"5m\",\"format\":\"yyyy-MM-dd HH:mm\"}}}}");
 		return sb.toString();
 	}
-	
-	
 
 }

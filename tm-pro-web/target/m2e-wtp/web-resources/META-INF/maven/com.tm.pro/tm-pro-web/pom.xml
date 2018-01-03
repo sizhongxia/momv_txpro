@@ -31,19 +31,13 @@
 
 		<dependency>
 			<groupId>com.tm.pro</groupId>
-			<artifactId>tm-pro-es</artifactId>
+			<artifactId>tm-pro-elastic</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 
 		<dependency>
 			<groupId>com.tm.pro</groupId>
 			<artifactId>tm-pro-utils</artifactId>
-			<version>${project.version}</version>
-		</dependency>
-
-		<dependency>
-			<groupId>com.tm.pro</groupId>
-			<artifactId>tm-pro-zk-service</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 
