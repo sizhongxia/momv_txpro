@@ -28,17 +28,18 @@ public class TransportClientFactory implements InitializingBean, DisposableBean 
 	public void setElasticConfig(ElasticConfig elasticConfig) {
 		this.elasticConfig = elasticConfig;
 	}
-	
+
 	private TransportClient client;
+
 	public TransportClient getClient() {
 		if (client == null) {
 			throw new RuntimeException("Init Transport Client Error!!!");
 		}
 		return client;
 	}
-	
+
 	public String postBaseRequest(String index, String type, String json) throws Exception {
-		StringBuffer sb = new StringBuffer("http://" + elasticConfig.getHost() + ":" + elasticConfig.getPort());
+		StringBuffer sb = new StringBuffer(elasticConfig.getHttp());
 		sb.append(index).append("/").append(type).append("/_search");
 		HttpClient client = HttpClients.createDefault();
 		URI uri = new URI(sb.toString());
@@ -57,7 +58,7 @@ public class TransportClientFactory implements InitializingBean, DisposableBean 
 			client = null;
 		}
 	}
-	
+
 	@Override
 	public void afterPropertiesSet() throws Exception {
 		try {

@@ -41,6 +41,7 @@
 	</bean>
 
 	<bean id="elasticConfig" class="org.tm.pro.elastic.model.ElasticConfig">
+		<property name="http" value="${elastic.http}" />
 		<property name="host" value="${elastic.host}" />
 		<property name="port" value="${elastic.port}" />
 		<property name="clusterName" value="${elastic.clusterName}" />

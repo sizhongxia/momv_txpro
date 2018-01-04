@@ -36,7 +36,7 @@ public class CacheLogStatisticsController extends BaseController {
 	@RequestMapping(value = "/local")
 	public ModelAndView local(HttpServletRequest request) {
 		ModelAndView mav = new ModelAndView("cache_log_statistics/local");
-		
+
 		mav.addObject("manufacturers", dictionaryService.getItemsByVCode("SYSTEM_MANUFACTURERS"));
 		mav.addObject("requestHttpUrlTypes", dictionaryService.getItemsByVCode("REQUEST_HTTP_URL_TYPE"));
 		mav.addObject("cacheSystemCitys", dictionaryService.getItemsByVCode("CACHE_SYSTEM_CITY"));
@@ -65,7 +65,16 @@ public class CacheLogStatisticsController extends BaseController {
 
 		mav.addObject("ranges", dictionaryService.getItemsByVCode("DOMAIN_VISIT_RANGE"));
 		mav.addObject("tops", dictionaryService.getItemsByVCode("DOMAIN_VISIT_TOP"));
-		
+
+		return mav;
+	}
+
+	// 域名访问统计 - 详情
+	@RequiresAuthentication
+	@RequestMapping(value = "/domain-visit-statistics/detail")
+	public ModelAndView domainVsitDetail(HttpServletRequest request, String domain) {
+		ModelAndView mav = new ModelAndView("cache_log_statistics/domain_visit_statistics_detail");
+		mav.addObject("domain", domain);
 		return mav;
 	}
 

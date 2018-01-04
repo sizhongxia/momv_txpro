@@ -28,100 +28,13 @@ thead>tr>th, tbody>tr>td{text-align:center}
 			<div class="col-sm-12">
 
 				<div class="ibox float-e-margins">
-					<div class="ibox-content">
-						<div class="row">
-
-							<div class="col-xs-2">
-								<div class="form-group" id="data_1">
-		                            <label class="font-noraml">日期</label>
-		                            <div class="input-group date">
-		                                <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
-		                                <input type="text" class="form-control" value="">
-		                            </div>
-		                        </div>
-							</div>
-							
-							<div class="col-xs-1">
-								<div class="form-group">
-									<label class="font-noraml">范围</label>
-                                    <select class="form-control" name="range" style="padding: 6px 0px;font-size: 12px">
-                                    	<#list ranges as item>
-											<option value="${item.value!}">${item.name!}</option>
-                                        </#list>
-                                    </select>
-								</div>
-							</div>
-							
-							<div class="col-xs-1">
-								<div class="form-group">
-									<label class="font-noraml">Top</label>
-                                    <select class="form-control" v-model="searchParm.size" style="padding: 6px 0px;font-size: 12px">
-                                    	<#list tops as item>
-											<option value="${item.value!}">${item.name!}</option>
-                                        </#list>
-                                    </select>
-								</div>
-							</div>
-							
-							<div class="col-xs-2">
-								<div class="form-group">
-									<label class="font-noraml">域名</label>
-									<input class="form-control" v-model="searchParm.domain"/>
-								</div>
-							</div>
-							
-							<div class="col-xs-2">
-								<label class="font-noraml">请求命中率%</label>
-								<div class="form-inline">
-		                            <div class="col-xs-5 form-group" style="padding: 0">
-		                                <input type="number" min="0" max="100" style="width: 100%" class="form-control">
-		                            </div>
-									<div class="col-xs-1" style="padding:8px 8px 0 4px">-</div>
-		                            <div class="col-xs-5 form-group" style="padding: 0">
-		                                <input type="number" min="0" max="100" style="width: 100%" class="form-control">
-		                            </div>
-	                            </div>
-							</div>
-							<div class="col-xs-2">
-								<label class="font-noraml">流量命中率%</label>
-								<div class="form-inline">
-		                            <div class="col-xs-5 form-group" style="padding: 0">
-		                                <input type="number" min="0" max="100" style="width: 100%" class="form-control">
-		                            </div>
-									<div class="col-xs-1" style="padding:8px 8px 0 4px">-</div>
-		                            <div class="col-xs-5 form-group" style="padding: 0">
-		                                <input type="number" min="0" max="100" style="width: 100%" class="form-control">
-		                            </div>
-	                            </div>
-							</div>
-							
-							<div class="col-xs-2">
-								<div class="form-group" style="min-width: 120px;">
-									<label class="font-noraml">操作</label>
-									<div class="btn-group" style="display: block;">
-										<button class="btn btn-primary" type="button" @click="search($event)">搜索</button>
-                                    </div>
-								</div>
-							</div>
-
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-	
-	
-		<div class="row">
-			<div class="col-sm-12">
-
-				<div class="ibox float-e-margins">
 					<div class="ibox-content" style="padding-left: 0;padding-right: 0;">
 						<div class="fixed-table-body">
 							<table class="table table-hover table-condensed" style="table-layout: fixed;width: 100%">
 								<thead>
 									<tr>
 										<th><div class="th-inner">序号</div></th>
-										<th width="150"><div class="th-inner">域名</div></th>
+										<th width="150"><div class="th-inner">URL</div></th>
 										<th><div class="th-inner">总请求次数</div></th>
 										<th><div class="th-inner">成功次数</div></th>
 										<th><div class="th-inner">失败次数</div></th>
@@ -138,11 +51,9 @@ thead>tr>th, tbody>tr>td{text-align:center}
 									</tr>
 								</thead>
 								<tbody>
-									<tr v-for="(item, index) in datas">
+									<tr v-for="(item, index) in datas"  v-bind:title="item.domainName">
 										<td>{{index+1}}</td>
-										<td class="tooltip-box" style="width:150px;white-space: nowrap;text-overflow: ellipsis;overflow: hidden;">
-											<a data-toggle="tooltip" data-placement="bottom" v-bind:title="item.domainName" href="javascript:;" @click="openDomainDetail(item.domainName)">{{item.domainName}}</a>
-										</td>
+										<td style="width:150px;white-space: nowrap;text-overflow: ellipsis;overflow: hidden;"><a href="javascript:;" @click="showFullName(item.domainName)">{{item.domainName}}</a></td>
 										<td>{{item.visitCount}}</td>
 										<td>{{item.visitSuccessCount}}</td>
 										<td>{{item.visitFailCount}}</td>
@@ -183,20 +94,20 @@ thead>tr>th, tbody>tr>td{text-align:center}
 	    	var data = {
 	   			datas: [],
 	   	    	searchParm: {
-	   	    		domain: "",
-	   	    		size: 10
+	   	    		domain: "${domain}"
 	   	    	}
 	   	    };
 	   		
 	   		var methods = {
 				loadData: function() {
 			   		const that = this;
-			   		_j.post("${rc.contextPath}/domainVisitData/data.do", that.searchParm , function(result) {
+			   		var load = parent.layer.load(1, {
+			   		    shade: [0.4,'#000']
+			   		});
+			   		_j.post("${rc.contextPath}/domainVisitData/detail.do", that.searchParm , function(result) {
+			   			parent.layer.close(load);
 			   			if(result.status) {
 							that.datas = result.data.domains;
-							setTimeout(function() {
-								$(".tooltip-box").tooltip({selector:"[data-toggle=tooltip]",container:"body"});
-							},20)
 			   			} else {
 			   				parent.layer.msg("<span style='color:red'><i class='fa fa-info'></i> " + result.msg  +"</span>", {
 				    			time: 2000
@@ -208,8 +119,8 @@ thead>tr>th, tbody>tr>td{text-align:center}
 			    	const that = this;
 			    	that.loadData();
 			    },
-			    openDomainDetail: function(domainName) {
-			    	openTab('${rc.contextPath}/cache-log-statistics/domain-visit-statistics/detail.do?domain=' + domainName, '详细 - ' + domainName, 'IFRAME_ID_DETAIL_' + domainName);
+			    showFullName: function(fullName) {
+			    	parent.layer.alert(fullName);
 			    }
 	   		}
 	    	
