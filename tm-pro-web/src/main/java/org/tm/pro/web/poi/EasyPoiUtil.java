@@ -70,6 +70,6 @@ public class EasyPoiUtil {
 		map.put(NormalExcelConstants.CLASS, UserInfo.class);// 导出实体
 		map.put(NormalExcelConstants.PARAMS, params);// 参数
 		map.put(NormalExcelConstants.FILE_NAME, "12345.xls");// 文件名称
-		PoiBaseView.render(map, request, response, NormalExcelConstants.JEECG_EXCEL_VIEW);
+		//PoiBaseView.render(map, request, response, NormalExcelConstants.JEECG_EXCEL_VIEW);
 	}
 }

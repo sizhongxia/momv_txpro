@@ -161,8 +161,6 @@
 		<module>tm-pro-utils</module>
 		<module>tm-pro-service</module>
 		<module>tm-pro-web</module>
-		<module>tm-pro-picture</module>
-		<module>tm-pro-es</module>
     <module>tm-pro-elastic</module>
   </modules>
 </project>

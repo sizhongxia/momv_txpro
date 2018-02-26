@@ -26,7 +26,8 @@
 	</bean>
 
 	<bean id="redisConfig" class="com.tm.pro.redis.config.RedisConfig">
-		<property name="urls" value="${redis.urls}" />
+		<property name="host" value="${redis.host}" />
+		<property name="port" value="${redis.port}" />
 		<property name="auth" value="${redis.auth}" />
 		<property name="timeout" value="${redis.timeout}" />
 		<property name="maxTotal" value="${redis.maxTotal}" />

@@ -400,26 +400,19 @@ public class RedisUtil implements InitializingBean, DisposableBean {
 		List<JedisShardInfo> shardedPoolList = new ArrayList<JedisShardInfo>();
 
 		String auth = redisConfig.getAuth();
-		String[] urls = redisConfig.getUrls().split(",");
-		JedisShardInfo Jedisinfo = null;
-
-		for (String url : urls) {
-			String[] urlInfo = url.split(":");
-			Jedisinfo = new JedisShardInfo(urlInfo[0], Integer.parseInt(urlInfo[1]), redisConfig.getTimeout());
-			if (TmStringUtil.isNotBlank(auth)) {
-				Jedisinfo.setPassword(auth);
-			}
-			shardedPoolList.add(Jedisinfo);
+		JedisShardInfo Jedisinfo = new JedisShardInfo(redisConfig.getHost(), redisConfig.getPort(),
+				redisConfig.getTimeout());
+		if (TmStringUtil.isNotBlank(auth)) {
+			Jedisinfo.setPassword(auth);
 		}
+		shardedPoolList.add(Jedisinfo);
 		// 构造池
 		this.shardedJedisPool = new ShardedJedisPool(poolConfig, shardedPoolList, Hashing.MURMUR_HASH);
-		String firstUrlInfo = urls[0];
-		String[] urlInfo = firstUrlInfo.split(":");
 		if (TmStringUtil.isNotBlank(auth)) {
-			this.jedisPool = new JedisPool(poolConfig, urlInfo[0], Integer.parseInt(urlInfo[1]),
+			this.jedisPool = new JedisPool(poolConfig, redisConfig.getHost(), redisConfig.getPort(),
 					redisConfig.getTimeout(), auth);
 		} else {
-			this.jedisPool = new JedisPool(poolConfig, urlInfo[0], Integer.parseInt(urlInfo[1]),
+			this.jedisPool = new JedisPool(poolConfig, redisConfig.getHost(), redisConfig.getPort(),
 					redisConfig.getTimeout());
 		}
 	}

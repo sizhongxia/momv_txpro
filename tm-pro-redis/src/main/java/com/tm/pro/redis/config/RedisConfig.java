@@ -10,8 +10,9 @@ import java.io.Serializable;
  */
 public class RedisConfig implements Serializable {
 	private static final long serialVersionUID = 1L;
-	// 服务地址包括IP和端口，可用“,”分割多个地址
-	private String urls;
+
+	private String host;
+	private int port;
 	// Redis配置的验证密码
 	private String auth;
 	// 超时时间
@@ -26,6 +27,22 @@ public class RedisConfig implements Serializable {
 	private long maxWaitMillis;
 	// 是否提前进行验证操作。如果为true，则得到的jedis实例均是可用的
 	private boolean testOnBorrow;
+
+	public String getHost() {
+		return host;
+	}
+
+	public void setHost(String host) {
+		this.host = host;
+	}
+
+	public int getPort() {
+		return port;
+	}
+
+	public void setPort(int port) {
+		this.port = port;
+	}
 
 	public int getTimeout() {
 		return timeout;
@@ -73,14 +90,6 @@ public class RedisConfig implements Serializable {
 
 	public void setTestOnBorrow(boolean testOnBorrow) {
 		this.testOnBorrow = testOnBorrow;
-	}
-
-	public String getUrls() {
-		return urls;
-	}
-
-	public void setUrls(String urls) {
-		this.urls = urls;
 	}
 
 	public String getAuth() {
