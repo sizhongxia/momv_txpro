@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.tm.pro.anno.DataSource;
 import org.tm.pro.entity.Authorization;
 import org.tm.pro.entity.AuthorizationExample;
 import org.tm.pro.mapper.AuthorizationMapper;
@@ -16,6 +17,7 @@ public class AuthorizationServiceImpl implements AuthorizationService {
 	AuthorizationMapper authorizationMapper;
 
 	@Override
+	@DataSource("slave")
 	public List<Authorization> getAuthorization(boolean isParent) {
 		AuthorizationExample example = new AuthorizationExample();
 		if (isParent) {
@@ -28,6 +30,7 @@ public class AuthorizationServiceImpl implements AuthorizationService {
 	}
 
 	@Override
+	@DataSource("slave")
 	public Authorization getAuthorizationByCode(String authorizationCode) {
 		AuthorizationExample example = new AuthorizationExample();
 		example.createCriteria().andAuthorizationCodeEqualTo(authorizationCode);

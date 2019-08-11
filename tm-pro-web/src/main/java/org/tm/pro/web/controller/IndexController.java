@@ -36,7 +36,7 @@ public class IndexController extends BaseController {
 	@RequestMapping(value = { "/index" }, method = { RequestMethod.GET })
 	public ModelAndView index(HttpServletRequest request) {
 		ModelAndView mv = new ModelAndView("index");
-
+		
 		SystemInfo systemInfo = SystemInfoCacheUtil.systemInfo;
 		mv.addObject("systemTitle", systemInfo.getSystemTitle());
 		mv.addObject("systemDescript", systemInfo.getSystemDescript());
@@ -133,7 +133,12 @@ public class IndexController extends BaseController {
 
 	@RequestMapping(value = "/page_not_found")
 	public ModelAndView pageNotFound(HttpServletRequest request) {
-		ModelAndView view = new ModelAndView("page_not_found");
+		ModelAndView view = new ModelAndView();
+		if (request.getHeader("Referer") != null) {
+			view.setViewName("page_not_found");
+		} else {
+			view.setViewName("to_skip_index");
+		}
 		return view;
 	}
 
@@ -148,6 +153,13 @@ public class IndexController extends BaseController {
 		ModelAndView view = new ModelAndView("operation_timeout");
 		return view;
 	}
+
+	@RequestMapping(value = "/socket_io")
+	public ModelAndView socketIo(HttpServletRequest request) {
+		ModelAndView view = new ModelAndView("socket_io");
+		return view;
+	}
+	
 
 	// /***
 	// * 上传文件

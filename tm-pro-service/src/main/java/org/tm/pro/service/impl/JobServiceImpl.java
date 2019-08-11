@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.tm.pro.anno.DataSource;
 import org.tm.pro.entity.Job;
 import org.tm.pro.entity.JobExample;
 import org.tm.pro.entity.JobGroup;
@@ -20,11 +21,13 @@ public class JobServiceImpl implements JobService {
 	JobGroupMapper jobGroupMapper;
 
 	@Override
+	@DataSource("slave")
 	public Job getById(Integer id) {
 		return jobMapper.selectByPrimaryKey(id);
 	}
 
 	@Override
+	@DataSource("slave")
 	public Job getByJobId(String jobId) {
 		JobExample example = new JobExample();
 		example.createCriteria().andJobIdEqualTo(jobId);
@@ -36,16 +39,19 @@ public class JobServiceImpl implements JobService {
 	}
 
 	@Override
+	@DataSource("slave")
 	public JobGroup getByGroupId(Integer groupId) {
 		return jobGroupMapper.selectByPrimaryKey(groupId);
 	}
 
 	@Override
+	@DataSource("slave")
 	public List<Job> getAllJobs() {
 		return jobMapper.selectByExample(new JobExample());
 	}
 
 	@Override
+	@DataSource("slave")
 	public List<Job> getStartupExecutionJobs() {
 		JobExample example = new JobExample();
 		example.createCriteria().andIsStartupExecutionEqualTo(Boolean.TRUE).andStatusNotEqualTo("NONE");
@@ -53,6 +59,7 @@ public class JobServiceImpl implements JobService {
 	}
 
 	@Override
+	@DataSource("master")
 	public int update(Job job) {
 		return jobMapper.updateByPrimaryKey(job);
 	}

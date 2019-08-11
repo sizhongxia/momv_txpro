@@ -29,6 +29,12 @@
         <table tableName="tb_authorization" domainObjectName="Authorization">
         	<generatedKey column="id" sqlStatement="MySql" identity="true"/>
         </table>
+        <table tableName="tb_dictionary" domainObjectName="Dictionary">
+        	<generatedKey column="id" sqlStatement="MySql" identity="true"/>
+        </table>
+        <table tableName="tb_dictionary_item" domainObjectName="DictionaryItem">
+        	<generatedKey column="id" sqlStatement="MySql" identity="true"/>
+        </table>
         <table tableName="tb_job" domainObjectName="Job">
         	<generatedKey column="id" sqlStatement="MySql" identity="true"/>
         </table>
